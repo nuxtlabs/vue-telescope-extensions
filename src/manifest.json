@@ -1,0 +1,40 @@
+{
+  "name": "vue-telemtry-extension",
+  "description": "A Vue.js web extension",
+  "version": null,
+  "manifest_version": 2,
+  "icons": {
+    "48": "icons/vue_telemetry_icon.png",
+    "128": "icons/vue_telemetry_icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "browser-polyfill.js",
+        "detector.js",
+        "./popup/popup.js"
+      ]
+    }
+  ],
+  "browser_action": {
+    "default_title": "my-extension",
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "scripts": [
+      "browser-polyfill.js",
+      "background.js"
+    ]
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "background",
+    "http://*/*",
+    "https://*/*"
+  ]
+}
