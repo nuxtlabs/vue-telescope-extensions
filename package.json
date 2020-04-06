@@ -2,7 +2,8 @@
   "name": "vue-telemetry-extension",
   "version": "1.0.0",
   "description": "A Vue.js web extension",
-  "author": "florentdelerue <fdelerue@monali.fr>",
+  "author": "NuxtJS Company",
+  "license": "MIT",
   "engines": {
     "node": ">=10"
   },
@@ -18,7 +19,6 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "gulp-sass": "4.0.2",
     "vue": "^2.6.10",
     "vue-telemetry-analyzer": "^0.1.6",
     "vuex": "^3.1.3",

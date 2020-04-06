@@ -1,7 +1,7 @@
 {
-  "name": "vue-telemtry-extension",
+  "name": "vue-telemetry-extension",
   "description": "A Vue.js web extension",
-  "version": null,
+  "version": "0.1.0",
   "manifest_version": 2,
   "icons": {
     "48": "icons/vue_telemetry_icon.png",
@@ -21,7 +21,7 @@
     }
   ],
   "browser_action": {
-    "default_title": "my-extension",
+    "default_title": "Vue Telemetry",
     "default_popup": "popup/popup.html"
   },
   "background": {
@@ -34,6 +34,7 @@
     "activeTab",
     "tabs",
     "background",
+    "storage",
     "http://*/*",
     "https://*/*"
   ]

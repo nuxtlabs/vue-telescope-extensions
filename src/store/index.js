@@ -1,28 +1,24 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexWebExtensions from 'vuex-webextensions'
+
+import * as getters from './getters'
+import mutations from './mutations'
+import * as actions from './actions'
 
 Vue.use(Vuex)
 
-export const store = new Vuex.Store({
-    state: {
-        loading: false,
-        response: null,
-    },
-    mutations: {
-        isLoading(state, loading) {
-            state.loading = loading
-        },
-        setResponse(state, response) {
-            state.response = response
-        }
-    },
-    getters: {
-        loading: state => {
-            return state.loading
-        },
-        response: state => {
-            return state.response
-        }
-    },
-
+export default new Vuex.Store({
+  state: {
+    data: {},
+  },
+  getters,
+  mutations,
+  actions,
+  plugins: [
+    VuexWebExtensions({
+      persistentStates: ['data'],
+      loggerLevel: 'verbose',
+    }),
+  ],
 })
