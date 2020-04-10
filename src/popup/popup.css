@@ -1,0 +1,37 @@
+@import url("https://fonts.googleapis.com/css?family=Quicksand");
+html {
+    font-family: "Quicksand";
+}
+body {
+  background: #fff;
+  direction: ltr;
+  font-size: 0.8rem;
+  margin: 0;
+  min-width: 30rem;
+}
+.header {
+  align-items: center;
+  border-bottom: 1px solid #dbdbdb;
+  height: 4rem;
+  display: flex;
+}
+
+.header__link:focus {
+  outline: none;
+}
+
+.header__logo {
+  display: inline-block;
+  margin: .2rem 1.5rem 0 1.5rem;
+  transform: translateZ(0);
+  height: 2rem;
+}
+
+.header__logo--dark {
+  display: none;
+}
+
+.container {
+  min-height: 5rem;
+  padding: 1rem 1.5rem 0rem 1.5rem;
+}

@@ -4,14 +4,14 @@
   "version": "0.1.0",
   "manifest_version": 2,
   "icons": {
-    "48": "icons/vue_telemetry_icon.png",
-    "128": "icons/vue_telemetry_icon.png"
+    "16": "icons/icon-nuxtjs.png",
+    "48": "icons/icon-nuxtjs.png",
+    "128": "icons/icon-nuxtjs.png"
   },
   "content_scripts": [
     {
       "matches": [
-        "http://*/*",
-        "https://*/*"
+        "<all_urls>"
       ],
       "js": [
         "browser-polyfill.js",
@@ -21,6 +21,11 @@
     }
   ],
   "browser_action": {
+    "default_icon": {
+      "16": "icons/icon-nuxtjs-disabled.png",
+      "48": "icons/icon-nuxtjs-disabled.png",
+      "128": "icons/icon-nuxtjs-disabled.png"
+    },
     "default_title": "Vue Telemetry",
     "default_popup": "popup/popup.html"
   },

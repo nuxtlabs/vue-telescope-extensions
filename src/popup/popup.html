@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<meta http-equiv="Content-Security-Policy"
-content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <html lang="en">
 
 <head>
@@ -8,15 +9,16 @@ content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; st
   <title>Vue Telemetry</title>
   <link rel="stylesheet" href="popup.css">
   <% if (NODE_ENV === 'development') { %>
-    <!-- Load some resources only in development environment -->
-    <% } %>
-  </head>
-  
-  <body>
-    <div id="vtm">
-      
-    </div>
-    <script src="popup.js"></script>
-  </body>
-  
-  </html>
+  <!-- Load some resources only in development environment -->
+  <% } %>
+</head>
+
+<body>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <div id="vtm">
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+
+</html>

@@ -10,14 +10,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    data: {},
+    data: new Map(),
+    isLoading: false,
+    currentDomain: "",
   },
   getters,
   mutations,
   actions,
   plugins: [
     VuexWebExtensions({
-      persistentStates: ['data'],
+      persistentStates: ['data', 'isLoading', 'currentDomain'],
       loggerLevel: 'verbose',
     }),
   ],
