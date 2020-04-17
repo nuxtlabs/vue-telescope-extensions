@@ -1,8 +1,8 @@
 import * as types from './mutation-types';
 
 export default {
-  [types.SET_DATA](state, payload) {
-    state.data = payload;
+  [types.SET_DATAINFO](state, payload) {
+    state.dataInfo = payload;
   },
   [types.SET_ISLOADING](state, payload) {
     state.isLoading = payload;

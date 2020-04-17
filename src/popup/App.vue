@@ -8,18 +8,7 @@
           <div class="header__title-logo"></div>
           <button v-on:click="switchTheme(theme)" class="header__title-theme"></button>
         </div>
-        <div class="header__close">
-          <lottie-player
-            v-on:click="close"
-            :src="closeButton"
-            background="transparent"
-            speed="5"
-            style="width: 25px; height: 25px;"
-            co
-            hover
-            name="close"
-          ></lottie-player>
-        </div>
+        <button v-on:click="close()" class="button-close"></button>
       </header>
       <div class="container">
         <div class="data-container">
@@ -35,13 +24,13 @@
             <div class="flexcontainer">
               <div
                 class="flex-item"
-                v-for="(category, index) in Object.keys(data.get(currentDomain))"
+                v-for="(category, index) in Object.keys(dataInfo[currentDomain])"
                 :key="`category-${index}`"
               >
                 {{ setCategoryTitle(category) }}
-                <div class="flex-item__detail" v-if="isArray(data.get(currentDomain)[category])">
+                <div class="flex-item__detail" v-if="isArray(dataInfo[currentDomain][category])">
                   <div
-                    v-for="(item, index) in data.get(currentDomain)[category]"
+                    v-for="(item, index) in dataInfo[currentDomain][category]"
                     :key="`item-${index}`"
                   >
                     <div class="flex-item__detail__array-item">{{ item }}</div>
@@ -50,7 +39,7 @@
                 <div class="flex-item__detail" v-else>
                   <div v-if="category == 'hasSSR'">SSR</div>
                   <div v-else-if="category == 'isStatic'">Satic</div>
-                  <div v-else>{{ data.get(currentDomain)[category] }}</div>
+                  <div v-else>{{ dataInfo[currentDomain][category] }}</div>
                 </div>
               </div>
             </div>
@@ -61,8 +50,14 @@
           <div v-else class="error">Vue not detected</div>
         </div>
         <div class="button-container">
-          <button class="button-container__submit">Submit a webiste</button>
-          <button class="button-container__github"></button>
+          <button
+            v-bind:class="[getPageState() == 'error'? 'button-container__submit' : getPageState() == 'data' ? 'button-container__submit' : 'button-container__submit']"
+            v-bind:id="[(getPageState() == 'noVue') ? 'submit-no-vue' : '']"
+          >Submit a webiste</button>
+          <button
+            class="button-container__github"
+            v-bind:id="[(getPageState() == 'noVue') ? 'github-no-vue' : '']"
+          ></button>
         </div>
       </div>
     </div>
@@ -72,18 +67,14 @@
 <script>
 import { mapState } from "vuex";
 import "@lottiefiles/lottie-player";
+let browser = require("webextension-polyfill");
 
 export default {
   data: function() {
     return {
       theme: "system",
-      bgImg: {
-        backgroundImage: `url(${browser.runtime.getURL(
-          "../images/extension-bg.svg"
-        )}`
-      },
       img: browser.runtime.getURL("../images/vue_telemetry_logo.png"),
-      closeButton: browser.runtime.getURL("../images/close-button.json"),
+      closeButton: browser.runtime.getURL("../images/button-close.svg"),
       loader: browser.runtime.getURL("../images/loader.json"),
       check: browser.runtime.getURL("../images/check.png"),
       broken: browser.runtime.getURL("../images/broken.json"),
@@ -107,19 +98,27 @@ export default {
     }
   },
   computed: {
-    ...mapState(["data", "isLoading", "currentDomain"])
+    ...mapState(["dataInfo", "isLoading", "currentDomain"])
   },
   methods: {
     getPageState() {
+      /*if (this.dataInfo[this.currentDomain] != null) {
+        if (this.dataInfo[this.currentDomain] == "error") {
+          return "error"
+        } else if (this.dataInfo[this.currentDomain] != "noVue") {
+          return "noVue"
+        }
+      } 
+      return "noVue"*/
+
       if (
-        this.data.get(this.currentDomain) != null &&
-        this.data.get(this.currentDomain) == "error"
+        this.dataInfo[this.currentDomain] != null &&
+        this.dataInfo[this.currentDomain] == "error"
       ) {
         return "error";
       } else if (
-        this.data.get(this.currentDomain) != null &&
-        this.currentDomain != "newTab" &&
-        this.currentDomain != "noVue"
+        this.dataInfo[this.currentDomain] != null &&
+        this.dataInfo[this.currentDomain] != "noVue"
       ) {
         return "data";
       }
@@ -149,29 +148,6 @@ export default {
         : jsonKey == "frameworkModules"
         ? "Modules"
         : jsonKey;
-    },
-    getBgImage(data) {
-      if (data.get(this.currentDomain) != null) {
-        if (data.get(this.currentDomain) == "error") {
-          return {
-            backgroundImage: `url(${browser.runtime.getURL(
-              "../images/extension-bg-error.svg"
-            )}`
-          };
-        } else {
-          return {
-            backgroundImage: `url(${browser.runtime.getURL(
-              `../images/extension-bg-light.svg`
-            )}`
-          };
-        }
-      } else {
-        return {
-          backgroundImage: `url(${browser.runtime.getURL(
-            "../images/extension-bg-no-vue.svg"
-          )}`
-        };
-      }
     },
     switchTheme(theme) {
       if (theme === "light") {
@@ -204,6 +180,7 @@ export default {
 :root {
   --bg-image: url("../images/extension-bg-light.svg");
   --button-submit-bg-color: #158876;
+  --button-submit-bg-color-no-vue: #414042;
   --button-submit-bg-color-hover: #099580;
   --button-github-bg-image: url("../images/github-light.svg");
   --button-github-bg-color: #243746;
@@ -215,6 +192,7 @@ export default {
 
 [data-theme="dark"] {
   --bg-image: url("../images/extension-bg-dark.svg");
+  --button-submit-bg-color-no-vue: #292728;
   --button-submit-bg-color: #41b38a;
   --button-submit-bg-color-hover: #2fc68f;
   --button-github-bg-image: url("../images/github-dark.svg");
@@ -277,21 +255,29 @@ body {
   color: #fff;
 }
 
-.header__close {
+.button-close {
   display: flex;
   width: 31px;
   height: 31px;
   margin-top: 23px;
   margin-right: 25px;
-  background: rgba(255, 255, 255, 0.21);
+  background: rgba(255, 255, 255, 0.21) no-repeat;
   border-radius: 6px;
   align-items: center;
   justify-content: center;
+  background-image: url("../images/button-close.svg");
+  background-position: center;
+  background-size: 10px;
+  border: none;
+}
+
+.button-close:hover {
+  color: #549c82;
 }
 
 .header__title-theme {
   display: flex;
-  transition-duration: 2s;
+  transition-duration: 0.1s;
   width: 31px;
   height: 31px;
   margin-top: 28px;
@@ -382,12 +368,17 @@ body {
 
 .button-container__submit {
   background: var(--button-submit-bg-color);
+  transition-duration: 0.5s;
   margin-right: 7px;
   width: 129px;
   height: 43px;
   border: none;
   border-radius: 8px;
   color: #fff;
+}
+
+#submit-no-vue {
+  background: var(--button-submit-bg-color-no-vue);
 }
 
 .button-container__submit:hover {
@@ -401,9 +392,16 @@ body {
   margin-right: 32px;
   background: var(--button-github-bg-image) no-repeat;
   background-color: var(--button-github-bg-color);
+  transition-duration: 0.5s;
   border-radius: 8px;
   border: none;
   background-size: auto;
+  background-position: center;
+}
+
+#github-no-vue {
+  background: url("../images/github-light.svg") no-repeat;
+  background-color: #6d6e71;
   background-position: center;
 }
 

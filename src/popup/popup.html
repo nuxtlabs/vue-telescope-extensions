@@ -8,18 +8,19 @@
   <meta charset="UTF-8">
   <title>Vue Telemetry</title>
   <link rel="stylesheet" href="popup.css">
-  <script type="application/javascript" src="browser-polyfill.js"></script>
+
   <% if (NODE_ENV === 'development') { %>
   <!-- Load some resources only in development environment -->
   <% } %>
 </head>
 
 <body>
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <div id="vtm">
 
   </div>
   <script src="popup.js"></script>
+  <script type="application/javascript" src="/polyfills/browser-polyfill.js"></script>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </body>
 
 </html>

@@ -1,8 +1,8 @@
 
 import * as types from './mutation-types';
 
-export const setData = ({ commit }, payload) => {
-  commit(types.SET_DATA, payload);
+export const setDataInfo = ({ commit }, payload) => {
+  commit(types.SET_DATAINFO, payload);
 };
 
 export const setIsLoading = ({ commit }, payload) => {

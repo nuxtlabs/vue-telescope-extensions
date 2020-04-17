@@ -1,5 +1,5 @@
+let browser = require("webextension-polyfill");
 const isBrowser = typeof navigator !== 'undefined'
-import { tabs } from "webextension-polyfill"
 const isFirefox = isBrowser && navigator.userAgent.indexOf('Firefox') > -1
 import "@babel/polyfill";
 
@@ -26,7 +26,8 @@ function handleMessage() {
   })
 }
 
-tabs.runtime.onMessage.addListener(handleMessage)
+"use strict";
+browser.runtime.onMessage.addListener(handleMessage)
 
 function detectVue(win) {
 

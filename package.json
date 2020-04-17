@@ -21,6 +21,7 @@
     "@babel/polyfill": "^7.8.7",
     "@lottiefiles/lottie-player": "^0.5.1",
     "axios": "^0.19.0",
+    "lottie-vuejs": "^0.3.7",
     "vue": "^2.6.10",
     "vue-telemetry-analyzer": "^0.1.6",
     "vuejs-logger": "1.5.4",

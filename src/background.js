@@ -1,18 +1,19 @@
-import { tabs } from "webextension-polyfill"
 import axios from 'axios'
 import store from './store'
-import { currentDomain, data } from "./store/getters"
+import { currentDomain } from './store/getters'
 
 // map to save id + url for checking if allready post
 let domainsVisited = []
-let dataMap = new Map()
+let browser = require("webextension-polyfill");
+
 
 // send url to analyzer
 async function sendUrl(url, domain, tabId) {
 
   //loading
   store.commit('SET_ISLOADING', true);
-  console.log("SEND URL")
+
+  let map = store.getters.dataInfo;
 
   await axios({
     method: 'GET',
@@ -29,20 +30,21 @@ async function sendUrl(url, domain, tabId) {
     delete data.screenshot
     delete data.meta
 
-    dataMap.set(domain, data)
-
-    store.commit('SET_DATA', dataMap)
+    //dataMap.set(domain, data)
+    map[domain] = data;
+    console.log("INFO", map)
+    store.commit('SET_DATAINFO', map)
   }).catch((err) => {
+
     browser.browserAction.setIcon({
       tabId: tabId,
       path: {
-        16: `icons/icon-vue-telemetry-404error-16.png`,
-        48: `icons/icon-vue-telemetry-404error-48.png`,
-        128: `icons/icon-vue-telemetry-404error-128.png`
+        16: `icons/icon-vue-telemetry-404error-128.png`,
+        32: `icons/icon-vue-telemetry-404error-128.png`
       }
     })
-    dataMap.set(domain, "error")
-    store.commit('SET_DATA', dataMap)
+    map[domain] = "error";
+    store.commit('SET_DATAINFO', map)
   })
 
   store.commit('SET_ISLOADING', false);
@@ -55,23 +57,32 @@ async function handleUpdated(tabId, changeInfo, tabInfo) {
   }
 }
 
-tabs.onUpdated.addListener(handleUpdated)
+browser.tabs.onUpdated.addListener(handleUpdated)
 
 // when tab clicked 
 async function handleActivated() {
   // get active tab
-  tabs.query({ currentWindow: true, active: true }).then(function (tabsArray) {
-    detectVue(tabsArray[0].id, tabsArray[0].url)
+  browser.tabs.query({ currentWindow: true, active: true }).then(function (tabsArray) {
+
+    if (/^chrome/.test(tabsArray[0].url) || /^about/.test(tabsArray[0].url)) {
+      store.commit('SET_CURRENTDOMAIN', "noVue")
+      let map = store.getters.dataInfo;
+      map[tabsArray[0].url] = "noVue"
+    } else {
+      detectVue(tabsArray[0].id, tabsArray[0].url)
+    }
   })
 }
 
-tabs.onActivated.addListener(handleActivated)
+browser.tabs.onActivated.addListener(handleActivated)
 
 function handleCreated(tab) {
-  store.commit('SET_CURRENTDOMAIN', "newTab")
+  let map = store.getters.dataInfo;
+  map[tab.url] = "noVue"
+  store.commit('SET_CURRENTDOMAIN', "noVue")
 }
 
-tabs.onCreated.addListener(handleCreated);
+browser.tabs.onCreated.addListener(handleCreated);
 
 //function to detect vue and send url
 async function detectVue(tabId, url) {
@@ -81,27 +92,34 @@ async function detectVue(tabId, url) {
 
     store.commit('SET_CURRENTDOMAIN', response.vueInfo.domain)
 
+    if (response.vueInfo.hasVue)
+      browser.browserAction.setIcon({
+        tabId: tabId,
+        path: {
+          16: "icons/icon-robot-128.png",
+          32: "icons/icon-robot-128.png",
+        }
+      })
+
     if (!domainsVisited.includes(response.vueInfo.domain)) {
 
       domainsVisited.push(response.vueInfo.domain)
 
       if (response.vueInfo.hasVue) {
-
-        browser.browserAction.setIcon({
-          tabId: tabId,
-          path: {
-            16: `icons/icon-vue-telemetry-16.png`,
-            48: `icons/icon-vue-telemetry-48.png`,
-            128: `icons/icon-vue-telemetry-128.png`
-          }
-        })
-
         sendUrl(url, response.vueInfo.domain, tabId)
       } else {
+        console.log("DOMAIN", response.vueInfo.domain)
+        let map = store.getters.dataInfo;
+        map[response.vueInfo.domain, "noVue"]
         store.commit('SET_CURRENTDOMAIN', "noVue")
       }
     }
+
+  }).catch((err) => {
+    let map = store.getters.dataInfo;
+    map[response.vueInfo.domain, "noVue"]
   })
+
 }
 
 //check vue in detector.js and get response
@@ -112,7 +130,7 @@ function hasVue(tabId) {
     //     console.log(response.farewell);
     //   });
 
-    chrome.tabs.sendMessage(
+    browser.tabs.sendMessage(
       tabId,
       { greeting: '' }
     ).then(response => {
