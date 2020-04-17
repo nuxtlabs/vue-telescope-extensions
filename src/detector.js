@@ -1,10 +1,12 @@
 const isBrowser = typeof navigator !== 'undefined'
+import { tabs } from "webextension-polyfill"
 const isFirefox = isBrowser && navigator.userAgent.indexOf('Firefox') > -1
 import "@babel/polyfill";
 
 if (document instanceof HTMLDocument) {
   installScript(detectVue)
 }
+
 let resolveDetecting
 let detecting = new Promise((resolve) => {
   resolveDetecting = resolve
@@ -24,11 +26,13 @@ function handleMessage() {
   })
 }
 
-browser.runtime.onMessage.addListener(handleMessage)
+tabs.runtime.onMessage.addListener(handleMessage)
 
 function detectVue(win) {
+
   setTimeout(() => {
-    const hasVue = Boolean(window.Vue || window.$nuxt) //|| [...document.querySelectorAll('*')].map((el) => Boolean(el.__vue__)).filter(Boolean).length)
+
+    let hasVue = Boolean(window.Vue || window.$nuxt) //|| [...document.querySelectorAll('*')].map((el) => Boolean(el.__vue__)).filter(Boolean).length)
 
     if (hasVue == false) {
       const all = document.querySelectorAll('*')
@@ -44,12 +48,13 @@ function detectVue(win) {
       }
     }
 
-
     win.postMessage({
       __vue_telemetry__: true,
       domain: document.domain,
       hasVue: hasVue
     })
+
+
   }, 100)
 }
 

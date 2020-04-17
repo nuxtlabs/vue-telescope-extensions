@@ -1,80 +1,71 @@
 <template>
-  <div>
-    <!--pre>{{ data.get(currentDomain) }}}</pre-->
-    <header class="header">
-      <a href="https://www.nuxtjs.org/" target="_blank">
-        <img class="header__logo" :src="img" />
-      </a>
-      <!-- <div>
-        <button class v-on:click="switchTheme(themeDark)">
-          <img v-if="themeDark" :src="moon" height="20px" />
-          <img v-else :src="sun" height="20px" />
-        </button>
-      </div>-->
-      <lottie-player
-        class="header__close"
-        v-on:click="close"
-        :src="closeButton"
-        background="transparent"
-        speed="5"
-        style="width: 30px; height: 30px;"
-        co
-        hover
-      ></lottie-player>
-    </header>
-    <div>
-      <lottie-player
-        class="loader"
-        v-if="isLoading"
-        :src="loader"
-        loop
-        autoplay
-        style="width: 60px; height: 60px;"
-      ></lottie-player>
-      <div v-else-if="currentDomain != 'noVue' && currentDomain != 'WSError'" class="flexcontainer">
-        <div
-          class="flex-item"
-          v-for="(category, index) in Object.keys(data.get(currentDomain))"
-          :key="`category-${index}`"
-        >
-          {{ setCategoryTitle(category) }}
-          <div class="flex-item__detail" v-if="isArray(data.get(currentDomain)[category])">
-            <div v-for="(item, index) in data.get(currentDomain)[category]" :key="`item-${index}`">
-              <div class="flex-item__detail__array-item">{{ item }}</div>
+  <div class="bg">
+    <div
+      v-bind:class="[getPageState() == 'error' ? 'bg__error' : getPageState() == 'data' ? 'bg__data' : 'bg__novue']"
+    >
+      <header class="header">
+        <div class="header__title">
+          <div class="header__title-logo"></div>
+          <button v-on:click="switchTheme(theme)" class="header__title-theme"></button>
+        </div>
+        <div class="header__close">
+          <lottie-player
+            v-on:click="close"
+            :src="closeButton"
+            background="transparent"
+            speed="5"
+            style="width: 25px; height: 25px;"
+            co
+            hover
+            name="close"
+          ></lottie-player>
+        </div>
+      </header>
+      <div class="container">
+        <div class="data-container">
+          <lottie-player
+            class="loader"
+            v-if="isLoading"
+            :src="loader"
+            loop
+            autoplay
+            style="width: 60px; height: 60px;"
+          ></lottie-player>
+          <div v-else-if="(getPageState() == 'data')">
+            <div class="flexcontainer">
+              <div
+                class="flex-item"
+                v-for="(category, index) in Object.keys(data.get(currentDomain))"
+                :key="`category-${index}`"
+              >
+                {{ setCategoryTitle(category) }}
+                <div class="flex-item__detail" v-if="isArray(data.get(currentDomain)[category])">
+                  <div
+                    v-for="(item, index) in data.get(currentDomain)[category]"
+                    :key="`item-${index}`"
+                  >
+                    <div class="flex-item__detail__array-item">{{ item }}</div>
+                  </div>
+                </div>
+                <div class="flex-item__detail" v-else>
+                  <div v-if="category == 'hasSSR'">SSR</div>
+                  <div v-else-if="category == 'isStatic'">Satic</div>
+                  <div v-else>{{ data.get(currentDomain)[category] }}</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="flex-item__detail" v-else>
-            <div v-if="category == 'hasSSR' || category=='isStatic'">
-              <img class="img" :src="getImgSSRorStatic(Boolean(data.get(currentDomain)[category]))" />
-            </div>
-            <div v-else>{{ data.get(currentDomain)[category] }}</div>
+          <div v-else-if="getPageState() == 'error'" class="error">
+            <div>Vue detected but an error occured</div>
           </div>
+          <div v-else class="error">Vue not detected</div>
+        </div>
+        <div class="button-container">
+          <button class="button-container__submit">Submit a webiste</button>
+          <button class="button-container__github"></button>
         </div>
       </div>
-      <div v-else-if="currentDomain=='WSError'">
-        <lottie-player
-          class="loader"
-          :src="broken"
-          loop
-          autoplay
-          style="width: 100px; height: 100px;"
-        ></lottie-player>
-        <div class="error">Vue detect but an error occured</div>
-      </div>
-      <div v-else class="error">Vue not detected</div>
     </div>
-    <footer>
-      <ul class="footer__item">
-        <li>
-          <a href class>Soumettre une URL</a>
-        </li>
-        <li>
-          <a href="https://nuxtjs.org">
-            <lottie-player :src="github" loop autoplay style="width: 20px; height: 20px;"></lottie-player>
-          </a>
-        </li>
-      </ul>
-    </footer>
   </div>
 </template>
 
@@ -85,32 +76,55 @@ import "@lottiefiles/lottie-player";
 export default {
   data: function() {
     return {
-      themeDark: false,
+      theme: "system",
+      bgImg: {
+        backgroundImage: `url(${browser.runtime.getURL(
+          "../images/extension-bg.svg"
+        )}`
+      },
       img: browser.runtime.getURL("../images/vue_telemetry_logo.png"),
       closeButton: browser.runtime.getURL("../images/close-button.json"),
       loader: browser.runtime.getURL("../images/loader.json"),
       check: browser.runtime.getURL("../images/check.png"),
       broken: browser.runtime.getURL("../images/broken.json"),
-      github: browser.runtime.getURL("../images/github.json"),
+      github: browser.runtime.getURL("../images/github-img.svg"),
+      error: browser.runtime.getURL("../images/error404.svg"),
       sun: browser.runtime.getURL("../icons/brightness.png"),
       moon: browser.runtime.getURL("../icons/moon.png")
     };
   },
-  // updated: function() {
-  //   const currentTheme = localStorage.getItem("theme");
+  updated: function() {
+    const currentTheme = localStorage.getItem("theme");
 
-  //   if (currentTheme) {
-  //     document.documentElement.setAttribute("data-theme", currentTheme);
+    if (currentTheme) {
+      document.documentElement.setAttribute("data-theme", currentTheme);
 
-  //     if (currentTheme === "dark") {
-  //       this.$data.themeDark = true;
-  //     }
-  //   }
-  // },
+      currentTheme === "dark"
+        ? (this.$data.theme = "dark")
+        : currentTheme === "light"
+        ? (this.$data.theme = "light")
+        : (this.$data.theme = "system");
+    }
+  },
   computed: {
     ...mapState(["data", "isLoading", "currentDomain"])
   },
   methods: {
+    getPageState() {
+      if (
+        this.data.get(this.currentDomain) != null &&
+        this.data.get(this.currentDomain) == "error"
+      ) {
+        return "error";
+      } else if (
+        this.data.get(this.currentDomain) != null &&
+        this.currentDomain != "newTab" &&
+        this.currentDomain != "noVue"
+      ) {
+        return "data";
+      }
+      return "noVue";
+    },
     isArray(obj) {
       return Array.isArray(obj);
     },
@@ -125,9 +139,9 @@ export default {
     },
     setCategoryTitle(jsonKey) {
       return jsonKey == "hasSSR"
-        ? "SSR"
+        ? "Mode"
         : jsonKey == "isStatic"
-        ? "Static"
+        ? "Target"
         : jsonKey == "vueVersion"
         ? "Vue version"
         : jsonKey == "ui"
@@ -135,54 +149,160 @@ export default {
         : jsonKey == "frameworkModules"
         ? "Modules"
         : jsonKey;
+    },
+    getBgImage(data) {
+      if (data.get(this.currentDomain) != null) {
+        if (data.get(this.currentDomain) == "error") {
+          return {
+            backgroundImage: `url(${browser.runtime.getURL(
+              "../images/extension-bg-error.svg"
+            )}`
+          };
+        } else {
+          return {
+            backgroundImage: `url(${browser.runtime.getURL(
+              `../images/extension-bg-light.svg`
+            )}`
+          };
+        }
+      } else {
+        return {
+          backgroundImage: `url(${browser.runtime.getURL(
+            "../images/extension-bg-no-vue.svg"
+          )}`
+        };
+      }
+    },
+    switchTheme(theme) {
+      if (theme === "light") {
+        this.$data.theme = "dark";
+        document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
+      } else if (theme === "dark") {
+        this.$data.theme = "light";
+        document.documentElement.setAttribute("data-theme", "light");
+        localStorage.setItem("theme", "light");
+      } else {
+        if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          this.$data.theme = "dark";
+          document.documentElement.setAttribute("data-theme", "dark");
+          localStorage.setItem("theme", "system");
+        } else {
+          this.$data.theme = "light";
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("theme", "system");
+        }
+      }
     }
-    // switchTheme(theme) {
-    //   this.$data.themeDark = !theme;
-    //   if (!theme) {
-    //     document.documentElement.setAttribute("data-theme", "dark");
-    //     localStorage.setItem("theme", "dark");
-    //   } else {
-    //     document.documentElement.setAttribute("data-theme", "light");
-    //     localStorage.setItem("theme", "light");
-    //   }
-    // }
   }
 };
 </script>
 <style>
 :root {
-  --bg-color: #f9fafc;
+  --bg-image: url("../images/extension-bg-light.svg");
+  --button-submit-bg-color: #158876;
+  --button-submit-bg-color-hover: #099580;
+  --button-github-bg-image: url("../images/github-light.svg");
+  --button-github-bg-color: #243746;
+  --button-github-bg-color-hover: #586976;
+  --button-theme-img: url("../images/button-theme-dark.svg");
+  --bg-error-image: url("../images/extension-bg-error-light.svg");
+  --bg-no-vue-image: url("../images/extension-bg-no-vue-light.svg");
 }
 
 [data-theme="dark"] {
-  --bg-color: #161625;
+  --bg-image: url("../images/extension-bg-dark.svg");
+  --button-submit-bg-color: #41b38a;
+  --button-submit-bg-color-hover: #2fc68f;
+  --button-github-bg-image: url("../images/github-dark.svg");
+  --button-github-bg-color: #fff;
+  --button-github-bg-color-hover: #e5e5e5;
+  --button-theme-img: url("../images/button-theme-light.svg");
+  --bg-error-image: url("../images/extension-bg-error-dark.svg");
+  --bg-no-vue-image: url("../images/extension-bg-no-vue-dark.svg");
 }
 
 @import url(https://fonts.googleapis.com/css?family=Quicksand);
 body {
-  background-color: var(--bg-color);
   direction: ltr;
   font-family: Quicksand;
   font-size: 0.8rem;
   margin: 0;
-  min-width: 300px;
-  min-height: 50px;
+  width: 100%;
   height: 100%;
 }
 
+.bg__error {
+  background-image: var(--bg-error-image);
+}
+
+.bg__data {
+  background-image: var(--bg-image);
+}
+
+.bg__novue {
+  background-image: var(--bg-no-vue-image);
+}
+
+.bg {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   height: 4rem;
   display: flex;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.101562);
-  background-color: #fff;
+  width: 100%;
+  align-self: flex-start;
+}
+
+.header__title {
+  display: flex;
+}
+
+.header__title-logo {
+  width: 156px;
+  height: 16px;
+  margin-left: 33px;
+  margin-top: 35px;
+  margin-bottom: 16px;
+  background-image: url("../images/title-logo.svg");
+  color: #fff;
 }
 
 .header__close {
-  align-self: flex-start;
-  margin-left: auto;
-  margin-right: 0.5rem;
-  margin-top: 0.5rem;
+  display: flex;
+  width: 31px;
+  height: 31px;
+  margin-top: 23px;
+  margin-right: 25px;
+  background: rgba(255, 255, 255, 0.21);
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.header__title-theme {
+  display: flex;
+  transition-duration: 2s;
+  width: 31px;
+  height: 31px;
+  margin-top: 28px;
+  margin-left: 8px;
+  background: rgba(255, 255, 255, 0.21) no-repeat;
+  background-position: center;
+  background-image: var(--button-theme-img);
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+  border: none;
 }
 
 .header__logo {
@@ -191,43 +311,104 @@ body {
   height: 2.5rem;
 }
 
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.data-container {
+  display: flex;
+  align-items: center;
+  width: 334px;
+  height: 301px;
+  margin-left: 32px;
+  margin-bottom: 32px;
+  margin-right: 23px;
+  margin-top: 3px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.21);
+}
+
 .error {
-  display: block;
-  align-self: center;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
   font-weight: bold;
   margin-top: 1rem;
   margin-bottom: 1rem;
+  padding: 0px;
+  color: #fff;
+  text-align: center;
+  width: 100%;
 }
 
 .flexcontainer {
   display: flex;
+  justify-content: space-around;
   flex-flow: column wrap;
   width: 400px;
-  height: 100%;
+  height: 300px;
   min-width: 300px;
   max-height: 400px;
-  box-sizing: content-box;
+  box-sizing: border-box;
+  padding: 15px;
 }
 
 .flex-item {
   box-sizing: border-box;
-  margin: 20px;
-  color: #41b38a;
+  margin: 10px;
+  color: #fff;
   font-weight: bold;
+  font-size: 14px;
   text-transform: capitalize;
 }
 
 .flex-item__detail {
-  color: #243746;
+  color: #fff;
   font-weight: lighter;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  font-size: 12px;
+  padding-right: 10px;
 }
 
 .flex-item__detail__array-item {
   margin-top: 5px;
+}
+
+.button-container {
+  display: flex;
+  align-self: flex-end;
+  justify-content: flex-end;
+  margin-bottom: 32px;
+}
+
+.button-container__submit {
+  background: var(--button-submit-bg-color);
+  margin-right: 7px;
+  width: 129px;
+  height: 43px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.button-container__submit:hover {
+  background-color: var(--button-submit-bg-color-hover);
+  color: white;
+}
+
+.button-container__github {
+  width: 43px;
+  height: 43px;
+  margin-right: 32px;
+  background: var(--button-github-bg-image) no-repeat;
+  background-color: var(--button-github-bg-color);
+  border-radius: 8px;
+  border: none;
+  background-size: auto;
+  background-position: center;
+}
+
+.button-container__github:hover {
+  background-color: var(--button-github-bg-color-hover);
 }
 
 .img {
@@ -251,20 +432,32 @@ body {
   background-color: #fff;
 }
 
-footer {
-  height: 35px;
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.101562);
-}
-
-.footer__item {
-  height: 35px;
+.footer {
   display: flex;
   flex-flow: row;
   justify-content: space-between;
+  height: 100px;
+  width: 100%;
+  background-color: transparent;
   align-items: center;
+  text-align: left;
+  text-justify: initial;
+}
+
+.footer-github {
+  width: 130px;
   margin: 0px;
+  display: flex;
+  flex-flow: row;
+  margin-top: 2.2rem;
+  margin-right: 5.2rem;
+}
+
+.footer-text {
+  margin-left: 5px;
+  font-size: 8px;
+  color: #000;
+  align-self: center;
 }
 
 ul {

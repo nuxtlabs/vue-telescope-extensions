@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexWebExtensions from 'vuex-webextensions'
-
+import VueLogger from 'vuejs-logger';
 import * as getters from './getters'
 import mutations from './mutations'
 import * as actions from './actions'
@@ -12,7 +12,7 @@ export default new Vuex.Store({
   state: {
     data: new Map(),
     isLoading: false,
-    currentDomain: "",
+    currentDomain: '',
   },
   getters,
   mutations,
