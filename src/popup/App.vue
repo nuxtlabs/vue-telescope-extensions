@@ -6,9 +6,13 @@
       <header class="header">
         <div class="header__title">
           <div class="header__title-logo"></div>
-          <button v-on:click="switchTheme(theme)" class="header__title-theme"></button>
+          <button
+            v-on:click="switchTheme(theme)"
+            class="header__title-theme"
+            v-bind:id="[(theme === 'system' || theme === null) ? 'theme-system' : 'theme']"
+          ></button>
         </div>
-        <button v-on:click="close()" class="button-close"></button>
+        <button v-on:click="closePopup()" class="button-close"></button>
       </header>
       <div class="container">
         <div class="data-container">
@@ -72,45 +76,48 @@ let browser = require("webextension-polyfill");
 export default {
   data: function() {
     return {
-      theme: "system",
-      img: browser.runtime.getURL("../images/vue_telemetry_logo.png"),
-      closeButton: browser.runtime.getURL("../images/button-close.svg"),
-      loader: browser.runtime.getURL("../images/loader.json"),
-      check: browser.runtime.getURL("../images/check.png"),
-      broken: browser.runtime.getURL("../images/broken.json"),
-      github: browser.runtime.getURL("../images/github-img.svg"),
-      error: browser.runtime.getURL("../images/error404.svg"),
-      sun: browser.runtime.getURL("../icons/brightness.png"),
-      moon: browser.runtime.getURL("../icons/moon.png")
+      theme: localStorage.getItem("theme"),
+      loader: browser.runtime.getURL("../images/loader.json")
     };
   },
-  updated: function() {
-    const currentTheme = localStorage.getItem("theme");
+  mounted: function() {
+    const currentTheme =
+      localStorage.getItem("theme") == null
+        ? "system"
+        : localStorage.getItem("theme");
 
-    if (currentTheme) {
-      document.documentElement.setAttribute("data-theme", currentTheme);
+    const dataTheme =
+      currentTheme === "system"
+        ? window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+        : currentTheme;
 
-      currentTheme === "dark"
-        ? (this.$data.theme = "dark")
-        : currentTheme === "light"
-        ? (this.$data.theme = "light")
-        : (this.$data.theme = "system");
-    }
+    this.theme = currentTheme;
+
+    document.documentElement.setAttribute("data-theme", dataTheme);
+    localStorage.setItem("theme", currentTheme);
+
+    this.setColorSchemeSystem();
   },
   computed: {
     ...mapState(["dataInfo", "isLoading", "currentDomain"])
   },
   methods: {
+    setColorSchemeSystem() {
+      window.matchMedia("(prefers-color-scheme: dark)").addListener(e => {
+        if (e.matches && this.theme == "system")
+          document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "system");
+      });
+      window.matchMedia("(prefers-color-scheme: light)").addListener(e => {
+        if (e.matches && this.theme == "system")
+          document.documentElement.setAttribute("data-theme", "light");
+        localStorage.setItem("theme", "system");
+      });
+    },
     getPageState() {
-      /*if (this.dataInfo[this.currentDomain] != null) {
-        if (this.dataInfo[this.currentDomain] == "error") {
-          return "error"
-        } else if (this.dataInfo[this.currentDomain] != "noVue") {
-          return "noVue"
-        }
-      } 
-      return "noVue"*/
-
       if (
         this.dataInfo[this.currentDomain] != null &&
         this.dataInfo[this.currentDomain] == "error"
@@ -127,14 +134,8 @@ export default {
     isArray(obj) {
       return Array.isArray(obj);
     },
-    close() {
+    closePopup() {
       window.close();
-    },
-    getImgSSRorStatic(value) {
-      // `this` points to the vm instance
-      return (this.$data.check = value
-        ? browser.runtime.getURL("../images/check.png")
-        : browser.runtime.getURL("../images/close.png"));
     },
     setCategoryTitle(jsonKey) {
       return jsonKey == "hasSSR"
@@ -149,58 +150,53 @@ export default {
         ? "Modules"
         : jsonKey;
     },
-    switchTheme(theme) {
-      if (theme === "light") {
-        this.$data.theme = "dark";
-        document.documentElement.setAttribute("data-theme", "dark");
-        localStorage.setItem("theme", "dark");
-      } else if (theme === "dark") {
-        this.$data.theme = "light";
-        document.documentElement.setAttribute("data-theme", "light");
-        localStorage.setItem("theme", "light");
-      } else {
-        if (
-          window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches
-        ) {
-          this.$data.theme = "dark";
-          document.documentElement.setAttribute("data-theme", "dark");
-          localStorage.setItem("theme", "system");
-        } else {
-          this.$data.theme = "light";
-          document.documentElement.setAttribute("data-theme", "light");
-          localStorage.setItem("theme", "system");
-        }
+    switchTheme() {
+      let dataTheme;
+
+      if (this.theme === "light") {
+        dataTheme = "dark";
+        this.theme = "dark";
+      } else if (this.theme === "dark") {
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? (dataTheme = "dark")
+          : (dataTheme = "light");
+        this.theme = "system";
+      } else if (this.theme === "system") {
+        dataTheme = "light";
+        this.theme = "light";
       }
+      document.documentElement.setAttribute("data-theme", dataTheme);
+      localStorage.setItem("theme", this.theme);
     }
   }
 };
 </script>
 <style>
 :root {
-  --bg-image: url("../images/extension-bg-light.svg");
+  --bg-image: url("../images/bg-light.svg");
   --button-submit-bg-color: #158876;
   --button-submit-bg-color-no-vue: #414042;
   --button-submit-bg-color-hover: #099580;
-  --button-github-bg-image: url("../images/github-light.svg");
+  --button-github-bg-image: url("../images/img-github-light.svg");
   --button-github-bg-color: #243746;
   --button-github-bg-color-hover: #586976;
-  --button-theme-img: url("../images/button-theme-dark.svg");
-  --bg-error-image: url("../images/extension-bg-error-light.svg");
-  --bg-no-vue-image: url("../images/extension-bg-no-vue-light.svg");
+  --button-theme-img: url("../images/img-theme-dark.svg");
+  --bg-error-image: url("../images/bg-error-light.svg");
+  --bg-no-vue-image: url("../images/bg-no-vue-light.svg");
 }
 
 [data-theme="dark"] {
-  --bg-image: url("../images/extension-bg-dark.svg");
+  --bg-image: url("../images/bg-dark.svg");
   --button-submit-bg-color-no-vue: #292728;
   --button-submit-bg-color: #41b38a;
   --button-submit-bg-color-hover: #2fc68f;
-  --button-github-bg-image: url("../images/github-dark.svg");
+  --button-github-bg-image: url("../images/img-github-dark.svg");
   --button-github-bg-color: #fff;
   --button-github-bg-color-hover: #e5e5e5;
-  --button-theme-img: url("../images/button-theme-light.svg");
-  --bg-error-image: url("../images/extension-bg-error-dark.svg");
-  --bg-no-vue-image: url("../images/extension-bg-no-vue-dark.svg");
+  --button-theme-img: url("../images/img-theme-light.svg");
+  --bg-error-image: url("../images/bg-error-dark.svg");
+  --bg-no-vue-image: url("../images/bg-no-vue-dark.svg");
 }
 
 @import url(https://fonts.googleapis.com/css?family=Quicksand);
@@ -251,7 +247,7 @@ body {
   margin-left: 33px;
   margin-top: 35px;
   margin-bottom: 16px;
-  background-image: url("../images/title-logo.svg");
+  background-image: url("../images/img-logo.svg");
   color: #fff;
 }
 
@@ -265,7 +261,7 @@ body {
   border-radius: 6px;
   align-items: center;
   justify-content: center;
-  background-image: url("../images/button-close.svg");
+  background-image: url("../images/img-button-close.svg");
   background-position: center;
   background-size: 10px;
   border: none;
@@ -283,12 +279,21 @@ body {
   margin-top: 28px;
   margin-left: 8px;
   background: rgba(255, 255, 255, 0.21) no-repeat;
-  background-position: center;
-  background-image: var(--button-theme-img);
   border-radius: 6px;
   align-items: center;
   justify-content: center;
   border: none;
+}
+
+#theme-system {
+  background-position: center;
+  background-size: 20px;
+  background-image: url("../images/img-theme-system.svg");
+}
+
+#theme {
+  background-position: center;
+  background-image: var(--button-theme-img);
 }
 
 .header__logo {
@@ -400,7 +405,7 @@ body {
 }
 
 #github-no-vue {
-  background: url("../images/github-light.svg") no-repeat;
+  background: url("../images/img-github-light.svg") no-repeat;
   background-color: #6d6e71;
   background-position: center;
 }
@@ -409,166 +414,12 @@ body {
   background-color: var(--button-github-bg-color-hover);
 }
 
-.img {
-  height: 13px;
-  width: 13px;
-}
-
 .loader {
   display: block;
   align-self: center;
   margin-left: auto;
   margin-right: auto;
 }
-
-.shadow-nuxt {
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.101562);
-  height: 50px;
-}
-
-.bg-light-elevatedSurface {
-  background-color: #fff;
-}
-
-.footer {
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-  height: 100px;
-  width: 100%;
-  background-color: transparent;
-  align-items: center;
-  text-align: left;
-  text-justify: initial;
-}
-
-.footer-github {
-  width: 130px;
-  margin: 0px;
-  display: flex;
-  flex-flow: row;
-  margin-top: 2.2rem;
-  margin-right: 5.2rem;
-}
-
-.footer-text {
-  margin-left: 5px;
-  font-size: 8px;
-  color: #000;
-  align-self: center;
-}
-
-ul {
-  list-style: none;
-}
-
-li {
-  margin-left: -0.25in;
-  margin-right: 0.1in;
-}
-
-a:hover {
-  color: #158876;
-}
-
-a {
-  font-size: 10px;
-  color: grey;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-/* .duration-300 {
-  transition-duration: 0.3s;
-}
-.ease-linear {
-  transition-timing-function: linear;
-}
-.transition-colors {
-  transition-property: background-color, border-color, color, fill, stroke;
-}
-.text-light-onSurfacePrimary {
-  color: #2f495e;
-}
-.relative {
-  position: relative;
-}
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-.overflow-hidden {
-  overflow: hidden;
-}
-.focus\:outline-none:focus,
-.outline-none {
-  outline: 0;
-}
-.h-10 {
-  height: 2.5rem;
-}
-.items-center {
-  align-items: center;
-}
-.flex {
-  display: flex;
-}
-.rounded-full {
-  border-radius: 9999px;
-}
-.bg-gray-200 {
-  background-color: #edf2f7;
-}
-button,
-input,
-optgroup,
-select,
-textarea {
-  padding: 0;
-  line-height: inherit;
-  color: inherit;
-}
-[role="button"],
-button {
-  cursor: pointer;
-}
-button {
-  background-color: transparent;
-  background-image: none;
-  align-self: flex-start;
-  margin-left: auto;
-  margin-right: 0.5rem;
-}
-[type="button"],
-[type="reset"],
-[type="submit"],
-button {
-  -webkit-appearance: button;
-}
-button,
-select {
-  text-transform: none;
-}
-button,
-input {
-  overflow: visible;
-}
-button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
-}
-*,
-:after,
-:before {
-  box-sizing: border-box;
-  border: 0 solid #e2e8f0;
-} */
 </style>
 
 <style>
