@@ -1,68 +1,63 @@
 <template>
-  <div class="bg">
-    <div
-      v-bind:class="[getPageState() == 'error' ? 'bg__error' : getPageState() == 'data' ? 'bg__data' : 'bg__novue']"
-    >
-      <header class="header">
-        <div class="header__title">
-          <div class="header__title-logo"></div>
-          <button
-            v-on:click="switchTheme(theme)"
-            class="header__title-theme"
-            v-bind:id="[(theme === 'system' || theme === null) ? 'theme-system' : 'theme']"
-          ></button>
-        </div>
-        <button v-on:click="closePopup()" class="button-close"></button>
-      </header>
-      <div class="container">
-        <div class="data-container">
-          <lottie-player
-            class="loader"
-            v-if="isLoading"
-            :src="loader"
-            loop
-            autoplay
-            style="width: 60px; height: 60px;"
-          ></lottie-player>
-          <div v-else-if="(getPageState() == 'data')">
-            <div class="flexcontainer">
+  <div
+    class="bg"
+    v-bind:id="[getPageState() == 'error' ? 'bg__error' : getPageState() == 'data' ? 'bg__data' : 'bg__novue']"
+  >
+    <header class="header">
+      <button
+        v-on:click="switchTheme(theme)"
+        class="header__button theme"
+        v-bind:id="[(theme === 'system' || theme === null) ? 'system' : 'dark-mode']"
+      ></button>
+      <button v-on:click="closePopup()" class="header__button close"></button>
+    </header>
+    <div class="container">
+      <div class="data-container">
+        <lottie-player
+          class="loader"
+          v-if="isLoading"
+          :src="loader"
+          loop
+          autoplay
+          style="width: 60px; height: 60px;"
+        ></lottie-player>
+        <div v-else-if="(getPageState() == 'data')" class="info">
+          <div
+            class="info__item"
+            v-for="(category, index) in Object.keys(dataInfo[currentDomain])"
+            :key="`category-${index}`"
+          >
+            {{ setCategoryTitle(category) }}
+            <div class="item__detail" v-if="Array.isArray(dataInfo[currentDomain][category])">
               <div
-                class="flex-item"
-                v-for="(category, index) in Object.keys(dataInfo[currentDomain])"
-                :key="`category-${index}`"
+                v-for="(item, index) in dataInfo[currentDomain][category]"
+                :key="`item-${index}`"
               >
-                {{ setCategoryTitle(category) }}
-                <div class="flex-item__detail" v-if="isArray(dataInfo[currentDomain][category])">
-                  <div
-                    v-for="(item, index) in dataInfo[currentDomain][category]"
-                    :key="`item-${index}`"
-                  >
-                    <div class="flex-item__detail__array-item">{{ item }}</div>
-                  </div>
-                </div>
-                <div class="flex-item__detail" v-else>
-                  <div v-if="category == 'hasSSR'">SSR</div>
-                  <div v-else-if="category == 'isStatic'">Satic</div>
-                  <div v-else>{{ dataInfo[currentDomain][category] }}</div>
-                </div>
+                <div class="detail__array__item">{{ item }}</div>
               </div>
             </div>
+            <div class="item__detail" v-else>
+              <div v-if="category == 'hasSSR'">SSR</div>
+              <div v-else-if="category == 'isStatic'">Satic</div>
+              <div v-else>{{ dataInfo[currentDomain][category] }}</div>
+            </div>
           </div>
-          <div v-else-if="getPageState() == 'error'" class="error">
-            <div>Vue detected but an error occured</div>
-          </div>
-          <div v-else class="error">Vue not detected</div>
         </div>
-        <div class="button-container">
-          <button
-            v-bind:class="[getPageState() == 'error'? 'button-container__submit' : getPageState() == 'data' ? 'button-container__submit' : 'button-container__submit']"
-            v-bind:id="[(getPageState() == 'noVue') ? 'submit-no-vue' : '']"
-          >Submit a webiste</button>
-          <button
-            class="button-container__github"
-            v-bind:id="[(getPageState() == 'noVue') ? 'github-no-vue' : '']"
-          ></button>
+        <div v-else-if="getPageState() == 'error'" class="error">
+          <h1>Oops !</h1>
+          <h3>Vue detected but we can't analyze the page you're looking for.</h3>
         </div>
+        <div v-else class="error">
+          <h1>Ooh !</h1>
+          <h3>This site doesn't use the technologies analysed by Vue telemetry.</h3>
+        </div>
+      </div>
+      <div class="button-container">
+        <button
+          class="submit"
+          v-bind:id="[(getPageState() == 'noVue') ? 'submit-no-vue' : '']"
+        >Submit a webiste</button>
+        <button class="github" v-bind:id="[(getPageState() == 'noVue') ? 'github-no-vue' : '']"></button>
       </div>
     </div>
   </div>
@@ -131,9 +126,6 @@ export default {
       }
       return "noVue";
     },
-    isArray(obj) {
-      return Array.isArray(obj);
-    },
     closePopup() {
       window.close();
     },
@@ -173,7 +165,9 @@ export default {
 };
 </script>
 <style>
+/* mode */
 :root {
+  /* light */
   --bg-image: url("../images/bg-light.svg");
   --button-submit-bg-color: #158876;
   --button-submit-bg-color-no-vue: #414042;
@@ -185,7 +179,7 @@ export default {
   --bg-error-image: url("../images/bg-error-light.svg");
   --bg-no-vue-image: url("../images/bg-no-vue-light.svg");
 }
-
+/* dark */
 [data-theme="dark"] {
   --bg-image: url("../images/bg-dark.svg");
   --button-submit-bg-color-no-vue: #292728;
@@ -199,32 +193,32 @@ export default {
   --bg-no-vue-image: url("../images/bg-no-vue-dark.svg");
 }
 
-@import url(https://fonts.googleapis.com/css?family=Quicksand);
+@import url(https://fonts.googleapis.com/css?family=Inter);
 body {
   direction: ltr;
-  font-family: Quicksand;
+  font-family: Inter;
   font-size: 0.8rem;
   margin: 0;
   width: 100%;
   height: 100%;
 }
 
-.bg__error {
-  background-image: var(--bg-error-image);
-}
-
-.bg__data {
-  background-image: var(--bg-image);
-}
-
-.bg__novue {
-  background-image: var(--bg-no-vue-image);
-}
-
 .bg {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+#bg__error {
+  background-image: var(--bg-error-image);
+}
+
+#bg__data {
+  background-image: var(--bg-image);
+}
+
+#bg__novue {
+  background-image: var(--bg-no-vue-image);
 }
 
 .header {
@@ -235,71 +229,46 @@ body {
   display: flex;
   width: 100%;
   align-self: flex-start;
+  background: url("../images/img-logo.svg") no-repeat;
+  background-position-x: 32px;
+  background-position-y: 38px;
+  background-size: 150px;
 }
 
-.header__title {
-  display: flex;
-}
-
-.header__title-logo {
-  width: 156px;
-  height: 16px;
-  margin-left: 33px;
-  margin-top: 35px;
-  margin-bottom: 16px;
-  background-image: url("../images/img-logo.svg");
-  color: #fff;
-}
-
-.button-close {
+.header__button {
   display: flex;
   width: 31px;
   height: 31px;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.close {
   margin-top: 23px;
   margin-right: 25px;
   background: rgba(255, 255, 255, 0.21) no-repeat;
-  border-radius: 6px;
-  align-items: center;
-  justify-content: center;
   background-image: url("../images/img-button-close.svg");
   background-position: center;
   background-size: 10px;
-  border: none;
 }
 
-.button-close:hover {
-  color: #549c82;
-}
-
-.header__title-theme {
-  display: flex;
-  transition-duration: 0.1s;
-  width: 31px;
-  height: 31px;
-  margin-top: 28px;
-  margin-left: 8px;
+.theme {
+  margin-top: 26px;
   background: rgba(255, 255, 255, 0.21) no-repeat;
-  border-radius: 6px;
-  align-items: center;
-  justify-content: center;
-  border: none;
+  margin-left: 196px;
 }
 
-#theme-system {
+#system {
   background-position: center;
   background-size: 20px;
   background-image: url("../images/img-theme-system.svg");
 }
 
-#theme {
+#dark-mode {
   background-position: center;
   background-image: var(--button-theme-img);
-}
-
-.header__logo {
-  display: inline-block;
-  margin: 1rem 1.5rem 1rem 1.5rem;
-  height: 2.5rem;
 }
 
 .container {
@@ -321,17 +290,14 @@ body {
   background: rgba(255, 255, 255, 0.21);
 }
 
-.error {
-  font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  padding: 0px;
-  color: #fff;
-  text-align: center;
-  width: 100%;
+.loader {
+  display: block;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.flexcontainer {
+.info {
   display: flex;
   justify-content: space-around;
   flex-flow: column wrap;
@@ -343,7 +309,7 @@ body {
   padding: 15px;
 }
 
-.flex-item {
+.info__item {
   box-sizing: border-box;
   margin: 10px;
   color: #fff;
@@ -352,7 +318,7 @@ body {
   text-transform: capitalize;
 }
 
-.flex-item__detail {
+.item__detail {
   color: #fff;
   font-weight: lighter;
   margin-top: 0.5rem;
@@ -360,8 +326,30 @@ body {
   padding-right: 10px;
 }
 
-.flex-item__detail__array-item {
+.item__detail__array {
   margin-top: 5px;
+}
+
+.error {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding: 0px;
+  color: #fff;
+  text-align: left;
+  width: 100%;
+  align-items: left;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 3rem;
+  line-height: 1.7rem;
+}
+
+h3 {
+  font-weight: normal;
 }
 
 .button-container {
@@ -371,7 +359,7 @@ body {
   margin-bottom: 32px;
 }
 
-.button-container__submit {
+.submit {
   background: var(--button-submit-bg-color);
   transition-duration: 0.5s;
   margin-right: 7px;
@@ -386,12 +374,7 @@ body {
   background: var(--button-submit-bg-color-no-vue);
 }
 
-.button-container__submit:hover {
-  background-color: var(--button-submit-bg-color-hover);
-  color: white;
-}
-
-.button-container__github {
+.github {
   width: 43px;
   height: 43px;
   margin-right: 32px;
@@ -413,14 +396,4 @@ body {
 .button-container__github:hover {
   background-color: var(--button-github-bg-color-hover);
 }
-
-.loader {
-  display: block;
-  align-self: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
-<style>
 </style>
