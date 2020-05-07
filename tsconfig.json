@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2015",
+        "declaration": true
+    },
+    "files": [
+        "src/store/index.ts",
+        "src/store/actions.ts",
+        "src/store/mutation-types.ts",
+        "src/detector.ts",
+        "src/background.ts",
+        "src/popup/popup.ts",
+        "src/vue-shims.d.ts"
+    ]
+}

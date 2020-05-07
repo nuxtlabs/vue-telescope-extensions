@@ -1,8 +1,8 @@
 <template>
   <div
-    class="extension" 
+    class="extension"
     :class="[getPageState() === 'error' ? 'bg-error' : getPageState() === 'data' ? 'bg' : 'bg-no-vue']"
-  >   
+  >
     <div class="h-16 flex justify-between">
       <div class="m-8">
         <svg width="156" height="16" class="mt-2"><path d="M14.395.378L7.24 16h-.114L0 .378h3.255l3.92 8.85 3.927-8.85h3.293zM15.79 9.986V.378h3.094v9.598c0 1.664 1.32 2.875 2.799 2.875 1.478 0 2.817-1.22 2.817-2.875V.378h3.094v9.608c0 3.452-2.647 5.967-5.902 5.967-3.255 0-5.901-2.513-5.901-5.967zM33.192 3.395v2.979h5.276v3.054h-5.276v3.15h6.148v3.044h-9.222V.378h9.222v3.017h-6.148zM56.97 3.415H53.21v12.21h-3.084V3.414h-3.766V.38H56.97v3.035zM61.771 3.395v2.979h5.276v3.054H61.77v3.15h6.148v3.044h-9.222V.378h9.222v3.017h-6.148zM79.4 12.578v3.044h-9.223V.378h3.075v12.2H79.4zM84.202 3.395v2.979h5.276v3.054h-5.276v3.15h6.148v3.044h-9.222V.378h9.222v3.017h-6.148zM107.591 0v15.622h-3.075V8.983l-4.403 6.384h-.019l-4.413-6.384v6.64h-3.075V0h.171l7.326 10.071L107.42 0h.171zM113.321 3.395v2.979h5.276v3.054h-5.276v3.15h6.148v3.044h-9.222V.378h9.222v3.017h-6.148zM131.407 3.415h-3.759v12.21h-3.083V3.414h-3.766V.38h10.608v3.035zM141.084 15.624l-4.868-7.207v7.207h-3.074L133.132.38h4.99c2.857 0 5.2 2.194 5.2 4.937 0 1.958-1.185 3.67-2.827 4.245l4.345 6.062h-3.756zm-4.876-8.38l1.975.01c1.043.01 1.974-.833 1.974-1.92s-.939-1.92-1.974-1.92h-1.975v3.83zM148.2 9.08l-4.736-8.7h3.473l2.79 5.295L152.518.38H156l-4.743 8.7v6.544h-3.055V9.08h-.002z" fill="#fff"/></svg>
@@ -83,14 +83,14 @@
         </div>
       </div>
       <div class="flex h-12 w-56 self-end mx-6">
-      <button class="h-full w-4/6 rounded-md text-white" 
+      <button class="h-full w-4/6 rounded-md text-white"
       :class="[(getPageState() !== 'error' && getPageState() !== 'data') ? 'light:bg-black-light dark:bg-black-dark' : 'light:bg-green-dark dark:bg-green-light']">
          Submit a website
        </button>
       <button class="h-full w-12 flex justify-center items-center rounded-md ml-2"
-        :class="[(getPageState() !== 'error' && getPageState() !== 'data') ? 'bg-gray' : 'light:bg-blue-dark dark:bg-white']" > 
-        <svg 
-        :class="[(getPageState() !== 'error' && getPageState() !== 'data') ? 'fill-white' : 'light:fill-white dark:fill-blue-dark']" 
+        :class="[(getPageState() !== 'error' && getPageState() !== 'data') ? 'bg-gray' : 'light:bg-blue-dark dark:bg-white']" >
+        <svg
+        :class="[(getPageState() !== 'error' && getPageState() !== 'data') ? 'fill-white' : 'light:fill-white dark:fill-blue-dark']"
         viewBox="0 0 21 23" width="21" height="23"><defs/><path d="M15.044 21.966v-4.048c0-1.241-.346-2.15-1.034-2.724a14.555 14.555 0 002.042-.345 8.405 8.405 0 001.873-.749 5.529 5.529 0 001.613-1.275c.43-.507.782-1.176 1.054-2.016.272-.837.408-1.8.408-2.887 0-1.548-.526-2.867-1.575-3.954.49-1.165.438-2.469-.16-3.915-.371-.114-.91-.045-1.612.21-.703.257-1.315.539-1.832.846l-.756.462a14.608 14.608 0 00-3.823-.499c-1.315 0-2.588.166-3.823.499-.213-.14-.493-.314-.845-.518-.351-.205-.907-.45-1.663-.74-.756-.288-1.327-.374-1.714-.26-.585 1.446-.629 2.75-.139 3.915C2.01 5.055 1.484 6.374 1.484 7.922c0 1.088.136 2.047.408 2.879.271.83.62 1.503 1.045 2.015.426.513.96.94 1.605 1.287a8.343 8.343 0 001.873.749c.605.154 1.285.268 2.041.344-.532.462-.857 1.12-.975 1.976a3.99 3.99 0 01-.895.288 5.94 5.94 0 01-1.135.096c-.437 0-.871-.136-1.302-.412-.432-.276-.801-.675-1.105-1.199a3.086 3.086 0 00-.966-.996c-.393-.256-.721-.41-.987-.461l-.399-.057c-.278 0-.47.028-.576.085-.106.057-.139.13-.1.222.038.088.1.18.18.268.08.088.165.168.26.23l.139.097c.292.128.582.37.865.729.287.359.494.683.627.98l.197.44c.172.487.464.88.878 1.18.41.301.857.492 1.335.574.479.083.94.128 1.383.134.446.006.812-.014 1.105-.068l.458-.077c0 .487.003 1.056.009 1.708l.008 1.036c0 .2-.068.37-.198.51a15.517 15.517 0 007.977-.003.727.727 0 01-.195-.51z"/></svg>
       </button>
       </div>
@@ -99,50 +99,37 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import "@lottiefiles/lottie-player";
-import browser from "webextension-polyfill";
+import { mapState } from 'vuex'
+import '@lottiefiles/lottie-player'
+import browser from 'webextension-polyfill'
 
 export default {
-  data: function() {
+  data: function () {
     return {
-      loader: browser.runtime.getURL("../images/loader.json"),
-    };
+      loader: browser.runtime.getURL('../images/loader.json')
+    }
   },
   computed: {
-    ...mapState(["dataInfo", "isLoading", "currentDomain"])
+    ...mapState(['dataInfo', 'isLoading', 'currentDomain'])
   },
   methods: {
-    getPageState() {
+    getPageState () {
       if (
         this.dataInfo[this.currentDomain] != null &&
-        this.dataInfo[this.currentDomain] == "error"
+        this.dataInfo[this.currentDomain] === 'error'
       ) {
-        return "error";
+        return 'error'
       } else if (
         this.dataInfo[this.currentDomain] != null &&
-        this.dataInfo[this.currentDomain] != "noVue"
+        this.dataInfo[this.currentDomain] !== 'noVue'
       ) {
-        return "data";
+        return 'data'
       }
-      return "noVue";
+      return 'noVue'
     },
-    closePopup() {
-      window.close();
-    },
-    setCategoryTitle(jsonKey) {
-      return jsonKey == "hasSSR"
-        ? "Mode"
-        : jsonKey == "isStatic"
-        ? "Target"
-        : jsonKey == "vueVersion"
-        ? "Vue version"
-        : jsonKey == "ui"
-        ? "UI"
-        : jsonKey == "frameworkModules"
-        ? "Modules"
-        : jsonKey;
-    },
+    closePopup () {
+      window.close()
+    }
   }
-};
+}
 </script>

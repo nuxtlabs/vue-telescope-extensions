@@ -1,14 +1,12 @@
-
-import * as types from './mutation-types';
-
-export const setDataInfo = ({ commit }, payload) => {
-  commit(types.SET_DATAINFO, payload);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const types = require("./mutation-types");
+exports.setDataInfo = ({ commit }, payload) => {
+    commit(types.SET_DATAINFO, payload);
 };
-
-export const setIsLoading = ({ commit }, payload) => {
-  commit(types.SET_ISLOADING, payload);
+exports.setIsLoading = ({ commit }, payload) => {
+    commit(types.SET_ISLOADING, payload);
 };
-
-export const setCurrentDomain = ({ commit }, payload) => {
-  commit(types.SET_CURRENTDOMAIN, payload);
+exports.setCurrentDomain = ({ commit }, payload) => {
+    commit(types.SET_CURRENTDOMAIN, payload);
 };

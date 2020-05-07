@@ -10,22 +10,26 @@ const config = {
   mode: process.env.NODE_ENV,
   context: __dirname + '/src',
   entry: {
-    'background': './background.js',
+    'background': './background.ts',
     'browser-polyfill': './browser-polyfill.js',
-    'popup/popup': './popup/popup.js',
+    'popup/popup': './popup/popup.ts',
     'options/options': './options/options.js',
-    'content': './content.js',
-    'detector': './detector.js'
+    'detector': './detector.ts'
   },
   output: {
     path: __dirname + '/dist',
     filename: '[name].js',
   },
   resolve: {
-    extensions: ['.js', '.vue'],
+    extensions: ['.js', '.vue', '.ts'],
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
       {
         test: /\.vue$/,
         loaders: 'vue-loader',
