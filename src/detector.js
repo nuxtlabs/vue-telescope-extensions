@@ -1,6 +1,6 @@
 import '@babel/polyfill';
+import browser from 'webextension-polyfill'
 
-const browser = require('webextension-polyfill');
 
 const isBrowser = typeof navigator !== 'undefined';
 const isFirefox = isBrowser && navigator.userAgent.indexOf('Firefox') > -1;
@@ -10,9 +10,11 @@ if (document instanceof HTMLDocument) {
 }
 
 let resolveDetecting;
+
 const detecting = new Promise((resolve) => {
   resolveDetecting = resolve;
 });
+
 let vueInfo = null;
 window.addEventListener('message', ({ data }) => {
   if (data.__vue_telemetry__) {
@@ -22,13 +24,14 @@ window.addEventListener('message', ({ data }) => {
 });
 
 function handleMessage() {
-  return new Promise(async (resolve) => {
-    await detecting;
-    resolve({ response: { vueInfo } });
-  });
+  return new Promise((resolve) => {
+    (async () => {
+     await detecting;
+     resolve({ response: { vueInfo } });
+    })})
 }
 
-'use strict';
+
 browser.runtime.onMessage.addListener(handleMessage);
 
 function detectVue(win) {

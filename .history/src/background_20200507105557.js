@@ -1,10 +1,12 @@
 import axios from 'axios';
 import store from './store';
-import browser from 'webextension-polyfill';
 
 // array to save domain for checking if allready post
 const domainsVisited = [];
+const browser = require('webextension-polyfill');
+
 const map = store.getters.dataInfo;
+
 
 // send url to analyzer
 async function sendUrl(url, domain, tabId) {
@@ -27,7 +29,7 @@ async function sendUrl(url, domain, tabId) {
     delete data.meta;
 
     setMapData(domain, data);
-  }).catch(() => {
+  }).catch((err) => {
     browser.browserAction.setIcon({
       tabId,
       path: {

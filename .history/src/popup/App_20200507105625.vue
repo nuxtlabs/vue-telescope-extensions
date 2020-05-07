@@ -101,7 +101,7 @@
 <script>
 import { mapState } from "vuex";
 import "@lottiefiles/lottie-player";
-import browser from "webextension-polyfill";
+let browser = require("webextension-polyfill");
 
 export default {
   data: function() {
