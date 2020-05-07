@@ -21,56 +21,57 @@
           autoplay
           style="width: 60px; height: 60px;"
         ></lottie-player>
-        <div v-else-if="getPageState() === 'data'" class="h-full w-full overflow-y-scroll text-white">
-      <div class="h-full rounded bg-gray-50">
-        <div class="p-4 text-xs h-72">
+        <div v-else-if="getPageState() === 'data'" class="flex-1 flex flex-col mb-4">
+      <div class="h-full rounded overflow-y-scroll bg-gray-50">
+        <pre> {{ dataInfo[currentDomain] }}</pre>
+        <!-- <div class="p-4 text-sm h-72">
           <div class="mb-4">
-            <p class="font-semibold mb-3">Mode</p>
+            <p class="text-nuxt-green font-semibold mb-3">Mode</p>
             <div class="">{{ dataInfo[currentDomain].hasSSR ? 'SSR' : 'SPA' }}</div>
           </div>
           <div class="mb-4">
-            <p class="font-semibold mb-3">Target</p>
+            <p class="text-nuxt-green font-semibold mb-3">Target</p>
             <div class="capitalize">
               {{ dataInfo[currentDomain].isStatic ? 'static' : 'dynamic' }}
             </div>
           </div>
-          <div v-if="dataInfo[currentDomain].vueVersion" class="mb-4">
-            <p class="font-semibold mb-3">Vue version</p>
+          <div v-if="data.vue_version" class="mb-4">
+            <p class="text-nuxt-green font-semibold mb-3">Vue version</p>
             <div class="capitalize">{{ dataInfo[currentDomain].vueVersion }}</div>
           </div>
           <div v-if="dataInfo[currentDomain].frameworkModules" class="mb-4">
-            <p class="font-semibold mb-3">Framework</p>
-            <div class="capitalize">{{ dataInfo[currentDomain].framework.name }}</div>
+            <p class="text-nuxt-green font-semibold mb-3">Framework</p>
+            <div class="capitalize">{{ data.framework.name }}</div>
           </div>
-          <div v-if="dataInfo[currentDomain].ui" class="mb-4">
-            <p class="font-semibold mb-3">UI</p>
-            <div class="capitalize">{{ dataInfo[currentDomain].ui }}</div>
+          <div v-if="data.ui" class="mb-4">
+            <p class="text-nuxt-green font-semibold mb-3">UI</p>
+            <div class="capitalize">{{ data.ui.name }}</div>
           </div>
-          <div v-if="dataInfo[currentDomain].plugins.length" class="mb-4">
-            <p class="font-semibold mb-3">Plugins</p>
+          <div v-if="data.showcases_plugins.length" class="mb-4">
+            <p class="text-nuxt-green font-semibold mb-3">Plugins</p>
             <div class="flex flex-row items-center flex-wrap">
               <span
-                v-for="(sp, i) in dataInfo[currentDomain].plugins"
+                v-for="(sp, i) in data.showcases_plugins"
                 :key="i"
-                class="px-2 py-1 bg-green-light rounded mr-2 last:mr-0 mb-2"
+                class="px-2 py-1 text-nuxt-gray bg-cool-gray-200 rounded mr-2 last:mr-0 mb-2"
               >
-                {{ sp }}
+                {{ sp.plugin.name }}
               </span>
             </div>
           </div>
-          <div v-if="dataInfo[currentDomain].frameworkModules != null && dataInfo[currentDomain].frameworkModules.length" class="mb-4">
-            <p class="font-semibold mb-3">Modules</p>
+          <div v-if="data.showcase_modules.length" class="mb-4">
+            <p class="text-nuxt-green font-semibold mb-3">Modules</p>
             <div class="flex flex-row items-center flex-wrap">
               <span
-                v-for="(sm, i) in dataInfo[currentDomain].frameworkModules"
+                v-for="(sm, i) in data.showcase_modules"
                 :key="i"
-                class="bg-green-light px-2 py-1 rounded mr-2 last:mr-0 mb-2"
+                class="px-2 py-1 text-nuxt-gray bg-cool-gray-200 rounded mr-2 last:mr-0 mb-2"
               >
-                {{ sm }}
+                {{ sm.module.name }}
               </span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
         <!-- <div v-else-if="getPageState() === 'data'" class="grid grid-cols-2 h-full w-full overflow-y-scroll">

@@ -23,7 +23,7 @@
         ></lottie-player>
         <div v-else-if="getPageState() === 'data'" class="h-full w-full overflow-y-scroll text-white">
       <div class="h-full rounded bg-gray-50">
-        <div class="p-4 text-xs h-72">
+        <div class="p-4 text-sm h-72">
           <div class="mb-4">
             <p class="font-semibold mb-3">Mode</p>
             <div class="">{{ dataInfo[currentDomain].hasSSR ? 'SSR' : 'SPA' }}</div>
@@ -44,7 +44,7 @@
           </div>
           <div v-if="dataInfo[currentDomain].ui" class="mb-4">
             <p class="font-semibold mb-3">UI</p>
-            <div class="capitalize">{{ dataInfo[currentDomain].ui }}</div>
+            <div class="capitalize">{{ dataInfo[currentDomain].ui.name }}</div>
           </div>
           <div v-if="dataInfo[currentDomain].plugins.length" class="mb-4">
             <p class="font-semibold mb-3">Plugins</p>
@@ -52,13 +52,13 @@
               <span
                 v-for="(sp, i) in dataInfo[currentDomain].plugins"
                 :key="i"
-                class="px-2 py-1 bg-green-light rounded mr-2 last:mr-0 mb-2"
+                class="px-2 py-1 bg-cool-gray-200 rounded mr-2 last:mr-0 mb-2"
               >
                 {{ sp }}
               </span>
             </div>
           </div>
-          <div v-if="dataInfo[currentDomain].frameworkModules != null && dataInfo[currentDomain].frameworkModules.length" class="mb-4">
+          <div v-if="dataInfo[currentDomain].frameworkModules.length" class="mb-4">
             <p class="font-semibold mb-3">Modules</p>
             <div class="flex flex-row items-center flex-wrap">
               <span

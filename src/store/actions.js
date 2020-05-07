@@ -12,4 +12,3 @@ export const setIsLoading = ({ commit }, payload) => {
 export const setCurrentDomain = ({ commit }, payload) => {
   commit(types.SET_CURRENTDOMAIN, payload);
 };
-

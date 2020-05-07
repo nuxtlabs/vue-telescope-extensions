@@ -12,7 +12,7 @@ export default new Vuex.Store({
     dataInfo: {},
     isLoading: false,
     currentDomain: '',
-  },
+  },s
   getters,
   mutations,
   actions,

@@ -21,59 +21,7 @@
           autoplay
           style="width: 60px; height: 60px;"
         ></lottie-player>
-        <div v-else-if="getPageState() === 'data'" class="h-full w-full overflow-y-scroll text-white">
-      <div class="h-full rounded bg-gray-50">
-        <div class="p-4 text-xs h-72">
-          <div class="mb-4">
-            <p class="font-semibold mb-3">Mode</p>
-            <div class="">{{ dataInfo[currentDomain].hasSSR ? 'SSR' : 'SPA' }}</div>
-          </div>
-          <div class="mb-4">
-            <p class="font-semibold mb-3">Target</p>
-            <div class="capitalize">
-              {{ dataInfo[currentDomain].isStatic ? 'static' : 'dynamic' }}
-            </div>
-          </div>
-          <div v-if="dataInfo[currentDomain].vueVersion" class="mb-4">
-            <p class="font-semibold mb-3">Vue version</p>
-            <div class="capitalize">{{ dataInfo[currentDomain].vueVersion }}</div>
-          </div>
-          <div v-if="dataInfo[currentDomain].frameworkModules" class="mb-4">
-            <p class="font-semibold mb-3">Framework</p>
-            <div class="capitalize">{{ dataInfo[currentDomain].framework.name }}</div>
-          </div>
-          <div v-if="dataInfo[currentDomain].ui" class="mb-4">
-            <p class="font-semibold mb-3">UI</p>
-            <div class="capitalize">{{ dataInfo[currentDomain].ui }}</div>
-          </div>
-          <div v-if="dataInfo[currentDomain].plugins.length" class="mb-4">
-            <p class="font-semibold mb-3">Plugins</p>
-            <div class="flex flex-row items-center flex-wrap">
-              <span
-                v-for="(sp, i) in dataInfo[currentDomain].plugins"
-                :key="i"
-                class="px-2 py-1 bg-green-light rounded mr-2 last:mr-0 mb-2"
-              >
-                {{ sp }}
-              </span>
-            </div>
-          </div>
-          <div v-if="dataInfo[currentDomain].frameworkModules != null && dataInfo[currentDomain].frameworkModules.length" class="mb-4">
-            <p class="font-semibold mb-3">Modules</p>
-            <div class="flex flex-row items-center flex-wrap">
-              <span
-                v-for="(sm, i) in dataInfo[currentDomain].frameworkModules"
-                :key="i"
-                class="bg-green-light px-2 py-1 rounded mr-2 last:mr-0 mb-2"
-              >
-                {{ sm }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-        <!-- <div v-else-if="getPageState() === 'data'" class="grid grid-cols-2 h-full w-full overflow-y-scroll">
+        <div v-else-if="getPageState() === 'data'" class="grid grid-cols-2 h-full w-full overflow-y-scroll">
           <div
             class="m-2 text-white font-bold"
             v-for="(category, index) in Object.keys(dataInfo[currentDomain])"
@@ -94,7 +42,7 @@
               <div v-else>{{ dataInfo[currentDomain][category] }}</div>
             </div>
           </div>
-        </div> -->
+        </div>
         <div v-else-if="getPageState() === 'error'" class="text-white p-4 self-center">
           <div class="font-bold text-5xl">Oops !</div>
           <div class="text-base">Vue detected but we can't analyze the page you're looking for.</div>

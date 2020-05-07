@@ -3,11 +3,10 @@ import store from './store';
 import { currentDomain } from './store/getters';
 
 // array to save domain for checking if allready post
-const domainsVisited = [];
+const domainsVisited: string[] = [];
 const browser = require('webextension-polyfill');
 
-const map = store.getters.dataInfo;
-
+const map: Map<String, String> = store.getters.dataInfo;
 
 // send url to analyzer
 async function sendUrl(url, domain, tabId) {

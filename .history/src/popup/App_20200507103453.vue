@@ -23,7 +23,8 @@
         ></lottie-player>
         <div v-else-if="getPageState() === 'data'" class="h-full w-full overflow-y-scroll text-white">
       <div class="h-full rounded bg-gray-50">
-        <div class="p-4 text-xs h-72">
+        <pre> dataInfo[currentDomain] </pre>
+        <!-- <div class="p-4 text-sm h-72">
           <div class="mb-4">
             <p class="font-semibold mb-3">Mode</p>
             <div class="">{{ dataInfo[currentDomain].hasSSR ? 'SSR' : 'SPA' }}</div>
@@ -58,7 +59,7 @@
               </span>
             </div>
           </div>
-          <div v-if="dataInfo[currentDomain].frameworkModules != null && dataInfo[currentDomain].frameworkModules.length" class="mb-4">
+          <div v-if="dataInfo[currentDomain].frameworkModules.length" class="mb-4">
             <p class="font-semibold mb-3">Modules</p>
             <div class="flex flex-row items-center flex-wrap">
               <span
@@ -70,7 +71,7 @@
               </span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
         <!-- <div v-else-if="getPageState() === 'data'" class="grid grid-cols-2 h-full w-full overflow-y-scroll">

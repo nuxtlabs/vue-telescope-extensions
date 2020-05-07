@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.extension {
+    width: 600px;
+    height: 400px;
+}
+.container {
+    width: 400px;
+    height: 305px;
+}
+.bg {
+    background: url("../images/bg-light.svg") no-repeat; 
+}
+.bg-error {
+    background: url("../images/bg-error-light.svg") no-repeat; 
+}
+.bg-no-vue {
+    background: url("../images/bg-no-vue-light.svg") no-repeat; 
+}
+
+@screen dark {
+    .bg {
+        background: url("../images/bg-dark.svg") no-repeat; 
+    }
+    .bg-error {
+        background: url("../images/bg-error-dark.svg") no-repeat; 
+    }
+    .bg-no-vue {
+        background: url("../images/bg-no-vue-dark.svg") no-repeat; 
+    }
+}

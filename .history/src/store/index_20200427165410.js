@@ -18,7 +18,7 @@ export default new Vuex.Store({
   actions,
   plugins: [
     VuexWebExtensions({
-      persistentStates: ['dataInfo', 'isLoading', 'currentDomain'],
+      persistentStates: ['dataInfo', 'isLoading', 'curr entDomain'],
       loggerLevel: 'verbose',
     }),
   ],

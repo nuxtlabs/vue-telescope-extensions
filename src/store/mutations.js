@@ -10,4 +10,4 @@ export default {
   [types.SET_CURRENTDOMAIN](state, payload) {
     state.currentDomain = payload;
   },
-}
+};

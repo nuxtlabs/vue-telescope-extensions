@@ -81,6 +81,10 @@ const config = {
       { from: 'popup/popup.html', to: 'popup/popup.html', transform: transformHtml },
       { from: 'options/options.html', to: 'options/options.html', transform: transformHtml },
       {
+        from: './popup/popup.css',
+        to: __dirname + '/dist/popup/popup.css',
+      },
+      {
         from: 'manifest.json',
         to: 'manifest.json',
         transform: (content) => {
