@@ -1,13 +1,13 @@
 module.exports = {
   theme: {
     fill: theme => ({
-      'white': theme('colors.white'),
-      'blue-dark': '#243746',
+      white: theme('colors.white'),
+      'blue-dark': '#243746'
     }),
     extend: {
       screens: {
-        light: { raw: "(prefers-color-scheme: light)" },
-        dark: { raw: "(prefers-color-scheme: dark)" },
+        light: { raw: '(prefers-color-scheme: light)' },
+        dark: { raw: '(prefers-color-scheme: dark)' }
       },
       colors: {
         container: 'rgba(255, 255, 255, 0.21)',
@@ -15,7 +15,7 @@ module.exports = {
         'green-dark': '#158876',
         'black-light': '#414042',
         'black-dark': '#292728',
-        'gray': '#6D6E71',
+        gray: '#6D6E71',
         'blue-dark': '#243746',
         'gray-cool': '#8F8F9A'
       },

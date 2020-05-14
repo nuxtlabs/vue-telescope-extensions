@@ -38,36 +38,62 @@
                 <p class="font-semibold mb-3">Vue version</p>
                 <div class="capitalize">{{ dataInfo[currentDomain].vueVersion }}</div>
               </div>
-              <div v-if="dataInfo[currentDomain].frameworkModules" class="mb-4">
-                <p class="font-semibold mb-3">Framework</p>
-                <div class="capitalize">{{ dataInfo[currentDomain].framework.name }}</div>
+              <div v-if="dataInfo[currentDomain].framework" class="mb-4">
+                <p class="font-semibold mb-3 flex flex-row mb-3">Framework</p>
+                <div class="flex flex-row items-center">
+              <img
+                v-if="dataInfo[currentDomain].framework.img_path"
+                :src="iconUrl(dataInfo[currentDomain].framework.img_path)"
+                :alt="dataInfo[currentDomain].framework.name"
+                class="w-4 h-4"
+              />
+              <a
+                :href="dataInfo[currentDomain].framework.url"
+                class="ml-2 capitalize hover:text-nuxt-lightgreen transition ease-linear duration-150"
+              >{{ dataInfo[currentDomain].framework.name }}</a>
+            </div>
               </div>
               <div v-if="dataInfo[currentDomain].ui" class="mb-4">
                 <p class="font-semibold mb-3">UI</p>
-                <div class="capitalize">{{ dataInfo[currentDomain].ui }}</div>
+                <div class="capitalize flex flex-row items-center">
+                  <img
+                v-if="dataInfo[currentDomain].ui.img_path"
+                :src="iconUrl(dataInfo[currentDomain].ui.img_path)"
+                :alt="dataInfo[currentDomain].ui.name"
+                class="w-4 h-4"
+              />
+                  <a
+                :href="dataInfo[currentDomain].ui.url"
+                class="ml-2 capitalize hover:text-nuxt-lightgreen transition ease-linear duration-150"
+              >{{ dataInfo[currentDomain].ui.name }}</a>
+                  </div>
               </div>
-              <div v-if="dataInfo[currentDomain].plugins.length" class="mb-4">
+              <div v-if="dataInfo[currentDomain].showcases_plugins.length" class="mb-4">
                 <p class="font-semibold mb-3">Plugins</p>
                 <div class="flex flex-row items-center flex-wrap">
-                  <span
-                    v-for="(sp, i) in dataInfo[currentDomain].plugins"
+                  <a
+                    v-for="(sp, i) in dataInfo[currentDomain].showcases_plugins"
                     :key="i"
-                    class="px-2 py-1 bg-green-light rounded mr-2 last:mr-0 mb-2"
+                    :href="sp.plugin.url"
+                    target="_blank"
+                    class="px-2 py-1 bg-green-light rounded mr-2 last:mr-0 mb-2 hover:bg-cool-gray-300 transition ease-linear duration-150"
                   >
-                    {{ sp }}
-                  </span>
+                    {{ sp.plugin.name }}
+                  </a>
                 </div>
               </div>
-              <div v-if="dataInfo[currentDomain].frameworkModules != null && dataInfo[currentDomain].frameworkModules.length" class="mb-4">
+              <div v-if="dataInfo[currentDomain].showcase_modules.length" class="mb-4">
                 <p class="font-semibold mb-3">Modules</p>
                 <div class="flex flex-row items-center flex-wrap">
-                  <span
-                    v-for="(sm, i) in dataInfo[currentDomain].frameworkModules"
+                  <a
+                    v-for="(sm, i) in dataInfo[currentDomain].showcase_modules"
                     :key="i"
-                    class="bg-green-light px-2 py-1 rounded mr-2 last:mr-0 mb-2"
+                    :href="sm.module.url"
+                    target="_blank"
+                    class="bg-green-light px-2 py-1 rounded mr-2 last:mr-0 mb-2 hover:bg-cool-gray-300 transition ease-linear duration-150"
                   >
-                    {{ sm }}
-                  </span>
+                    {{ sm.module.name }}
+                  </a>
                 </div>
               </div>
             </div>
@@ -129,6 +155,9 @@ export default {
     },
     closePopup () {
       window.close()
+    },
+    iconUrl (path) {
+      return `${process.env.ICONS_URL}${path}`
     }
   }
 }

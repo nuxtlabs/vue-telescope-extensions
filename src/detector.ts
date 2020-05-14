@@ -34,6 +34,8 @@ function detectVue (win: { postMessage: (arg0: { __vue_telemetry__: boolean; dom
   setTimeout(() => {
     let hasVue: boolean = Boolean(window.Vue || (window as any).$nuxt) // || [...document.querySelectorAll('*')].map((el) => Boolean(el.__vue__)).filter(Boolean).length)
 
+    console.log('hasVue', hasVue)
+
     if (hasVue === false) {
       const all = document.querySelectorAll('*')
       let el: Element
