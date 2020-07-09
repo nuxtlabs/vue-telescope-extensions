@@ -13,9 +13,7 @@ const config = {
   context: path.join(__dirname, 'src'),
   entry: {
     background: './background.ts',
-    'browser-polyfill': './browser-polyfill.js',
     'popup/popup': './popup/popup.ts',
-    'options/options': './options/options.js',
     detector: './detector.ts'
   },
   output: {
@@ -37,7 +35,7 @@ const config = {
       },
       {
         test: /\.vue$/,
-        loaders: 'vue-loader'
+        loader: 'vue-loader'
       },
       {
         test: /\.js$/,
@@ -57,7 +55,7 @@ const config = {
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?indentedSyntax']
       },
       {
-        test: /\.(png|jpg|jpeg|gif|svg|ico)$/,
+        test: /\.(png|jpg|jpeg|gif|ico)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]',
@@ -66,13 +64,17 @@ const config = {
         }
       },
       {
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]',
           outputPath: '/fonts/',
           emitFile: false
         }
+      },
+      {
+        test: /\.svg$/,
+        loader: 'vue-svg-loader'
       }
     ]
   },
@@ -88,7 +90,6 @@ const config = {
       { from: 'icons', to: 'icons', ignore: ['icon.xcf'] },
       { from: 'images', to: 'images', ignore: ['icon.xcf'] },
       { from: 'popup/popup.html', to: 'popup/popup.html', transform: transformHtml },
-      { from: 'options/options.html', to: 'options/options.html', transform: transformHtml },
       {
         from: './popup/popup.css',
         to: path.join(__dirname, '/dist/popup/popup.css')

@@ -1,34 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* purgecss start ignore */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+/* purgecss end ignore */
+@import 'tailwindcss/utilities';
 
+@font-face {
+  font-family: 'PTRootUI';
+  src: url('~assets/fonts/PTRootUI/PTRootUI-Regular.woff2') format('woff2'),
+    url('~assets/fonts/PTRootUI/PTRootUI-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PTRootUI';
+  src: url('~assets/fonts/PTRootUI/PTRootUI-Bold.woff2') format('woff2'),
+    url('~assets/fonts/PTRootUI/PTRootUI-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 .extension {
     width: 600px;
-    height: 400px;
-}
-.container {
-    width: 400px;
-    height: 305px;
-}
-.bg {
-    background: url("../images/bg-light.svg") no-repeat; 
-}
-.bg-error {
-    background: url("../images/bg-error-light.svg") no-repeat; 
-}
-.bg-no-vue {
-    background: url("../images/bg-no-vue-light.svg") no-repeat; 
-}
-
-@screen dark {
-    .bg {
-        background: url("../images/bg-dark.svg") no-repeat; 
-    }
-    .bg-error {
-        background: url("../images/bg-error-dark.svg") no-repeat; 
-    }
-    .bg-no-vue {
-        background: url("../images/bg-no-vue-dark.svg") no-repeat; 
-    }
+    height: 300px;
+    @apply font-display text-base;
 }

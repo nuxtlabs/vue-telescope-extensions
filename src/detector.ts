@@ -16,7 +16,7 @@ window.addEventListener('message', ({ data }) => {
   }
 })
 
-function handleMessage () {
+function handleMessage() {
   return new Promise((resolve) => {
     detecting.then(function () {
       resolve({ response: { vueInfo } })
@@ -30,11 +30,9 @@ if (document instanceof HTMLDocument) {
 
 browser.runtime.onMessage.addListener(handleMessage)
 
-function detectVue (win: { postMessage: (arg0: { __vue_telemetry__: boolean; domain: string; hasVue: boolean; }) => void; }) {
+function detectVue(win: { postMessage: (arg0: { __vue_telemetry__: boolean; domain: string; hasVue: boolean; }) => void; }) {
   setTimeout(() => {
     let hasVue: boolean = Boolean(window.Vue || (window as any).$nuxt) // || [...document.querySelectorAll('*')].map((el) => Boolean(el.__vue__)).filter(Boolean).length)
-
-    console.log('hasVue', hasVue)
 
     if (hasVue === false) {
       const all = document.querySelectorAll('*')
@@ -58,7 +56,7 @@ function detectVue (win: { postMessage: (arg0: { __vue_telemetry__: boolean; dom
   }, 100)
 }
 
-function installScript (fn: { (win: { postMessage: (arg0: { __vue_telemetry__: boolean; domain: string; hasVue: boolean; }) => void; }): void; toString?: any; }) {
+function installScript(fn: { (win: { postMessage: (arg0: { __vue_telemetry__: boolean; domain: string; hasVue: boolean; }) => void; }): void; toString?: any; }) {
   const source = `;(${fn.toString()})(window)`
 
   if (isFirefox) {

@@ -7,13 +7,13 @@ const browser = require('webextension-polyfill')
 
 const map = store.getters.dataInfo
 // send url to analyzer
-async function sendUrl (url: string, domain: string, tabId: number) {
+async function sendUrl(url: string, domain: string, tabId: number) {
   // loading
   store.commit('SET_ISLOADING', true)
 
   await axios({
     method: 'GET',
-    url: `https://vue-telemetry.netlify.com/api/analyze?url=${url}&src=extension`,
+    url: `https://vue-telemetry.nuxtjs.app/api/analyze?url=${url}&src=extension`,
     auth: {
       username: 'nuxt-admin',
       password: 'vue-telemetry-protected-area'
@@ -31,8 +31,8 @@ async function sendUrl (url: string, domain: string, tabId: number) {
     browser.browserAction.setIcon({
       tabId,
       path: {
-        16: 'icons/icon-vue-telemetry-404error-128.png',
-        32: 'icons/icon-vue-telemetry-404error-128.png'
+        16: 'icons/icon-grey-128.png',
+        32: 'icons/icon-grey-128.png'
       }
     })
     setMapData(domain, 'error')
@@ -42,13 +42,13 @@ async function sendUrl (url: string, domain: string, tabId: number) {
 }
 
 // when tab created
-function handleCreated (tab: { url: string }) {
+function handleCreated(tab: { url: string }) {
   setMapData(tab.url, 'noVue')
   store.commit('SET_CURRENTDOMAIN', 'noVue')
 }
 
 // when tab clicked
-async function handleActivated () {
+async function handleActivated() {
   // get active tab
   browser.tabs.query({ currentWindow: true, active: true }).then((tabsArray: { id: number, url: string; }[]) => {
     if (/^chrome/.test(tabsArray[0].url) || /^about/.test(tabsArray[0].url)) {
@@ -61,8 +61,7 @@ async function handleActivated () {
 }
 
 // when tab updated
-async function handleUpdated (tabId: number, changeInfo: { status: string }, tabInfo: { url: string }) {
-  console.log('handleUpdated')
+async function handleUpdated(tabId: number, changeInfo: { status: string }, tabInfo: { url: string }) {
   if (changeInfo.status === 'complete') {
     detectVue(tabId, tabInfo.url)
   }
@@ -73,7 +72,7 @@ browser.tabs.onActivated.addListener(handleActivated)
 browser.tabs.onUpdated.addListener(handleUpdated)
 
 // detect vue by calling detector and sendUrl
-async function detectVue (tabId: number, url: string) {
+async function detectVue(tabId: number, url: string) {
   await hasVue(tabId).then(({ response }) => {
     store.commit('SET_CURRENTDOMAIN', response.vueInfo.domain)
 
@@ -81,8 +80,8 @@ async function detectVue (tabId: number, url: string) {
       browser.browserAction.setIcon({
         tabId,
         path: {
-          16: 'icons/icon-robot-128.png',
-          32: 'icons/icon-robot-128.png'
+          16: 'icons/icon-128.png',
+          32: 'icons/icon-128.png'
         }
       })
     }
@@ -101,19 +100,18 @@ async function detectVue (tabId: number, url: string) {
 }
 
 // check vue in detector.js and get response
-function hasVue (tabId: number) {
+function hasVue(tabId: number) {
   return new Promise((resolve) => {
     browser.tabs.sendMessage(
       tabId,
       { greeting: '' }
     ).then((response: any) => {
-      console.log('response', response)
       resolve(response)
     })
   })
 }
 
-function setMapData (domain: string, data: any) {
+function setMapData(domain: string, data: any) {
   map[domain] = data
   store.commit('SET_DATAINFO', map)
 }

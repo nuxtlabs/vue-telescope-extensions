@@ -1,32 +1,44 @@
+// Docs: https://tailwindcss.com/docs/configuration
+// Default: https://github.com/tailwindcss/tailwindcss/blob/master/stubs/defaultConfig.stub.js
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   theme: {
-    fill: theme => ({
-      white: theme('colors.white'),
-      'blue-dark': '#243746'
-    }),
-    extend: {
-      screens: {
-        light: { raw: '(prefers-color-scheme: light)' },
-        dark: { raw: '(prefers-color-scheme: dark)' }
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      white: 'white',
+      primary: {
+        50: '#E8FFF9',
+        100: '#B7F8E7',
+        200: '#88F1D5',
+        300: '#5CEAC3',
+        400: '#32E3B2',
+        500: '#0BDCA0',
+        600: '#09C38D',
+        700: '#07A97B',
+        800: '#058F68',
+        900: '#047555'
       },
-      colors: {
-        container: 'rgba(255, 255, 255, 0.21)',
-        'green-light': '#41B38A',
-        'green-dark': '#158876',
-        'black-light': '#414042',
-        'black-dark': '#292728',
-        gray: '#6D6E71',
-        'blue-dark': '#243746',
-        'gray-cool': '#8F8F9A'
-      },
-      textColor: {
-        'no-vue-title-light': '#414042',
-        'no-vue-title-dark': '#292728',
-        'no-vue-light': '#6D6E71',
-        'no-vue-dark': '#4D4D4F',
+      grey: {
+        50: '#FAFAFA',
+        100: '#F5F5F5',
+        200: '#EEEEEE',
+        300: '#E0E0E0',
+        400: '#BDBDBD',
+        500: '#9E9E9E',
+        600: '#757575',
+        700: '#616161',
+        800: '#424242',
+        900: '#212121'
       }
     },
+    extend: {
+      fontFamily: {
+        display: ['PTRootUI', ...defaultTheme.fontFamily.sans]
+      }
+    }
   },
   variants: {},
-  plugins: [],
+  plugins: []
 }
