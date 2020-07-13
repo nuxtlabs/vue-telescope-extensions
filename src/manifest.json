@@ -14,8 +14,7 @@
         "<all_urls>"
       ],
       "js": [
-        "detector.js",
-        "./popup/popup.js"
+        "content.js"
       ]
     }
   ],

@@ -12,16 +12,16 @@ const config = {
   mode: process.env.NODE_ENV,
   context: path.join(__dirname, 'src'),
   entry: {
-    background: './background.ts',
-    'popup/popup': './popup/popup.ts',
-    detector: './detector.ts'
+    background: './background.js',
+    'popup/popup': './popup/popup.js',
+    content: './content.js'
   },
   output: {
     path: path.join(__dirname, '/dist'),
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['.js', '.vue', '.ts']
+    extensions: ['.js', '.vue']
   },
   node: {
     fs: 'empty'

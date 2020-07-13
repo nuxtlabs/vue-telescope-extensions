@@ -6,9 +6,20 @@
           <LogoIcon class="h-8" />
         </a>
 
-        <a href="https://github.com/nuxt-company/vue-telemetry-website" target="_blank">
-          <GithubIcon class="w-8 h-8" />
-        </a>
+        <div class="flex items-center">
+          <a
+            v-if="state === 'data'"
+            :href="`https://vuetelemetry.com/explore/${website.slug}`"
+            target="_blank"
+            class="mr-2"
+          >
+            <ExternalLinkIcon class="w-8 h-8" />
+          </a>
+
+          <a href="https://github.com/nuxt-company/vue-telemetry-website" target="_blank">
+            <GithubIcon class="w-8 h-8" />
+          </a>
+        </div>
       </div>
 
       <div v-if="isLoading">Loading...</div>
@@ -112,8 +123,9 @@ import { mapState } from 'vuex'
 import LogoIcon from '../images/logo.svg?inline'
 import XmarkCircleFillIcon from '../images/icons/xmark-circle-fill.svg?inline'
 import CheckmarkCircleFillIcon from '../images/icons/checkmark-circle-fill.svg?inline'
-import VueIcon from '../images/brands/vue.svg?inline'
+import VueIcon from '../images/icons/vue.svg?inline'
 import GithubIcon from '../images/icons/github.svg?inline'
+import ExternalLinkIcon from '../images/icons/external-link.svg?inline'
 import ModulesIcon from '../images/icons/modules.svg?inline'
 import PluginsIcon from '../images/icons/plugins.svg?inline'
 import ConfigIcon from '../images/icons/config.svg?inline'
@@ -130,6 +142,7 @@ export default {
     ModulesIcon,
     PluginsIcon,
     ConfigIcon,
+    ExternalLinkIcon,
     ListBlock
   },
   computed: {
@@ -139,7 +152,7 @@ export default {
       'currentDomain'
     ]),
     website () {
-      return this.dataInfo[this.currentDomain] || {}
+      return this.dataInfo[this.currentDomain]
     },
     state () {
       const website = this.dataInfo[this.currentDomain]

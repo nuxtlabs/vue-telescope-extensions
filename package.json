@@ -9,8 +9,6 @@
   },
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
-    "prettier": "prettier \"src/**/*.{js,vue}\"",
-    "prettier:write": "npm run prettier -- --write",
     "build:dev": "cross-env NODE_ENV=development webpack --hide-modules",
     "build-zip": "node scripts/build-zip.js",
     "watch:tailwind": "NODE_ENV=development postcss src/tailwind.css -o dist/tailwind.css -w",
@@ -18,12 +16,11 @@
     "build:tailwind": "NODE_ENV=production postcss src/tailwind.css -o dist/tailwind.css",
     "watch": "npm run build -- --watch",
     "watch:dev": "cross-env HMR=true npm run build:dev -- --watch",
-    "dev": "concurrently \"npm run watch:tailwind\" \"NODE_ENV=development webpack --config webpack.config.js --mode=development --watch\"",
+    "dev": "concurrently \"npm run watch:tailwind\" \"npm run watch:dev\"",
     "build": "npm run build:tailwind && webpack --mode production"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
-    "@types/node": "^14.0.1",
     "axios": "^0.19.0",
     "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
@@ -33,7 +30,6 @@
     "tailwindcss": "^1.3.5",
     "vue": "^2.6.10",
     "vue-telemetry-analyzer": "^0.1.6",
-    "vuejs-logger": "1.5.4",
     "vuex": "^3.1.3",
     "vuex-webextensions": "^1.3.0",
     "webextension-polyfill": "^0.3.1"
@@ -43,8 +39,6 @@
     "@babel/plugin-proposal-optional-chaining": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/runtime-corejs3": "^7.4.0",
-    "@typescript-eslint/eslint-plugin": "^2.31.0",
-    "@typescript-eslint/parser": "^2.31.0",
     "archiver": "^3.0.0",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.2",
@@ -70,8 +64,6 @@
     "node-sass": "^4.13.1",
     "puppeteer": "^2.1.1",
     "sass-loader": "^7.1.0",
-    "ts-loader": "^7.0.3",
-    "typescript": "^3.8.3",
     "vue-loader": "^15.4.2",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.6.10",

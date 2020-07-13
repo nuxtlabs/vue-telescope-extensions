@@ -13,18 +13,18 @@ export default new Vuex.Store({
     currentDomain: ''
   },
   getters: {
-    dataInfo(state: any): any { return state.dataInfo },
-    isLoading(state: any): boolean { return state.isLoading },
-    currentDomain(state: any): string { return state.currentDomain }
+    dataInfo (state) { return state.dataInfo },
+    isLoading (state) { return state.isLoading },
+    currentDomain (state) { return state.currentDomain }
   },
   mutations: {
-    [types.SET_DATAINFO](state: any, payload: any) {
+    [types.SET_DATAINFO] (state, payload) {
       state.dataInfo = payload
     },
-    [types.SET_ISLOADING](state: any, payload: string) {
+    [types.SET_ISLOADING] (state, payload) {
       state.isLoading = payload
     },
-    [types.SET_CURRENTDOMAIN](state: any, payload: string) {
+    [types.SET_CURRENTDOMAIN] (state, payload) {
       state.currentDomain = payload
     }
   },

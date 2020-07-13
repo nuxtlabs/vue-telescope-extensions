@@ -13,12 +13,10 @@ module.exports = {
   },
   parserOptions: {
     ecmaVersion: 2018,
-    parser: '@typescript-eslint/parser',
     sourceType: 'module'
   },
   plugins: [
-    'vue',
-    '@typescript-eslint'
+    'vue'
   ],
   rules: {
   }
