@@ -16,7 +16,7 @@
             <ExternalLinkIcon class="w-8 h-8" />
           </a>
 
-          <a href="https://github.com/nuxt-company/vue-telemetry-website" target="_blank">
+          <a href="https://github.com/nuxt-company/vue-telemetry-analyzer" target="_blank">
             <GithubIcon class="w-8 h-8" />
           </a>
         </div>
