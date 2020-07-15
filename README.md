@@ -12,25 +12,30 @@ After cloning the repository, install the dependencies:
 yarn install
 ```
 
-You also need to have Netlify CLI installed:
+Launch the project with:
 
 ```bash
-yarn global add netlify-cli
+yarn dev
 ```
 
-## Development
+To have a preview in Chrome, you have to go to: [chrome://extensions/](chrome://extensions/), then enable Developer mode toggle.
+
+You can then load an unpacked extension by selecting the `dist` directory created.
+
+The extension will be automatically reloaded each time you make a change thanks to HMR.
+
+## Build
+
+To build the extension you have to run:
 
 ```bash
-netlify dev
+yarn build
 ```
 
-Then go to [http://localhost:8888](http://localhost:8888).
-
-
-## Build Setup
+and then:
 
 ```bash
-yarn generate
+yarn build-zip
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+You will obtain a `zip` file inside `dist-zip` directory you can upload to the Chrome and Firefox webstore.
