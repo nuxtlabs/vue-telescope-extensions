@@ -1,6 +1,6 @@
 {
-  "name": "vue-telemetry-extension",
-  "description": "A Vue.js web extension",
+  "name": "Vue Telemetry",
+  "description": "Analyze Vue.js Websites",
   "version": "0.1.0",
   "manifest_version": 2,
   "icons": {
