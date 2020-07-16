@@ -23,10 +23,7 @@ async function sendUrl (url, domain, tabId) {
   }).catch((e) => {
     browser.browserAction.setIcon({
       tabId,
-      path: {
-        16: 'icons/icon-grey-128.png',
-        32: 'icons/icon-grey-128.png'
-      }
+      path: 'icons/icon-grey-128.png'
     })
     setMapData(domain, e.response.data.statusCode === 400 ? 'noVue' : 'error')
   })
@@ -73,10 +70,7 @@ async function detectVue (tabId, url) {
     if (response.vueInfo.hasVue) {
       browser.browserAction.setIcon({
         tabId,
-        path: {
-          16: 'icons/icon-128.png',
-          32: 'icons/icon-128.png'
-        }
+        path: 'icons/icon-128.png'
       })
     }
 
