@@ -1,8 +1,10 @@
-# vue-telemetry-website
+# Vue Telemetry Browser Extensions
 
-> Curated list of vuejs websites
+> Browser extensions for [VueTelemetry](https://vuetelemetry.com), available on Chrome and Firefox.
 
-## Installation
+## Development
+
+### Installation
 
 Make sure to have [Yarn](https://classic.yarnpkg.com/en/) installed.
 
@@ -24,7 +26,7 @@ You can then load an unpacked extension by selecting the `dist` directory create
 
 The extension will be automatically reloaded each time you make a change thanks to HMR.
 
-## Build
+### Build
 
 To build the extension you have to run:
 
@@ -39,3 +41,7 @@ yarn build-zip
 ```
 
 You will obtain a `zip` file inside `dist-zip` directory you can upload to the Chrome and Firefox webstore.
+
+## License
+
+[MIT](./LICENSE)
