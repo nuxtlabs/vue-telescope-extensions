@@ -168,7 +168,7 @@ export default {
   },
   methods: {
     getURL (path) {
-      return `https://nuxt-company.github.io/vue-telemetry-analyzer${path}`
+      return `https://icons.vuetelemetry.com${path}`
     }
   }
 }
