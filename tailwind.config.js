@@ -36,6 +36,9 @@ module.exports = {
     extend: {
       fontFamily: {
         display: ['PTRootUI', ...defaultTheme.fontFamily.sans]
+      },
+      borderRadius: {
+        xl: '0.875rem'
       }
     }
   },

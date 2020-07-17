@@ -25,5 +25,5 @@
 .extension {
     width: 600px;
     height: 300px;
-    @apply font-display text-base;
+    @apply font-display text-base antialiased;
 }
