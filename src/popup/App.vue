@@ -53,10 +53,13 @@
               </ListBlock>
 
               <ListBlock label="Rendering">
-                <div class="font-semibold">{{ website.hasSSR ? 'Server-side' : 'Client-side' }}</div>
+                <div class="font-semibold">{{ website.hasSSR ? 'Universal' : 'Client-side' }}</div>
               </ListBlock>
 
-              <ListBlock label="Deployment">
+              <ListBlock
+                v-if="website.framework && website.framework.slug === 'nuxtjs'"
+                label="Deployment"
+              >
                 <div class="font-semibold">{{ website.isStatic ? 'Static' : 'Server' }}</div>
               </ListBlock>
             </div>
