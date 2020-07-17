@@ -13,15 +13,15 @@
             target="_blank"
             class="mr-3"
           >
-            <ExternalLinkIcon class="w-6 h-6 hover:text-primary-500" />
+            <ExternalLinkIcon class="w-5 h-5 hover:text-primary-500" />
           </a>
 
           <a href="https://twitter.com/VueTelemetry" target="_blank" class="mr-3">
-            <TwitterIcon class="w-6 h-6 hover:text-primary-500" />
+            <TwitterIcon class="w-5 h-5 hover:text-primary-500" />
           </a>
 
           <a href="https://github.com/nuxt-company/vue-telemetry-analyzer" target="_blank">
-            <GithubIcon class="w-6 h-6 hover:text-primary-500" />
+            <GithubIcon class="w-5 h-5 hover:text-primary-500" />
           </a>
         </div>
       </div>
