@@ -33,8 +33,7 @@ browser.runtime.onMessage.addListener(handleMessage)
 function detectVue (win) {
   setTimeout(() => {
     let hasVue = Boolean(window.Vue || window.$nuxt)
-
-    if (hasVue === false) {
+    if (!hasVue) {
       const all = document.querySelectorAll('*')
       let el
       for (let i = 0; i < all.length; i++) {
@@ -53,7 +52,7 @@ function detectVue (win) {
       domain: document.domain,
       hasVue
     })
-  }, 100)
+  }, 200)
 }
 
 function installScript (fn) {
