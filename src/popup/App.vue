@@ -9,7 +9,7 @@
         <div class="flex items-center">
           <a
             v-if="state === 'data'"
-            :href="`https://vuetelemetry.com/explore/${website.slug}`"
+            :href="`https://vuetelemetry.com/explore/${showcase.slug}`"
             target="_blank"
             class="mr-3"
           >
@@ -39,33 +39,33 @@
             <div class="grid grid-cols-3 gap-4">
               <ListBlock label="Vue version" href="https://vuejs.org/">
                 <img :src="getURL('/vue.svg')" alt class="w-6 h-6 mr-2" />
-                <div class="font-semibold">{{ website.vueVersion }}</div>
+                <div class="font-semibold">{{ showcase.vueVersion }}</div>
               </ListBlock>
 
-              <ListBlock v-if="website.framework" label="Framework" :href="website.framework.url">
-                <img :src="getURL(website.framework.imgPath)" alt class="w-6 h-6 mr-2" />
-                <div class="font-semibold">{{ website.framework.name }}</div>
+              <ListBlock v-if="showcase.framework" label="Framework" :href="showcase.framework.url">
+                <img :src="getURL(showcase.framework.imgPath)" alt class="w-6 h-6 mr-2" />
+                <div class="font-semibold">{{ showcase.framework.name }}</div>
               </ListBlock>
 
-              <ListBlock v-if="website.ui" label="UI Framework" :href="website.ui.url">
-                <img :src="getURL(website.ui.imgPath)" alt class="w-6 h-6 mr-2" />
-                <div class="font-semibold">{{ website.ui.name }}</div>
+              <ListBlock v-if="showcase.ui" label="UI Framework" :href="showcase.ui.url">
+                <img :src="getURL(showcase.ui.imgPath)" alt class="w-6 h-6 mr-2" />
+                <div class="font-semibold">{{ showcase.ui.name }}</div>
               </ListBlock>
 
               <ListBlock label="Rendering">
-                <div class="font-semibold">{{ website.hasSSR ? 'Universal' : 'Client-side' }}</div>
+                <div class="font-semibold">{{ showcase.hasSSR ? 'Universal' : 'Client-side' }}</div>
               </ListBlock>
 
               <ListBlock
-                v-if="website.framework && website.framework.slug === 'nuxtjs'"
+                v-if="showcase.framework && showcase.framework.slug === 'nuxtjs'"
                 label="Deployment"
               >
-                <div class="font-semibold">{{ website.isStatic ? 'Static' : 'Server' }}</div>
+                <div class="font-semibold">{{ showcase.isStatic ? 'Static' : 'Server' }}</div>
               </ListBlock>
             </div>
           </div>
 
-          <div v-if="website.plugins.length" class="mb-4">
+          <div v-if="showcase.plugins.length" class="mb-4">
             <div class="mb-4">
               <h3 class="flex items-center font-bold pl-2 text-primary-500 uppercase">
                 <PluginsIcon class="h-6 mr-2 text-primary-500 opacity-50" />Plugins
@@ -74,7 +74,7 @@
 
             <div class="flex flex-wrap">
               <a
-                v-for="plugin in website.plugins"
+                v-for="plugin in showcase.plugins"
                 :key="plugin.id"
                 :href="plugin.url"
                 target="_blank"
@@ -87,7 +87,7 @@
             </div>
           </div>
 
-          <div v-if="website.modules.length">
+          <div v-if="showcase.modules.length">
             <div class="mb-4">
               <h3 class="flex items-center font-bold pl-2 text-primary-500 uppercase">
                 <ModulesIcon class="h-6 mr-2 text-primary-500 opacity-50" />Nuxt Modules
@@ -96,7 +96,7 @@
 
             <div class="flex flex-wrap">
               <a
-                v-for="module in website.modules"
+                v-for="module in showcase.modules"
                 :key="module.id"
                 :href="module.url"
                 target="_blank"
@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import LogoIcon from '../images/logo.svg?inline'
 import ExternalLinkIcon from '../images/external-link.svg?inline'
@@ -141,20 +141,14 @@ export default {
     ListBlock
   },
   computed: {
-    ...mapState([
-      'dataInfo',
+    ...mapGetters([
       'isLoading',
-      'currentDomain'
+      'showcase'
     ]),
-    website () {
-      return this.dataInfo[this.currentDomain]
-    },
     state () {
-      const website = this.dataInfo[this.currentDomain]
-
-      if (website && website === 'error') {
+      if (this.showcase && this.showcase === 'error') {
         return 'error'
-      } else if (website && website !== 'noVue') {
+      } else if (this.showcase && this.showcase !== 'noVue') {
         return 'data'
       }
 

@@ -1,16 +1,10 @@
 import axios from 'axios'
 import store from './store'
 
-// array to save domain for checking if allready post
-const domainsVisited = []
 const browser = require('webextension-polyfill')
 
-const map = store.getters.dataInfo
 // send url to analyzer
-async function sendUrl (url, domain, tabId) {
-  // loading
-  store.commit('SET_ISLOADING', true)
-
+async function analyze (tabId, url) {
   await axios({
     method: 'GET',
     url: `https://vuetelemetry.com/api/analyze?url=${url}&src=extension`,
@@ -23,16 +17,11 @@ async function sendUrl (url, domain, tabId) {
       tabId,
       path: 'icons/icon-128.png'
     })
-    setMapData(domain, data.body)
-  }).catch((e) => {
-    browser.browserAction.setIcon({
-      tabId,
-      path: 'icons/icon-grey-128.png'
-    })
-    setMapData(domain, e.response.data.statusCode === 400 ? 'noVue' : 'error')
-  })
 
-  store.commit('SET_ISLOADING', false)
+    store.commit('SET_SHOWCASE', data.body)
+  }).catch((e) => {
+    store.commit('SET_SHOWCASE', e.response.data.statusCode === 400 ? 'noVue' : 'error')
+  })
 }
 
 // when tab clicked
@@ -57,34 +46,54 @@ async function handleUpdated (tabId, changeInfo, tabInfo) {
 browser.tabs.onActivated.addListener(handleActivated)
 browser.tabs.onUpdated.addListener(handleUpdated)
 
-// detect vue by calling detector and sendUrl
+// detect vue by calling detector and analyze
 async function detectVue (tabId, url) {
-  store.commit('SET_CURRENTDOMAIN', url)
+  browser.browserAction.setIcon({
+    tabId,
+    path: 'icons/icon-grey-128.png'
+  })
+
+  store.commit('SET_DOMAIN', null)
 
   if (!url) {
     return
   }
   if (/^chrome/.test(url) || /^about/.test(url)) {
-    return setMapData(url, 'noVue')
+    return
   }
 
-  await hasVue(tabId).then(({ response }) => {
-    store.commit('SET_CURRENTDOMAIN', response.vueInfo.domain)
+  store.commit('SET_ISLOADING', true)
 
-    if (!domainsVisited.includes(response.vueInfo.domain)) {
-      domainsVisited.push(response.vueInfo.domain)
+  try {
+    const { response } = await resolveVue(tabId)
+    const { domain, hasVue } = response.vueInfo
 
-      if (response.vueInfo.hasVue) {
-        sendUrl(url, response.vueInfo.domain, tabId)
+    store.commit('SET_DOMAIN', domain)
+
+    const showcase = store.getters.showcase
+
+    if (showcase) {
+      if (showcase.id) {
+        browser.browserAction.setIcon({
+          tabId,
+          path: 'icons/icon-128.png'
+        })
+      }
+    } else {
+      if (hasVue) {
+        await analyze(tabId, url)
       } else {
-        setMapData(response.vueInfo.domain, 'noVue')
+        store.commit('SET_SHOWCASE', 'noVue')
       }
     }
-  })
+  } catch (e) {
+  }
+
+  store.commit('SET_ISLOADING', false)
 }
 
 // check vue in content.js and get response
-function hasVue (tabId) {
+function resolveVue (tabId) {
   return new Promise((resolve) => {
     browser.tabs.sendMessage(
       tabId,
@@ -93,9 +102,4 @@ function hasVue (tabId) {
       resolve(response)
     })
   })
-}
-
-function setMapData (domain, data) {
-  map[domain] = data
-  store.commit('SET_DATAINFO', map)
 }
