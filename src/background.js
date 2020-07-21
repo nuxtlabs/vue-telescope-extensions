@@ -19,6 +19,10 @@ async function sendUrl (url, domain, tabId) {
       password: 'vue-telemetry-protected-area'
     }
   }).then(({ data }) => {
+    browser.browserAction.setIcon({
+      tabId,
+      path: 'icons/icon-128.png'
+    })
     setMapData(domain, data.body)
   }).catch((e) => {
     browser.browserAction.setIcon({
@@ -66,13 +70,6 @@ async function detectVue (tabId, url) {
 
   await hasVue(tabId).then(({ response }) => {
     store.commit('SET_CURRENTDOMAIN', response.vueInfo.domain)
-
-    if (response.vueInfo.hasVue) {
-      browser.browserAction.setIcon({
-        tabId,
-        path: 'icons/icon-128.png'
-      })
-    }
 
     if (!domainsVisited.includes(response.vueInfo.domain)) {
       domainsVisited.push(response.vueInfo.domain)
