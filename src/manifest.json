@@ -33,11 +33,9 @@
     ]
   },
   "permissions": [
-    "activeTab",
     "tabs",
     "background",
     "storage",
-    "http://*/*",
     "https://*/*"
   ]
 }

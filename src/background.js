@@ -20,7 +20,7 @@ async function analyze (tabId, url) {
 
     store.commit('SET_SHOWCASE', data.body)
   }).catch((e) => {
-    store.commit('SET_SHOWCASE', e.response.data.statusCode === 400 ? 'noVue' : 'error')
+    store.commit('SET_SHOWCASE', e.response &&  e.response.data && e.response.data.statusCode === 400 ? 'noVue' : 'error')
   })
 }
 
@@ -58,7 +58,7 @@ async function detectVue (tabId, url) {
   if (!url) {
     return
   }
-  if (/^chrome/.test(url) || /^about/.test(url)) {
+  if (/^https:\/\//.test(url) === false) {
     return
   }
 
@@ -100,6 +100,6 @@ function resolveVue (tabId) {
       { greeting: '' }
     ).then((response) => {
       resolve(response)
-    })
+    }).catch((_) => {})
   })
 }

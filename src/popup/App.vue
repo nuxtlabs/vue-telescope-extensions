@@ -111,6 +111,7 @@
         </div>
         <div v-else-if="state === 'error'">An error occurred</div>
         <div v-else-if="state === 'noVue'">Vue is not used on this website</div>
+        <div v-else-if="state === 'noData'">Vue Telemetry cannot analyze this url, only https domains are supported.</div>
       </div>
     </div>
   </div>
@@ -150,9 +151,10 @@ export default {
         return 'error'
       } else if (this.showcase && this.showcase !== 'noVue') {
         return 'data'
+      } else if (this.showcase) {
+        return 'noVue'
       }
-
-      return 'noVue'
+      return 'noData'
     }
   },
   methods: {
