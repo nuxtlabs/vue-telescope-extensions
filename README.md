@@ -2,9 +2,29 @@
 
 > Browser extensions for [VueTelemetry](https://vuetelemetry.com), available on Chrome and Firefox.
 
+![Extension Screenshot](https://user-images.githubusercontent.com/904724/88175523-419f3d80-cc26-11ea-9c44-3c6782c5fbd5.png)
+
+
+## Installation
+
+- 🟡 &nbsp; Get the Chrome Extension (*pending approval*) see [manual installation](#manual-installation-chrome)
+
+- 🟡 &nbsp; Get the Firefox Addon (*pending approval*), see [manual installation](#manual-installation-firefox)
+
+
+## Manual installation
+
+### Chrome
+
+// TODO
+
+### Firefox
+
+// TODO
+
 ## Development
 
-### Installation
+### Setup
 
 Make sure to have [Yarn](https://classic.yarnpkg.com/en/) installed.
 
