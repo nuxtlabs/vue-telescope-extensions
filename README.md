@@ -25,6 +25,8 @@
 5. Click on "Load unpacked" button and select the unzipped directory
 6. That's it ✨! We recommend to pin the extension to quickly discover if a website uses Vue.js.
 
+![vt-chrome-extension](https://user-images.githubusercontent.com/904724/88186616-b037c780-cc35-11ea-8c76-ffaf8e8af4fe.gif)
+
 ### Firefox
 
 1. [Download the extension (.zip)][download-extension-link]
@@ -32,6 +34,8 @@
 3. Go to "This Firefox" section
 3. Click on "Load Temporary Add-on" and select the zip
 4. That's it ✨!
+
+![vt-firefox-extension](https://user-images.githubusercontent.com/904724/88186887-1d4b5d00-cc36-11ea-96c9-2b6367920863.gif)
 
 ## Development
 
