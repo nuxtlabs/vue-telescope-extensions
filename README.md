@@ -28,10 +28,10 @@
 ### Firefox
 
 1. [Download the extension (.zip)][download-extension-link]
-2. Unzip it
-3. Go to [about:addons](about:addons)
-
-// TODO
+2. Enter `about:debugging` in the URL bar
+3. Go to "This Firefox" section
+3. Click on "Load Temporary Add-on" and select the zip
+4. That's it ✨!
 
 ## Development
 
