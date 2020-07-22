@@ -14,11 +14,22 @@
 
 ## Manual installation
 
+[download-extension-link]: https://github.com/nuxt-company/vue-telemetry-extensions/releases/download/v1.0.0/vue-telemetry-extension-v1.0.0.zip
+
 ### Chrome
 
-// TODO
+1. [Download the extension (.zip)][download-extension-link]
+2. Unzip it
+3. Go to [chrome://extensions/](chrome://extensions/)
+4. Enable developer mode toggle (top right)
+5. Click on "Load unpacked" and select the unzipped directory
+6. That's it ✨! We recommend to pin the extension to quickly discover if a website uses Vue.js.
 
 ### Firefox
+
+1. [Download the extension (.zip)][download-extension-link]
+2. Unzip it
+3. Go to [about:addons](about:addons)
 
 // TODO
 
