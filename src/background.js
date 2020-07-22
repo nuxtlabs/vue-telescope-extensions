@@ -79,15 +79,12 @@ async function detectVue (tabId, url) {
           path: 'icons/icon-128.png'
         })
       }
+    } else if (hasVue) {
+      await analyze(tabId, url)
     } else {
-      if (hasVue) {
-        await analyze(tabId, url)
-      } else {
-        store.commit('SET_SHOWCASE', 'noVue')
-      }
+      store.commit('SET_SHOWCASE', 'noVue')
     }
-  } catch (e) {
-  }
+  } catch (e) {}
 
   store.commit('SET_ISLOADING', false)
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="extension bg-white">
+  <div class="relative extension bg-white">
     <div class="px-4 pt-4">
       <div class="flex items-center justify-between mb-8">
         <a href="http://vuetelemetry.com/" target="_blank">
@@ -108,6 +108,7 @@
               </a>
             </div>
           </div>
+          <RefreshIcon @click="refresh" class="cursor-pointer absolute bottom-0 right-0 mb-4 mr-4 w-4 h-4 text-grey-500 hover:text-grey-800" />
         </div>
         <div v-else-if="state === 'error'">An error occurred</div>
         <div v-else-if="state === 'noVue'">Vue is not used on this website</div>
@@ -127,6 +128,7 @@ import GithubIcon from '../images/github.svg?inline'
 import InfoIcon from '../images/info.svg?inline'
 import PluginsIcon from '../images/plugins.svg?inline'
 import ModulesIcon from '../images/modules.svg?inline'
+import RefreshIcon from '../images/refresh.svg?inline'
 
 import ListBlock from '../components/ListBlock.vue'
 
@@ -139,6 +141,7 @@ export default {
     InfoIcon,
     PluginsIcon,
     ModulesIcon,
+    RefreshIcon,
     ListBlock
   },
   computed: {
@@ -160,6 +163,10 @@ export default {
   methods: {
     getURL (path) {
       return `https://icons.vuetelemetry.com${path}`
+    },
+    refresh() {
+      // TODO: set loading state and call analyze again
+      console.log('refresh')
     }
   }
 }
