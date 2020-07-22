@@ -23,9 +23,9 @@
 3. Enter `chrome://extensions` in the URL bar
 4. Enable the developer mode (toggle at the top right)
 5. Click on "Load unpacked" button and select the unzipped directory
-6. That's it ✨! We recommend to pin the extension to quickly discover if a website uses Vue.js.
+6. That's it ✨&nbsp;! *We recommend to pin the extension to quickly discover if a website uses Vue.js.*
 
-![vt-chrome-extension](https://user-images.githubusercontent.com/904724/88186616-b037c780-cc35-11ea-8c76-ffaf8e8af4fe.gif)
+![vt-chrome-extension](https://user-images.githubusercontent.com/904724/88188033-98614300-cc37-11ea-9500-f0e3ae3d97f0.gif)
 
 ### Firefox
 
