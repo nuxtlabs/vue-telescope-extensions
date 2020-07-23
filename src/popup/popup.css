@@ -1,1 +1,14 @@
-@import "../tailwind.css"
+@import "../tailwind.css";
+
+@keyframes spin{
+  0% {
+    transform:rotate(0deg);
+  } to {
+    transform:rotate(1turn);
+  }
+}
+
+.animate-spin {
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+}

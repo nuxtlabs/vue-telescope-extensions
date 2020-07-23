@@ -20,7 +20,7 @@ async function analyze (tabId, url) {
 
     store.commit('SET_SHOWCASE', data.body)
   }).catch((e) => {
-    store.commit('SET_SHOWCASE', e.response &&  e.response.data && e.response.data.statusCode === 400 ? 'noVue' : 'error')
+    store.commit('SET_SHOWCASE', e.response && e.response.data && e.response.data.statusCode === 400 ? 'noVue' : 'error')
   })
 }
 
@@ -46,8 +46,23 @@ async function handleUpdated (tabId, changeInfo, tabInfo) {
 browser.tabs.onActivated.addListener(handleActivated)
 browser.tabs.onUpdated.addListener(handleUpdated)
 
+// handle refresh btn
+browser.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.msg === 'refresh') {
+      browser.tabs.query({ currentWindow: true, active: true }).then((tabsArray) => {
+        const { id, url, status } = tabsArray[0]
+
+        if (status === 'complete') {
+          detectVue(id, url, true)
+        }
+      })
+    }
+  }
+)
+
 // detect vue by calling detector and analyze
-async function detectVue (tabId, url) {
+async function detectVue (tabId, url, force = false) {
   browser.browserAction.setIcon({
     tabId,
     path: 'icons/icon-grey-128.png'
@@ -72,7 +87,7 @@ async function detectVue (tabId, url) {
 
     const showcase = store.getters.showcase
 
-    if (showcase) {
+    if (!force && showcase) {
       if (showcase.id) {
         browser.browserAction.setIcon({
           tabId,
@@ -84,7 +99,7 @@ async function detectVue (tabId, url) {
     } else {
       store.commit('SET_SHOWCASE', 'noVue')
     }
-  } catch (e) {}
+  } catch (e) { }
 
   store.commit('SET_ISLOADING', false)
 }
@@ -97,6 +112,6 @@ function resolveVue (tabId) {
       { greeting: '' }
     ).then((response) => {
       resolve(response)
-    }).catch((_) => {})
+    }).catch((_) => { })
   })
 }

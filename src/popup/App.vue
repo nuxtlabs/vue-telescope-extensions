@@ -108,18 +108,26 @@
               </a>
             </div>
           </div>
-          <RefreshIcon @click="refresh" class="cursor-pointer absolute bottom-0 right-0 mb-4 mr-4 w-4 h-4 text-grey-500 hover:text-grey-800" />
         </div>
         <div v-else-if="state === 'error'">An error occurred</div>
         <div v-else-if="state === 'noVue'">Vue is not used on this website</div>
-        <div v-else-if="state === 'noData'">Vue Telemetry cannot analyze this url, only https domains are supported.</div>
+        <div
+          v-else-if="state === 'noData'"
+        >Vue Telemetry cannot analyze this url, only https domains are supported.</div>
       </div>
+
+      <RefreshIcon
+        @click="refresh"
+        class="cursor-pointer fixed bottom-0 right-0 mb-4 mr-4 w-4 h-4 text-grey-500 hover:text-grey-800"
+        :class="{ 'animate-spin': isLoading }"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import browser from 'webextension-polyfill'
 
 import LogoIcon from '../images/logo.svg?inline'
 import ExternalLinkIcon from '../images/external-link.svg?inline'
@@ -164,9 +172,8 @@ export default {
     getURL (path) {
       return `https://icons.vuetelemetry.com${path}`
     },
-    refresh() {
-      // TODO: set loading state and call analyze again
-      console.log('refresh')
+    refresh () {
+      browser.runtime.sendMessage({ msg: 'refresh' })
     }
   }
 }
