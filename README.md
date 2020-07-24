@@ -2,15 +2,13 @@
 
 > Browser extensions for [Vue Telemetry](https://vuetelemetry.com): available on Chrome and Firefox.
 
-![Extension Screenshot](https://user-images.githubusercontent.com/904724/88175523-419f3d80-cc26-11ea-9c44-3c6782c5fbd5.png)
+[![Extension Screenshot](https://user-images.githubusercontent.com/904724/88175523-419f3d80-cc26-11ea-9c44-3c6782c5fbd5.png)](https://vuetelemetry.com)
 
 
 ## Installation
 
-- 🟡 &nbsp; Get the Chrome Extension (*pending approval*) see [manual installation](#chrome)
-
-- 🟡 &nbsp; Get the Firefox Addon (*pending approval*), see [manual installation](#firefox)
-
+- [Get the Firefox Addon 🦊](https://addons.mozilla.org/en-GB/firefox/addon/vue-telemetry/)
+- 🟡 &nbsp; Get the Chrome Extension 🧪 (*pending approval*) see [manual installation](#chrome)
 
 ## Manual installation
 
