@@ -7,8 +7,8 @@
 
 ## Installation
 
+- [Get the Chrome Extension 🍭](https://chrome.google.com/webstore/detail/vue-telemetry/neaebjphlfplgdhedjdhcnpjkndddbpd)
 - [Get the Firefox Addon 🦊](https://addons.mozilla.org/en-GB/firefox/addon/vue-telemetry/)
-- 🟡 &nbsp; Get the Chrome Extension 🧪 &nbsp;(*pending approval*) see [manual installation](#chrome)
 
 ## Manual installation
 
