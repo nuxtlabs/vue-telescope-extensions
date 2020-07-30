@@ -5,14 +5,7 @@ const browser = require('webextension-polyfill')
 
 // send url to analyzer
 async function analyze (tabId, url) {
-  await axios({
-    method: 'GET',
-    url: `https://vuetelemetry.com/api/analyze?url=${url}&src=extension`,
-    auth: {
-      username: 'nuxt-admin',
-      password: 'vue-telemetry-protected-area'
-    }
-  }).then(({ data }) => {
+  await axios(`https://vuetelemetry.com/api/analyze?url=${url}&src=extension`).then(({ data }) => {
     browser.browserAction.setIcon({
       tabId,
       path: 'icons/icon-128.png'
