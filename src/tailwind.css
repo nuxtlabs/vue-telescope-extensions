@@ -6,8 +6,8 @@
 
 @font-face {
   font-family: 'PTRootUI';
-  src: url('~assets/fonts/PTRootUI/PTRootUI-Regular.woff2') format('woff2'),
-    url('~assets/fonts/PTRootUI/PTRootUI-Regular.woff') format('woff');
+  src: url('./fonts/PTRootUI/PTRootUI-Regular.woff2') format('woff2'),
+    url('./fonts/PTRootUI/PTRootUI-Regular.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -15,8 +15,8 @@
 
 @font-face {
   font-family: 'PTRootUI';
-  src: url('~assets/fonts/PTRootUI/PTRootUI-Bold.woff2') format('woff2'),
-    url('~assets/fonts/PTRootUI/PTRootUI-Bold.woff') format('woff');
+  src: url('./fonts/PTRootUI/PTRootUI-Bold.woff2') format('woff2'),
+    url('./fonts/PTRootUI/PTRootUI-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

@@ -89,6 +89,7 @@ const config = {
     new CopyPlugin([
       { from: 'icons', to: 'icons', ignore: ['icon.xcf'] },
       { from: 'images', to: 'images', ignore: ['icon.xcf'] },
+      { from: 'fonts', to: 'fonts' },
       { from: 'popup/popup.html', to: 'popup/popup.html', transform: transformHtml },
       {
         from: './popup/popup.css',
