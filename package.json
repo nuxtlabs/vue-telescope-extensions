@@ -1,6 +1,6 @@
 {
   "name": "vue-telemetry-extension",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A Vue.js web extension",
   "author": "NuxtJS Company",
   "license": "MIT",
@@ -17,7 +17,8 @@
     "watch": "npm run build -- --watch",
     "watch:dev": "cross-env HMR=true npm run build:dev -- --watch",
     "dev": "concurrently \"npm run watch:tailwind\" \"npm run watch:dev\"",
-    "build": "npm run build:tailwind && webpack --mode production"
+    "build": "npm run build:tailwind && webpack --mode production",
+    "release": "standard-version"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
@@ -64,6 +65,7 @@
     "node-sass": "^4.13.1",
     "puppeteer": "^2.1.1",
     "sass-loader": "^7.1.0",
+    "standard-version": "^8.0.2",
     "vue-loader": "^15.4.2",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.6.10",
