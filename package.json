@@ -18,7 +18,7 @@
     "watch:dev": "cross-env HMR=true npm run build:dev -- --watch",
     "dev": "concurrently \"npm run watch:tailwind\" \"npm run watch:dev\"",
     "build": "npm run build:tailwind && webpack --mode production",
-    "release": "standard-version"
+    "release": "standard-version && git push --follow-tags origin master"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
