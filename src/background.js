@@ -88,6 +88,10 @@ async function detectVue (tabId, url, force = false) {
         })
       }
     } else if (hasVue) {
+      browser.browserAction.setIcon({
+        tabId,
+        path: 'icons/icon-128.png'
+      })
       await analyze(tabId, url)
     } else {
       store.commit('SET_SHOWCASE', 'noVue')
