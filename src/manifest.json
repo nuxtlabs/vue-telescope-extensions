@@ -33,6 +33,7 @@
     ]
   },
   "permissions": [
+    "tabs",
     "background",
     "storage",
     "https://*/*"

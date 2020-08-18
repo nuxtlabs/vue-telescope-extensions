@@ -8,13 +8,14 @@
 
         <div class="flex items-center">
           <a
-            v-if="state === 'data'"
+            v-if="state === 'data' && showcase.isPublic"
             :href="`https://vuetelemetry.com/explore/${showcase.slug}`"
             target="_blank"
             class="mr-3"
           >
-            <ExternalLinkIcon class="w-5 h-5 hover:text-primary-500" />
+            <AppButton size="small" appearance="primary">Open</AppButton>
           </a>
+          <AppButton v-else @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">Save</AppButton>
 
           <a href="https://twitter.com/VueTelemetry" target="_blank" class="mr-3">
             <TwitterIcon class="w-5 h-5 hover:text-primary-500" />
@@ -31,43 +32,89 @@
         <div v-if="state === 'data'">
           <div class="mb-8">
             <div class="mb-4">
-              <h3 class="flex items-center font-bold pl-2 text-primary-500 uppercase">
+              <h3 class="flex items-center font-bold-body-weight pl-2 text-primary-500 uppercase">
                 <InfoIcon class="h-5 mr-2 text-primary-5700 opacity-50" />Info
               </h3>
             </div>
 
             <div class="grid grid-cols-3 gap-4">
-              <ListBlock label="Vue version" href="https://vuejs.org/">
-                <img :src="getURL('/vue.svg')" alt class="w-6 h-6 mr-2" />
-                <div class="font-semibold">{{ showcase.vueVersion }}</div>
-              </ListBlock>
+              <ExploreDataItem
+                label="Vue Version"
+                tag="a"
+                href="https://vuejs.org"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <img
+                  class="w-6 h-6 mr-2"
+                  :src="getURL('/vue.svg')"
+                  alt
+                />
+                <div class=" text-base leading-base font-bold-body-weight">
+                  {{ showcase.vueVersion }}
+                </div>
+              </ExploreDataItem>
 
-              <ListBlock v-if="showcase.framework" label="Framework" :href="showcase.framework.url">
-                <img :src="getURL(showcase.framework.imgPath)" alt class="w-6 h-6 mr-2" />
-                <div class="font-semibold">{{ showcase.framework.name }}</div>
-              </ListBlock>
+              <ExploreDataItem
+                v-if="showcase.framework"
+                label="Framework"
+                tag="a"
+                :href="showcase.framework.url"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <img
+                  class="w-6 h-6 mr-2"
+                  :src="getURL(showcase.framework.imgPath)"
+                  alt
+                />
+                <div class="text-base leading-seven font-bold-body-weight">
+                  {{ showcase.framework.name }}
+                </div>
+              </ExploreDataItem>
 
-              <ListBlock v-if="showcase.ui" label="UI Framework" :href="showcase.ui.url">
-                <img :src="getURL(showcase.ui.imgPath)" alt class="w-6 h-6 mr-2" />
-                <div class="font-semibold">{{ showcase.ui.name }}</div>
-              </ListBlock>
+              <ExploreDataItem
+                v-if="showcase.ui"
+                label="UI Framework"
+                tag="a"
+                :href="showcase.ui.url"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <img
+                  class="w-6 h-6 mr-2"
+                  :src="getURL(showcase.ui.imgPath)"
+                  alt
+                />
+                <div class="text-base leading-seven font-bold-body-weight">
+                  {{ showcase.ui.name }}
+                </div>
+              </ExploreDataItem>
 
-              <ListBlock label="Rendering">
-                <div class="font-semibold">{{ showcase.hasSSR ? 'Universal' : 'Client-side' }}</div>
-              </ListBlock>
+              <ExploreDataItem label="Rendering">
+                <div
+                  class="flex items-center text-base leading-seven font-bold-body-weight"
+                >
+                  {{ showcase.hasSSR ? 'Universal' : 'Client-side' }}
+                </div>
+              </ExploreDataItem>
 
-              <ListBlock
+              <ExploreDataItem
                 v-if="showcase.framework && showcase.framework.slug === 'nuxtjs'"
                 label="Deployment"
               >
-                <div class="font-semibold">{{ showcase.isStatic ? 'Static' : 'Server' }}</div>
-              </ListBlock>
+                <div
+                  class="flex items-center text-base leading-seven font-bold-body-weight"
+                >
+                  {{ showcase.isStatic ? 'Static' : 'Server' }}
+                </div>
+              </ExploreDataItem>
             </div>
           </div>
 
           <div v-if="showcase.plugins.length" class="mb-4">
             <div class="mb-4">
-              <h3 class="flex items-center font-bold pl-2 text-primary-500 uppercase">
+              <h3 class="flex items-center font-bold-body-weight pl-2 text-primary-500 uppercase">
                 <PluginsIcon class="h-6 mr-2 text-primary-500 opacity-50" />Plugins
               </h3>
             </div>
@@ -78,18 +125,20 @@
                 :key="plugin.id"
                 :href="plugin.url"
                 target="_blank"
-                class="mr-4 mb-4"
+                class="mr-4 mb-4 bg-grey-50 hover:bg-grey-100 border border-grey-200 rounded-xl"
               >
                 <span
-                  class="block bg-grey-50 border border-grey-200 font-semibold text-sm px-4 py-2 rounded-xl"
-                >{{ plugin.name }}</span>
+                  class="block font-bold-body-weight px-4 py-2 text-sm"
+                >
+                  {{ plugin.name }}
+                </span>
               </a>
             </div>
           </div>
 
           <div v-if="showcase.modules.length">
             <div class="mb-4">
-              <h3 class="flex items-center font-bold pl-2 text-primary-500 uppercase">
+              <h3 class="flex items-center font-bold-body-weight pl-2 text-primary-500 uppercase">
                 <ModulesIcon class="h-6 mr-2 text-primary-500 opacity-50" />Nuxt Modules
               </h3>
             </div>
@@ -100,11 +149,13 @@
                 :key="module.id"
                 :href="module.url"
                 target="_blank"
-                class="mr-4 mb-4"
+                class="mr-4 mb-4 bg-grey-50 hover:bg-grey-100 border border-grey-200 rounded-xl"
               >
                 <span
-                  class="block bg-grey-50 border border-grey-200 font-semibold text-sm px-4 py-2 rounded-xl"
-                >{{ module.name }}</span>
+                  class="block font-bold-body-weight px-4 py-2 text-sm"
+                >
+                  {{ module.name }}
+                </span>
               </a>
             </div>
           </div>
@@ -130,7 +181,7 @@ import { mapGetters } from 'vuex'
 import browser from 'webextension-polyfill'
 
 import LogoIcon from '../images/logo.svg?inline'
-import ExternalLinkIcon from '../images/external-link.svg?inline'
+// import ExternalLinkIcon from '../images/external-link.svg?inline'
 import TwitterIcon from '../images/twitter.svg?inline'
 import GithubIcon from '../images/github.svg?inline'
 import InfoIcon from '../images/info.svg?inline'
@@ -138,19 +189,21 @@ import PluginsIcon from '../images/plugins.svg?inline'
 import ModulesIcon from '../images/modules.svg?inline'
 import RefreshIcon from '../images/refresh.svg?inline'
 
-import ListBlock from '../components/ListBlock.vue'
+import ExploreDataItem from '../components/ExploreDataItem.vue'
+import AppButton from '../components/AppButton.vue'
 
 export default {
   components: {
     LogoIcon,
-    ExternalLinkIcon,
+    // ExternalLinkIcon,
     TwitterIcon,
     GithubIcon,
     InfoIcon,
     PluginsIcon,
     ModulesIcon,
     RefreshIcon,
-    ListBlock
+    ExploreDataItem,
+    AppButton
   },
   computed: {
     ...mapGetters([
@@ -174,6 +227,20 @@ export default {
     },
     refresh () {
       browser.runtime.sendMessage({ msg: 'refresh' })
+    },
+    async saveShowcase () {
+      const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.hostname}&isPublic=true`, {
+        method: 'GET'
+      })
+        .then((response) => {
+          this.pending = false
+          return response.json()
+        })
+        .catch((err) => {
+          this.pending = false
+          throw new Error(err)
+        })
+      this.$store.commit('SET_SHOWCASE', res.body)
     }
   }
 }

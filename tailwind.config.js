@@ -4,6 +4,56 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
   theme: {
+    fontSize: {
+      base: '16px',
+      one: '68px',
+      two: '54px',
+      three: '42px',
+      four: '32px',
+      five: '28px',
+      six: '24px',
+      seven: '20px',
+      eight: '18px',
+      sm: '14px',
+      xs: '12px'
+    },
+    letterSpacing: {
+      '-20': 'calc(20 * -0.0125rem)',
+      '-15': 'calc(15 * -0.0125rem)',
+      '-10': 'calc(10 * -0.0125rem)',
+      '-5': 'calc(5 * -0.0125rem)',
+      '-4': 'calc(4 * -0.0125rem)',
+      '-3': 'calc(3 * -0.0125rem)',
+      '-2': 'calc(2 * -0.0125rem)',
+      '-1': '-0.0125rem',
+      1: '0.0125rem',
+      2: 'calc(2 * 0.0125rem)',
+      3: 'calc(3 * 0.0125rem)',
+      4: 'calc(4 * 0.0125rem)',
+      5: 'calc(5 * 0.0125rem)',
+      10: 'calc(10 * 0.0125rem)',
+      15: 'calc(15 * 0.0125rem)',
+      20: 'calc(20 * 0.0125rem)'
+    },
+    lineHeight: {
+      base: '24px',
+      one: '72px',
+      two: '56px',
+      three: '48px',
+      four: '36px',
+      five: '32px',
+      six: '32px',
+      seven: '28px',
+      eight: '24px',
+      sm: '20px',
+      xs: '16px'
+    },
+    fontWeight: {
+      'body-weight': 400,
+      'bold-body-weight': 700,
+      'display-weight': 700,
+      'mono-weight': 400
+    },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
@@ -35,10 +85,16 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        display: ['PTRootUI', ...defaultTheme.fontFamily.sans]
+        display: ['PTRootUI', ...defaultTheme.fontFamily.sans],
+        body: ['PTRootUI', ...defaultTheme.fontFamily.sans]
       },
       borderRadius: {
-        xl: '0.875rem'
+        '2lg': '0.625rem',
+        '3lg': '0.75rem',
+        xl: '0.875rem',
+        '2xl': '1rem',
+        '3xl': '1.25rem',
+        '4xl': '1.5rem'
       }
     }
   },

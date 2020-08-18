@@ -22,8 +22,11 @@
   font-display: swap;
 }
 
+body {
+  @apply font-body text-base antialiased text-grey-900;
+}
+
 .extension {
-    width: 600px;
-    height: 300px;
-    @apply font-display text-base antialiased;
+  width: 600px;
+  min-height: 300px;
 }
