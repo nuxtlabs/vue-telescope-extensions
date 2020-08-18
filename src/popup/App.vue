@@ -8,14 +8,14 @@
 
         <div class="flex items-center">
           <a
-            v-if="state === 'data' && showcase.isPublic"
+            v-if="!isLoading && state === 'data' && showcase.isPublic"
             :href="`https://vuetelemetry.com/explore/${showcase.slug}`"
             target="_blank"
             class="mr-3"
           >
-            <AppButton size="small" appearance="primary">Open</AppButton>
+            <AppButton size="small" appearance="primary" outlined>Open</AppButton>
           </a>
-          <AppButton v-else @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">Save</AppButton>
+          <AppButton v-else-if="!isLoading && state === 'data' && !showcase.isPublic" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
 
           <a href="https://twitter.com/VueTelemetry" target="_blank" class="mr-3">
             <TwitterIcon class="w-5 h-5 hover:text-primary-500" />
@@ -47,7 +47,7 @@
               >
                 <img
                   class="w-6 h-6 mr-2"
-                  :src="getURL('/vue.svg')"
+                  :src="iconURL('/vue.svg')"
                   alt
                 />
                 <div class=" text-base leading-base font-bold-body-weight">
@@ -65,7 +65,7 @@
               >
                 <img
                   class="w-6 h-6 mr-2"
-                  :src="getURL(showcase.framework.imgPath)"
+                  :src="iconURL(showcase.framework.imgPath)"
                   alt
                 />
                 <div class="text-base leading-seven font-bold-body-weight">
@@ -83,7 +83,7 @@
               >
                 <img
                   class="w-6 h-6 mr-2"
-                  :src="getURL(showcase.ui.imgPath)"
+                  :src="iconURL(showcase.ui.imgPath)"
                   alt
                 />
                 <div class="text-base leading-seven font-bold-body-weight">
@@ -205,6 +205,11 @@ export default {
     ExploreDataItem,
     AppButton
   },
+  data() {
+    return {
+      saving: false
+    }
+  },
   computed: {
     ...mapGetters([
       'isLoading',
@@ -222,22 +227,23 @@ export default {
     }
   },
   methods: {
-    getURL (path) {
+    iconURL (path) {
       return `https://icons.vuetelemetry.com${path}`
     },
     refresh () {
       browser.runtime.sendMessage({ msg: 'refresh' })
     },
     async saveShowcase () {
-      const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.hostname}&isPublic=true`, {
+      this.saving = true
+      const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true`, {
         method: 'GET'
       })
         .then((response) => {
-          this.pending = false
+          this.saving = false
           return response.json()
         })
         .catch((err) => {
-          this.pending = false
+          this.saving = false
           throw new Error(err)
         })
       this.$store.commit('SET_SHOWCASE', res.body)
