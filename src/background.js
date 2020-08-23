@@ -10,7 +10,6 @@ async function analyze (tabId, url) {
       tabId,
       path: 'icons/icon-128.png'
     })
-
     store.commit('SET_SHOWCASE', data.body)
   }).catch((e) => {
     store.commit('SET_SHOWCASE', e.response && e.response.data && e.response.data.statusCode === 400 ? 'noVue' : 'error')

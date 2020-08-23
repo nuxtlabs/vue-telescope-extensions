@@ -205,7 +205,7 @@ export default {
     ExploreDataItem,
     AppButton
   },
-  data() {
+  data () {
     return {
       saving: false
     }
@@ -235,7 +235,7 @@ export default {
     },
     async saveShowcase () {
       this.saving = true
-      const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true`, {
+      const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true&force=true`, {
         method: 'GET'
       })
         .then((response) => {
