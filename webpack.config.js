@@ -22,6 +22,9 @@ const config = {
   },
   resolve: {
     extensions: ['.js', '.vue']
+    // alias: {
+    //   '@analyzer': 'vue-telemetry-analyzer'
+    // }
   },
   node: {
     fs: 'empty'
