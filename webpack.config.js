@@ -9,11 +9,13 @@ const { version } = require('./package.json')
 const path = require('path')
 
 const config = {
+  devtool: 'source-map',
   mode: process.env.NODE_ENV,
   context: path.join(__dirname, 'src'),
   entry: {
-    background: './background.js',
     'popup/popup': './popup/popup.js',
+    injected: './injected.js',
+    background: './background.js',
     content: './content.js'
   },
   output: {
@@ -22,9 +24,6 @@ const config = {
   },
   resolve: {
     extensions: ['.js', '.vue']
-    // alias: {
-    //   '@analyzer': 'vue-telemetry-analyzer'
-    // }
   },
   node: {
     fs: 'empty'
