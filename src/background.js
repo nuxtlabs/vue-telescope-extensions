@@ -1,11 +1,11 @@
-// const browser = require('webextension-polyfill')
+const browser = require('webextension-polyfill')
 
 const tabsStorage = {}
 
-chrome.tabs.onActivated.addListener(handleActivated)
-chrome.tabs.onUpdated.addListener(handleUpdated)
+browser.tabs.onActivated.addListener(handleActivated)
+browser.tabs.onUpdated.addListener(handleUpdated)
 
-chrome.runtime.onMessage.addListener(
+browser.runtime.onMessage.addListener(
   async function (message, sender, sendResponse) {
     // console.log('onMessage message', message)
     // console.log('onMessage sender', sender)
@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener(
       tabsStorage[sender.tab.id] = {}
       tabsStorage[sender.tab.id] = message.payload
 
-      chrome.browserAction.setIcon({
+      browser.browserAction.setIcon({
         tabId: sender.tab.id,
         path: message.payload.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
       })
@@ -34,7 +34,10 @@ chrome.runtime.onMessage.addListener(
     } else if (!sender.tab) {
       if (message.action === 'getShowcase') {
         // this is likely popup requesting
-        sendResponse({ payload: tabsStorage[message.payload.tabId] })
+        // sendResponse doesn't work in Firefox 👀
+        // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage#Sending_a_synchronous_response
+        return Promise.resolve({ payload: tabsStorage[message.payload.tabId] })
+        // sendResponse({ payload: tabsStorage[message.payload.tabId] })
       }
     }
   }
@@ -42,7 +45,7 @@ chrome.runtime.onMessage.addListener(
 
 // when tab clicked
 async function handleActivated ({ tabId, windowId }) {
-  chrome.browserAction.setIcon({
+  browser.browserAction.setIcon({
     tabId,
     path: tabsStorage[tabId] && tabsStorage[tabId] && tabsStorage[tabId].hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
   })

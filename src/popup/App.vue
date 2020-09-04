@@ -214,7 +214,7 @@ export default {
   },
   computed: {
     isRootUrl () {
-      if (!this.currentTab) {
+      if (!this.currentTab || !this.currentTab.url) {
         return false
       } else {
         const { hostname } = new URL(this.currentTab.url)
@@ -256,7 +256,6 @@ export default {
     },
     sendToBackground (message) {
       return browser.runtime.sendMessage(message).then(res => {
-        console.log('ANSWER', res)
         return res
       })
     },

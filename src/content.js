@@ -1,6 +1,8 @@
+const browser = require('webextension-polyfill')
+
 // injecting the script
 
-const content = chrome.extension.getURL('injected.js')
+const content = browser.extension.getURL('injected.js')
 const script = document.createElement('script')
 script.setAttribute('defer', 'defer')
 script.setAttribute('type', 'text/javascript')
@@ -11,7 +13,7 @@ script.parentNode.removeChild(script)
 
 // content script logic
 
-chrome.runtime.onMessage.addListener(messageFromBackground)
+browser.runtime.onMessage.addListener(messageFromBackground)
 
 function messageFromBackground (message) {
   if (message.proxyTo) {
@@ -26,7 +28,7 @@ window.addEventListener('message', function (event) {
   if (event.data.from === 'injected') {
     console.log('message from injected', event.data)
     if (event.data.action) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         from: 'content',
         proxyFrom: event.data.from,
         action: event.data.action,
