@@ -8,14 +8,14 @@
 
         <div class="flex items-center">
           <a
-            v-if="showcase && showcase.isPublic"
+            v-if="isRootUrl && showcase && showcase.isPublic"
             :href="`https://vuetelemetry.com/explore/${showcase.slug}`"
             target="_blank"
             class="mr-3"
           >
             <AppButton size="small" appearance="primary" outlined>Open</AppButton>
           </a>
-          <AppButton v-else-if="showcase && !showcase.isPublic" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
+          <AppButton v-else-if="isRootUrl && showcase && !showcase.isPublic" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
 
           <a href="https://twitter.com/VueTelemetry" target="_blank" class="mr-3">
             <TwitterIcon class="w-5 h-5 hover:text-primary-500" />
@@ -208,11 +208,27 @@ export default {
   data () {
     return {
       saving: false,
-      showcase: null
+      showcase: null,
+      currentTab: null
+    }
+  },
+  computed: {
+    isRootUrl () {
+      if (!this.currentTab) {
+        return false
+      } else {
+        const { hostname } = new URL(this.currentTab.url)
+        if (this.currentTab.url.endsWith(hostname) || this.currentTab.url.endsWith(hostname + '/')) {
+          return true
+        } else {
+          return false
+        }
+      }
     }
   },
   async mounted () {
-    const tabId = await this.getCurrentTabId()
+    this.currentTab = await this.getCurrentTab()
+    const tabId = this.currentTab.id
 
     const res = await this.sendToBackground({
       from: 'popup',
@@ -230,11 +246,11 @@ export default {
     // })
   },
   methods: {
-    async getCurrentTabId () {
+    async getCurrentTab () {
       return await browser.tabs.query({ currentWindow: true, active: true }).then((tabsArray) => {
-        const { id, status } = tabsArray[0]
+        const { id, status, url } = tabsArray[0]
         if (status === 'complete') {
-          return id
+          return { id, url }
         }
       })
     },
