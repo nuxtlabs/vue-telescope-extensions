@@ -7934,10 +7934,10 @@ vue-svg-loader@^0.16.0:
     loader-utils "^1.2.3"
     svg-to-vue "^0.7.0"
 
-vue-telemetry-analyzer@^0.6.13:
-  version "0.6.14"
-  resolved "https://registry.yarnpkg.com/vue-telemetry-analyzer/-/vue-telemetry-analyzer-0.6.14.tgz#3ad174dbe44670fa6b72c48273f6e8fff9cc86f8"
-  integrity sha512-ecQd0hIoLXnNMiU0hsgpHl0A4bHEFa/C0t5teI/reUAUpl0FZR/3WeHpSTgb0/zl0NXHmyHPeYOgwEEaFm0urA==
+vue-telemetry-analyzer@^0.6.15:
+  version "0.6.15"
+  resolved "https://registry.yarnpkg.com/vue-telemetry-analyzer/-/vue-telemetry-analyzer-0.6.15.tgz#2937484d0366cfb3070114cf9c98bf063dd2a847"
+  integrity sha512-YavMp78FWSO5pkGWx1x38lJxpgKuN4h82UtV44gYfYIoFpLYQaY416SkobDW8BWCFgJE4pa+/cvSvlOwnIH65w==
   dependencies:
     chrome-aws-lambda "^3.1.1"
     consola "^2.13.0"

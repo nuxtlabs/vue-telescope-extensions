@@ -13,11 +13,12 @@ async function analyzeLocally () {
     }
   }
   const hasVue = await detectors.hasVue(context)
+  const vueVersion = (window.$nuxt && window.$nuxt.$root && window.$nuxt.$root.constructor.version) || (window.Vue && window.Vue.version) || [...document.querySelectorAll('*')].map((el) => el.__vue__ && el.__vue__.$root && el.__vue__.$root.constructor.version).filter(Boolean)[0]
   // console.log('hasVue', hasVue)
   // if (hasVue) {
   //   //
   // }
-  const meta = await detectors.getVueMeta(context)
+  const { ssr } = await detectors.getVueMeta(context)
   const framework = await detectors.getFramework(context)
   const ui = await detectors.getUI(context)
   const plugins = await detectors.getPlugins(context)
@@ -30,12 +31,12 @@ async function analyzeLocally () {
     payload: {
       url: document.location.href,
       hasVue,
-      vueVersion: meta.version,
+      vueVersion,
       // meta,
       plugins,
       framework,
       ui,
-      hasSSR: nuxtMeta.ssr,
+      hasSSR: ssr || nuxtMeta.ssr,
       isStatic: nuxtMeta.static,
       modules
     }
