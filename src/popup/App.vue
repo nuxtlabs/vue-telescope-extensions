@@ -33,7 +33,9 @@
         <div class="font-bold-body-weight text-seven">Loading...</div>
       </div>
 
-      <div v-else-if="!showcase || !showcase.url">Please enter an url in the address bar.</div>
+      <div v-else-if="!showcase || !showcase.url" class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+        <div class="font-bold-body-weight text-eight">Please enter an url in the address bar.</div>
+      </div>
 
       <div v-else-if="showcase">
         <div v-if="showcase.hasVue">
@@ -168,8 +170,9 @@
           </div>
         </div>
 
-        <div v-else-if="!showcase.hasVue">Vue is not used on this website</div>
-
+        <div v-else-if="!showcase.hasVue" class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+          <div class="font-bold-body-weight text-eight">Vue is not used on this website</div>
+        </div>
       </div>
 
     </div>
