@@ -2,7 +2,7 @@
 
 const detectors = require('vue-telemetry-analyzer/src/detectors')
 
-async function analyzeLocally () {
+async function analyze () {
   const originalHtml = await fetch(document.location.href).then(res => res.text())
   const context = {
     originalHtml,
@@ -14,10 +14,6 @@ async function analyzeLocally () {
   }
   const hasVue = await detectors.hasVue(context)
   const vueVersion = (window.$nuxt && window.$nuxt.$root && window.$nuxt.$root.constructor.version) || (window.Vue && window.Vue.version) || [...document.querySelectorAll('*')].map((el) => el.__vue__ && el.__vue__.$root && el.__vue__.$root.constructor.version).filter(Boolean)[0]
-  // console.log('vueVersion', vueVersion)
-  // if (hasVue) {
-  //   //
-  // }
   const { ssr } = await detectors.getVueMeta(context)
   const framework = await detectors.getFramework(context)
   const ui = await detectors.getUI(context)
@@ -27,7 +23,7 @@ async function analyzeLocally () {
 
   window.postMessage({
     from: 'injected',
-    action: 'analyzeLocally',
+    action: 'analyze',
     payload: {
       url: document.location.href,
       path: document.location.pathname || '/',
@@ -44,13 +40,16 @@ async function analyzeLocally () {
   })
 }
 
-analyzeLocally()
+analyze()
 
 // listen to messages from content/popup/other script
 window.addEventListener('message', function (event) {
   if (event.data && event.data.from === 'content' && event.data.action === 'analyze') {
-    analyzeLocally()
+    analyze()
     // console.log('message from content', event.data)
+  } else if (event.data && event.data.proxyFrom === 'background' && event.data.action === 'analyze') {
+    // console.log('message from background', event.data)
+    analyze()
   } else if (event.data && event.data.from === 'popup') {
     // console.log('message from popup', event.data)
   } else if (event.data && event.data.payload && event.data.from !== 'injected') {

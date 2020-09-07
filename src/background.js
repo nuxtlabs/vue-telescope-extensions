@@ -7,30 +7,31 @@ browser.tabs.onUpdated.addListener(handleUpdated)
 
 browser.runtime.onMessage.addListener(
   async function (message, sender, sendResponse) {
-    // console.log('onMessage message', message)
-    // console.log('onMessage sender', sender)
-    // console.log('onMessage tabId', sender.tab.id)
-    if (message.action === 'analyzeLocally') {
-      tabsStorage[sender.tab.id] = {}
-      tabsStorage[sender.tab.id] = message.payload
-
+    if (message.action === 'analyze') {
       browser.browserAction.setIcon({
         tabId: sender.tab.id,
         path: message.payload.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
       })
-      if (message.payload.hasVue) {
-        const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
-          method: 'GET'
-        })
-          .then((response) => {
-            return response.json()
+
+      if (!tabsStorage[sender.tab.id]) {
+        tabsStorage[sender.tab.id] = message.payload
+        if (message.payload.hasVue) {
+          const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
+            method: 'GET'
           })
-          .catch((err) => {
-            throw new Error(err)
-          })
-        tabsStorage[sender.tab.id].isPublic = res.body.isPublic
-        tabsStorage[sender.tab.id].slug = res.body.slug
+            .then((response) => {
+              return response.json()
+            })
+            .catch((err) => {
+              throw new Error(err)
+            })
+          tabsStorage[sender.tab.id].isPublic = res.body.isPublic
+          tabsStorage[sender.tab.id].slug = res.body.slug
+        }
+      } else {
+        tabsStorage[sender.tab.id] = { ...tabsStorage[sender.tab.id], ...message.payload }
       }
+      // tabsStorage[sender.tab.id] = message.payload
     } else if (!sender.tab) {
       if (message.action === 'getShowcase') {
         // this is likely popup requesting
@@ -61,11 +62,17 @@ async function handleActivated ({ tabId, windowId }) {
 async function handleUpdated (tabId, changeInfo, tabInfo) {
   if (changeInfo.status === 'complete') {
     if (!tabsStorage[tabId]) return
-    tabsStorage[tabId].url = tabInfo.url
+    // tabsStorage[tabId].url = tabInfo.url
+    browser.tabs.sendMessage(tabId, {
+      from: 'background',
+      to: 'injected',
+      action: 'analyze',
+      payload: {}
+    })
     // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     //   // send message to content script
-    //   chrome.tabs.sendMessage(tabs[0].id, { from: 'background', proxyTo: 'injected', payload: { message: 'hello from background with sendMessage' } })
+    //   chrome.tabs.sendMessage(tabs[0].id, { from: 'background', to: 'injected', payload: { message: 'hello from background with sendMessage' } })
     // })
-    console.log('tabsStorage', tabsStorage)
+    // console.log('tabsStorage', tabsStorage)
   }
 }

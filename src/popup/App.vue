@@ -27,12 +27,13 @@
         </div>
       </div>
 
-      <div v-if="currentTab && !currentTab.url">Please enter an url in the address bar.</div>
-      <div v-else-if="isLoading">Loading...</div>
-      <div v-else-if="!isLoading && !showcase">Please refresh the page to detect.</div>
+      <!-- <div v-if="isLoading && (!showcase || !showcase.url)">Please refresh the page to detect.</div> -->
 
-      <div>
-        <div v-if="showcase && showcase.hasVue">
+      <div v-if="!showcase || !showcase.url">Please enter an url in the address bar. {{isLoading}}</div>
+      <div v-else-if="isLoading">Loading...</div>
+
+      <div v-else-if="showcase">
+        <div v-if="showcase.hasVue">
           <div class="mb-8">
             <div class="mb-4">
               <h3 class="flex items-center font-bold-body-weight pl-2 text-primary-500 uppercase">
@@ -164,17 +165,10 @@
           </div>
         </div>
 
-        <div v-else-if="showcase && !showcase.hasVue">Vue is not used on this website</div>
-        <!-- <div v-else-if="state === 'error'">An error occurred</div> -->
-        <!-- <div v-else-if="state === 'noData'">Vue Telemetry cannot analyze this url, only https domains are supported.</div> -->
+        <div v-else-if="!showcase.hasVue">Vue is not used on this website</div>
 
       </div>
 
-      <!-- <RefreshIcon
-        @click="refresh"
-        class="cursor-pointer fixed bottom-0 right-0 mb-4 mr-4 w-4 h-4 text-grey-500 hover:text-grey-800"
-        :class="{ 'animate-spin': isLoading }"
-      /> -->
     </div>
   </div>
 </template>
@@ -217,11 +211,11 @@ export default {
   },
   computed: {
     isRootUrl () {
-      if (!this.currentTab || !this.currentTab.url) {
+      if (!this.showcase || !this.showcase.url) {
         return false
       }
-      const { hostname } = new URL(this.currentTab.url)
-      if (this.currentTab.url.endsWith(hostname) || this.currentTab.url.endsWith(hostname + '/')) {
+      const { hostname } = new URL(this.showcase.url)
+      if (this.showcase.url.endsWith(hostname) || this.showcase.url.endsWith(hostname + '/')) {
         return true
       } else {
         return false
@@ -275,9 +269,7 @@ export default {
       })
     },
     sendToBackground (message) {
-      return browser.runtime.sendMessage(message).then(res => {
-        return res
-      })
+      return browser.runtime.sendMessage(message)
     },
     // sendToContent (message) {
     //   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -289,9 +281,6 @@ export default {
     iconURL (path) {
       return `https://icons.vuetelemetry.com${path}`
     },
-    //   refresh () {
-    //     browser.runtime.sendMessage({ msg: 'refresh' })
-    //   },
     async saveShowcase () {
       this.saving = true
       const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true&force=true`, {

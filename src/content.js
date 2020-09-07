@@ -16,12 +16,12 @@ script.parentNode.removeChild(script)
 browser.runtime.onMessage.addListener(messageFromBackground)
 
 function messageFromBackground (message) {
-  if (message.proxyTo) {
+  if (message.to === 'injected') {
     // proxy message to injected
-    console.log('proxy message to injected')
     postMessage({
       from: 'content',
       proxyFrom: message.from,
+      to: message.to,
       action: message.action,
       payload: message.payload || {}
     }, '*')
@@ -31,17 +31,17 @@ function messageFromBackground (message) {
 // listen to messages from injected script
 window.addEventListener('message', function (event) {
   if (event.data.from === 'injected') {
-    console.log('message from injected', event.data)
     if (event.data.action) {
       browser.runtime.sendMessage({
         from: 'content',
         proxyFrom: event.data.from,
+        to: event.data.to,
         action: event.data.action,
         payload: event.data.payload
       })
     }
   } else if (event.data.from === 'popup') {
-    console.log('message from popup', event.data)
+    // console.log('message from popup', event.data)
   } else if (event.data.from !== 'content') {
     // console.log('some other message', event.data)
   }
