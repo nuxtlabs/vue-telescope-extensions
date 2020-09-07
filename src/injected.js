@@ -14,7 +14,7 @@ async function analyzeLocally () {
   }
   const hasVue = await detectors.hasVue(context)
   const vueVersion = (window.$nuxt && window.$nuxt.$root && window.$nuxt.$root.constructor.version) || (window.Vue && window.Vue.version) || [...document.querySelectorAll('*')].map((el) => el.__vue__ && el.__vue__.$root && el.__vue__.$root.constructor.version).filter(Boolean)[0]
-  // console.log('hasVue', hasVue)
+  // console.log('vueVersion', vueVersion)
   // if (hasVue) {
   //   //
   // }
@@ -30,6 +30,7 @@ async function analyzeLocally () {
     action: 'analyzeLocally',
     payload: {
       url: document.location.href,
+      path: document.location.pathname || '/',
       hasVue,
       vueVersion,
       // meta,
@@ -47,10 +48,11 @@ analyzeLocally()
 
 // listen to messages from content/popup/other script
 window.addEventListener('message', function (event) {
-  if (event.data && event.data.from === 'content') {
-    console.log('message from content', event.data)
+  if (event.data && event.data.from === 'content' && event.data.action === 'analyze') {
+    analyzeLocally()
+    // console.log('message from content', event.data)
   } else if (event.data && event.data.from === 'popup') {
-    console.log('message from popup', event.data)
+    // console.log('message from popup', event.data)
   } else if (event.data && event.data.payload && event.data.from !== 'injected') {
     // console.log('other message', event.data)
   }

@@ -27,7 +27,9 @@
         </div>
       </div>
 
-      <!-- <div v-if="isLoading">Loading...</div> -->
+      <div v-if="currentTab && !currentTab.url">Please enter an url in the address bar.</div>
+      <div v-else-if="isLoading">Loading...</div>
+      <div v-else-if="!isLoading && !showcase">Please refresh the page to detect.</div>
 
       <div>
         <div v-if="showcase && showcase.hasVue">
@@ -207,6 +209,7 @@ export default {
   },
   data () {
     return {
+      isLoading: true,
       saving: false,
       showcase: null,
       currentTab: null
@@ -216,42 +219,59 @@ export default {
     isRootUrl () {
       if (!this.currentTab || !this.currentTab.url) {
         return false
+      }
+      const { hostname } = new URL(this.currentTab.url)
+      if (this.currentTab.url.endsWith(hostname) || this.currentTab.url.endsWith(hostname + '/')) {
+        return true
       } else {
-        const { hostname } = new URL(this.currentTab.url)
-        if (this.currentTab.url.endsWith(hostname) || this.currentTab.url.endsWith(hostname + '/')) {
-          return true
-        } else {
-          return false
-        }
+        return false
       }
     }
   },
-  async mounted () {
-    this.currentTab = await this.getCurrentTab()
-    const tabId = this.currentTab.id
-
-    const res = await this.sendToBackground({
-      from: 'popup',
-      action: 'getShowcase',
-      payload: {
-        tabId
+  mounted () {
+    this.detect()
+  },
+  beforeDestroy () {
+    if (!this._timer) {
+      clearTimeout(this._timer)
+      delete this._timer
+    }
+  },
+  methods: {
+    async detect (nbTries = 0) {
+      this.currentTab = await this.getCurrentTab()
+      if (!this.currentTab) {
+        this._timer = setTimeout(() => this.detect(), 1000)
+        return
       }
-    })
-    this.showcase = res.payload
+      const tabId = this.currentTab.id
+      const res = await this.sendToBackground({
+        from: 'popup',
+        action: 'getShowcase',
+        payload: {
+          tabId
+        }
+      })
+      if (!res.payload && nbTries < 3) {
+        this._timer = setTimeout(() => this.detect(nbTries + 1), 1000)
+        return
+      }
+      this.isLoading = false
+      this.showcase = res.payload || null
 
     // this.sendToContent({
     //   proxyTo: 'injected',
     //   from: 'popup',
     //   payload: 'test from popup'
     // })
-  },
-  methods: {
+    },
     async getCurrentTab () {
       return await browser.tabs.query({ currentWindow: true, active: true }).then((tabsArray) => {
         const { id, status, url } = tabsArray[0]
         if (status === 'complete') {
           return { id, url }
         }
+        return null
       })
     },
     sendToBackground (message) {

@@ -19,7 +19,12 @@ function messageFromBackground (message) {
   if (message.proxyTo) {
     // proxy message to injected
     console.log('proxy message to injected')
-    postMessage({ from: 'content', proxyFrom: message.from, payload: message.payload }, '*')
+    postMessage({
+      from: 'content',
+      proxyFrom: message.from,
+      action: message.action,
+      payload: message.payload || {}
+    }, '*')
   }
 }
 
