@@ -29,8 +29,11 @@
 
       <!-- <div v-if="isLoading && (!showcase || !showcase.url)">Please refresh the page to detect.</div> -->
 
-      <div v-if="!showcase || !showcase.url">Please enter an url in the address bar. {{isLoading}}</div>
-      <div v-else-if="isLoading">Loading...</div>
+      <div v-if="isLoading" class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+        <div class="font-bold-body-weight text-seven">Loading...</div>
+      </div>
+
+      <div v-else-if="!showcase || !showcase.url">Please enter an url in the address bar.</div>
 
       <div v-else-if="showcase">
         <div v-if="showcase.hasVue">
