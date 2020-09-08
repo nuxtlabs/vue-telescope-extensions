@@ -8,23 +8,25 @@ browser.tabs.onUpdated.addListener(handleUpdated)
 browser.runtime.onMessage.addListener(
   async function (message, sender, sendResponse) {
     if (message.action === 'analyze') {
+      // when sending message from popup.js there's no sender.tab, so need to pass tabId
+      const tabId = (sender.tab && sender.tab.id) || message.payload.tabId
       browser.browserAction.setIcon({
-        tabId: sender.tab.id,
+        tabId: tabId,
         path: message.payload.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
       })
 
-      if (!tabsStorage[sender.tab.id]) {
-        tabsStorage[sender.tab.id] = message.payload
+      if (!tabsStorage[tabId]) {
+        tabsStorage[tabId] = message.payload
       } else {
         // temporary fix when hit CSP
         if (!message.payload.modules.length) delete message.payload.modules
         if (!message.payload.plugins.length) delete message.payload.plugins
 
-        tabsStorage[sender.tab.id] = { ...tabsStorage[sender.tab.id], ...message.payload }
+        tabsStorage[tabId] = { ...tabsStorage[tabId], ...message.payload }
       }
 
-      const showcase = tabsStorage[sender.tab.id]
-      if (showcase.hasVue && !showcase.slug) {
+      const showcase = tabsStorage[tabId]
+      if (showcase.hasVue) {
         try {
           const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
             method: 'GET'
@@ -47,7 +49,7 @@ browser.runtime.onMessage.addListener(
           }
         } catch (err) {}
       }
-      // tabsStorage[sender.tab.id] = message.payload
+      // tabsStorage[tabId] = message.payload
     } else if (!sender.tab) {
       if (message.action === 'getShowcase') {
         // this is likely popup requesting

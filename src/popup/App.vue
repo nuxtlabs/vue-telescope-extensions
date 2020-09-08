@@ -309,6 +309,15 @@ export default {
             this.showcase.isPublic = body.isPublic
             this.saving = false
           })
+        const tabId = this.currentTab.id
+        await this.sendToBackground({
+          from: 'popup',
+          action: 'analyze',
+          payload: {
+            tabId,
+            ...this.showcase // TODO: ugly stuff, make separate handler in background for refreshing backend analyzer data later
+          }
+        })
       } catch (err) {
         this.saving = false
         this.savingError = true
