@@ -15,23 +15,25 @@ browser.runtime.onMessage.addListener(
 
       if (!tabsStorage[sender.tab.id]) {
         tabsStorage[sender.tab.id] = message.payload
-        if (message.payload.hasVue) {
-          try {
-            const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
-              method: 'GET'
-            })
-              .then((response) => {
-                if (!response.ok) {
-                  throw new Error('API call to VT failed')
-                }
-                return response.json()
-              })
-            tabsStorage[sender.tab.id].isPublic = res.body.isPublic
-            tabsStorage[sender.tab.id].slug = res.body.slug
-          } catch (err) {}
-        }
       } else {
         tabsStorage[sender.tab.id] = { ...tabsStorage[sender.tab.id], ...message.payload }
+      }
+
+      const showcase = tabsStorage[sender.tab.id]
+      if (showcase.hasVue && !showcase.slug) {
+        try {
+          const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
+            method: 'GET'
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('API call to VT failed')
+              }
+              return response.json()
+            })
+          showcase.isPublic = res.body.isPublic
+          showcase.slug = res.body.slug
+        } catch (err) {}
       }
       // tabsStorage[sender.tab.id] = message.payload
     } else if (!sender.tab) {
