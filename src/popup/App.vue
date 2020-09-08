@@ -15,7 +15,7 @@
           >
             <AppButton size="small" appearance="primary" outlined>Open</AppButton>
           </a>
-          <AppButton v-else-if="isRootUrl && showcase && !showcase.isPublic" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
+          <AppButton v-else-if="isRootUrl && showcase && !showcase.isPublic && !savingError" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
 
           <a href="https://twitter.com/VueTelemetry" target="_blank" class="mr-3">
             <TwitterIcon class="w-5 h-5 hover:text-primary-500" />
@@ -40,6 +40,9 @@
       <div v-else-if="showcase">
         <div v-if="showcase.hasVue">
           <div class="mb-8">
+            <div v-if="savingError" class="mb-4 text-orange">
+              Could not save website to Vue Telemetry, please try again later or <a class="underline" :href="`mailto:vuetelemetry@nuxtjs.com?subject=Could not save ${showcase.url}`">contact us</a>.
+            </div>
             <div class="mb-4">
               <h3 class="flex items-center font-bold-body-weight pl-2 text-primary-500 uppercase">
                 <InfoIcon class="h-5 mr-2 text-primary-5700 opacity-50" />Info
@@ -211,6 +214,7 @@ export default {
     return {
       isLoading: true,
       saving: false,
+      savingError: false,
       showcase: null,
       currentTab: null
     }
@@ -289,18 +293,26 @@ export default {
     },
     async saveShowcase () {
       this.saving = true
-      const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true&force=true`, {
-        method: 'GET'
-      })
-        .then((response) => {
-          this.saving = false
-          return response.json()
+      this.savingError = false
+      try {
+        await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true&force=true`, {
+          method: 'GET'
         })
-        .catch((err) => {
-          this.saving = false
-          throw new Error(err)
-        })
-      this.showcase.isPublic = res.body.isPublic
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('API call to VT failed')
+            }
+            return response.json()
+          })
+          .then(({ body }) => {
+            this.showcase.slug = body.slug
+            this.showcase.isPublic = body.isPublic
+            this.saving = false
+          })
+      } catch (err) {
+        this.saving = false
+        this.savingError = true
+      }
     }
   }
 }
