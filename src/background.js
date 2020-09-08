@@ -16,17 +16,19 @@ browser.runtime.onMessage.addListener(
       if (!tabsStorage[sender.tab.id]) {
         tabsStorage[sender.tab.id] = message.payload
         if (message.payload.hasVue) {
-          const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
-            method: 'GET'
-          })
-            .then((response) => {
-              return response.json()
+          try {
+            const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
+              method: 'GET'
             })
-            .catch((err) => {
-              throw new Error(err)
-            })
-          tabsStorage[sender.tab.id].isPublic = res.body.isPublic
-          tabsStorage[sender.tab.id].slug = res.body.slug
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error('API call to VT failed')
+                }
+                return response.json()
+              })
+            tabsStorage[sender.tab.id].isPublic = res.body.isPublic
+            tabsStorage[sender.tab.id].slug = res.body.slug
+          } catch (err) {}
         }
       } else {
         tabsStorage[sender.tab.id] = { ...tabsStorage[sender.tab.id], ...message.payload }
