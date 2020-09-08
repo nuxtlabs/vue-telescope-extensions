@@ -16,6 +16,10 @@ browser.runtime.onMessage.addListener(
       if (!tabsStorage[sender.tab.id]) {
         tabsStorage[sender.tab.id] = message.payload
       } else {
+        // temporary fix when hit CSP
+        if (!message.payload.modules.length) delete message.payload.modules
+        if (!message.payload.plugins.length) delete message.payload.plugins
+
         tabsStorage[sender.tab.id] = { ...tabsStorage[sender.tab.id], ...message.payload }
       }
 
@@ -33,6 +37,14 @@ browser.runtime.onMessage.addListener(
             })
           showcase.isPublic = res.body.isPublic
           showcase.slug = res.body.slug
+
+          // temporary fix when hit CSP
+          if (!showcase.modules.length && res.body.modules.length) {
+            showcase.modules = res.body.modules
+          }
+          if (!showcase.plugins.length && res.body.plugins.length) {
+            showcase.plugins = res.body.plugins
+          }
         } catch (err) {}
       }
       // tabsStorage[sender.tab.id] = message.payload
