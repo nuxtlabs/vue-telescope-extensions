@@ -1,71 +1,48 @@
 const browser = require('webextension-polyfill')
-const isBrowser = typeof navigator !== 'undefined'
-const isFirefox = isBrowser && navigator.userAgent.indexOf('Firefox') > -1
 
-let vueInfo = null
-let resolveDetecting
+// injecting the script
 
-const detecting = new Promise((resolve) => {
-  resolveDetecting = resolve
-})
+const content = browser.extension.getURL('injected.js')
+const script = document.createElement('script')
+script.setAttribute('defer', 'defer')
+script.setAttribute('type', 'text/javascript')
+script.setAttribute('src', content)
+// document.body.appendChild(script)
+document.documentElement.appendChild(script)
+script.parentNode.removeChild(script)
 
-window.addEventListener('message', ({ data }) => {
-  if (data.__vue_telemetry__) {
-    vueInfo = data
-    resolveDetecting()
+// content script logic
+
+browser.runtime.onMessage.addListener(messageFromBackground)
+
+function messageFromBackground (message) {
+  if (message.to === 'injected') {
+    // proxy message to injected
+    postMessage({
+      from: 'content',
+      proxyFrom: message.from,
+      to: message.to,
+      action: message.action,
+      payload: message.payload || {}
+    }, '*')
   }
-})
-
-function handleMessage () {
-  return new Promise((resolve) => {
-    detecting.then(function () {
-      resolve({ response: { vueInfo } })
-    })
-  })
 }
 
-if (document instanceof HTMLDocument) {
-  installScript(detectVue)
-}
-
-browser.runtime.onMessage.addListener(handleMessage)
-
-function detectVue (win) {
-  setTimeout(() => {
-    let hasVue = Boolean(window.Vue || window.$nuxt)
-    if (!hasVue) {
-      const all = document.querySelectorAll('*')
-      let el
-      for (let i = 0; i < all.length; i++) {
-        if (all[i].__vue__) {
-          el = all[i]
-          break
-        }
-      }
-      if (el) {
-        hasVue = true
-      }
+// listen to messages from injected script
+window.addEventListener('message', function (event) {
+  if (event.data.from === 'injected') {
+    if (event.data.action) {
+      browser.runtime.sendMessage({
+        from: 'content',
+        proxyFrom: event.data.from,
+        to: event.data.to,
+        action: event.data.action,
+        payload: event.data.payload
+      })
     }
-
-    win.postMessage({
-      __vue_telemetry__: true,
-      domain: document.domain,
-      hasVue
-    })
-  }, 200)
-}
-
-function installScript (fn) {
-  const source = `;(${fn.toString()})(window)`
-
-  if (isFirefox) {
-    // eslint-disable-next-line no-eval
-    window.eval(source) // in Firefox, this evaluates on the content window
-  } else {
-    const script = document.createElement('script')
-    script.setAttribute('defer', 'defer')
-    script.textContent = source
-    document.documentElement.appendChild(script)
-    script.parentNode.removeChild(script)
+  } else if (event.data.from === 'popup') {
+    // console.log('message from popup', event.data)
+  } else if (event.data.from !== 'content') {
+    // console.log('some other message', event.data)
   }
-}
+})

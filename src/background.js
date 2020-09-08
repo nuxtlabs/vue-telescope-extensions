@@ -1,109 +1,80 @@
-import axios from 'axios'
-import store from './store'
-
 const browser = require('webextension-polyfill')
 
-// send url to analyzer
-async function analyze (tabId, url) {
-  await axios(`https://vuetelemetry.com/api/analyze?url=${url}&src=extension`).then(({ data }) => {
-    browser.browserAction.setIcon({
-      tabId,
-      path: 'icons/icon-128.png'
-    })
-    store.commit('SET_SHOWCASE', data.body)
-  }).catch((e) => {
-    store.commit('SET_SHOWCASE', e.response && e.response.data && e.response.data.statusCode === 400 ? 'noVue' : 'error')
-  })
-}
+const tabsStorage = {}
+
+browser.tabs.onActivated.addListener(handleActivated)
+browser.tabs.onUpdated.addListener(handleUpdated)
+
+browser.runtime.onMessage.addListener(
+  async function (message, sender, sendResponse) {
+    if (message.action === 'analyze') {
+      browser.browserAction.setIcon({
+        tabId: sender.tab.id,
+        path: message.payload.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
+      })
+
+      if (!tabsStorage[sender.tab.id]) {
+        tabsStorage[sender.tab.id] = message.payload
+        if (message.payload.hasVue) {
+          try {
+            const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
+              method: 'GET'
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error('API call to VT failed')
+                }
+                return response.json()
+              })
+            tabsStorage[sender.tab.id].isPublic = res.body.isPublic
+            tabsStorage[sender.tab.id].slug = res.body.slug
+          } catch (err) {}
+        }
+      } else {
+        tabsStorage[sender.tab.id] = { ...tabsStorage[sender.tab.id], ...message.payload }
+      }
+      // tabsStorage[sender.tab.id] = message.payload
+    } else if (!sender.tab) {
+      if (message.action === 'getShowcase') {
+        // this is likely popup requesting
+        // sendResponse doesn't work in Firefox 👀
+        // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage#Sending_a_synchronous_response
+        return Promise.resolve({ payload: tabsStorage[message.payload.tabId] })
+        // sendResponse({ payload: tabsStorage[message.payload.tabId] })
+      }
+    }
+  }
+)
 
 // when tab clicked
-async function handleActivated () {
-  // get active tab
-  browser.tabs.query({ currentWindow: true, active: true }).then((tabsArray) => {
-    const { id, url, status } = tabsArray[0]
-
-    if (status === 'complete') {
-      detectVue(id, url)
-    }
+async function handleActivated ({ tabId, windowId }) {
+  browser.browserAction.setIcon({
+    tabId,
+    path: tabsStorage[tabId] && tabsStorage[tabId] && tabsStorage[tabId].hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
   })
+  // chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+  //   const { id, url, status } = tabs[0]
+  //   if (status === 'complete') {
+  //     // tabsStorage[id].url = url
+  //   }
+  // })
 }
 
 // when tab updated
 async function handleUpdated (tabId, changeInfo, tabInfo) {
   if (changeInfo.status === 'complete') {
-    detectVue(tabId, tabInfo.url)
+    if (!tabsStorage[tabId]) return
+    // tabsStorage[tabId].url = tabInfo.url
+    browser.tabs.sendMessage(tabId, {
+      from: 'background',
+      to: 'injected',
+      action: 'analyze',
+      payload: {}
+    })
+    // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    //   // send message to content script
+    //   chrome.tabs.sendMessage(tabs[0].id, { from: 'background', to: 'injected', payload: { message: 'hello from background with sendMessage' } })
+    // })
+    // console.log('tabsStorage', tabsStorage)
   }
-}
-
-browser.tabs.onActivated.addListener(handleActivated)
-browser.tabs.onUpdated.addListener(handleUpdated)
-
-// handle refresh btn
-browser.runtime.onMessage.addListener(
-  function (request, sender, sendResponse) {
-    if (request.msg === 'refresh') {
-      browser.tabs.query({ currentWindow: true, active: true }).then((tabsArray) => {
-        const { id, url, status } = tabsArray[0]
-
-        if (status === 'complete') {
-          detectVue(id, url, true)
-        }
-      })
-    }
-  }
-)
-
-// detect vue by calling detector and analyze
-async function detectVue (tabId, url, force = false) {
-  browser.browserAction.setIcon({
-    tabId,
-    path: 'icons/icon-grey-128.png'
-  })
-
-  store.commit('SET_DOMAIN', null)
-
-  if (!url) {
-    return
-  }
-  if (/^https:\/\//.test(url) === false) {
-    return
-  }
-
-  store.commit('SET_ISLOADING', true)
-
-  try {
-    const { response } = await resolveVue(tabId)
-    const { domain, hasVue } = response.vueInfo
-
-    store.commit('SET_DOMAIN', domain)
-
-    const showcase = store.getters.showcase
-
-    if (!force && showcase) {
-      if (showcase.id) {
-        browser.browserAction.setIcon({
-          tabId,
-          path: 'icons/icon-128.png'
-        })
-      }
-    } else if (hasVue) {
-      await analyze(tabId, url)
-    } else {
-      store.commit('SET_SHOWCASE', 'noVue')
-    }
-  } catch (e) { }
-
-  store.commit('SET_ISLOADING', false)
-}
-
-// check vue in content.js and get response
-function resolveVue (tabId) {
-  return new Promise((resolve) => {
-    browser.tabs.sendMessage(
-      tabId,
-      { greeting: '' }
-    ).then((response) => {
-      resolve(response)
-    }).catch((_) => { })
-  })
 }
