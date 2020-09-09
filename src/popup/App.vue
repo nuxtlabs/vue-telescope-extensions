@@ -8,14 +8,14 @@
 
         <div class="flex items-center">
           <a
-            v-if="isRootUrl && showcase && showcase.isPublic"
+            v-if="isRootUrl && showcase && showcase.hasVue && showcase.isPublic"
             :href="`https://vuetelemetry.com/explore/${showcase.slug}`"
             target="_blank"
             class="mr-3"
           >
             <AppButton size="small" appearance="primary" outlined>Open</AppButton>
           </a>
-          <AppButton v-else-if="isRootUrl && showcase && !showcase.isPublic && !savingError" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
+          <AppButton v-else-if="isRootUrl && showcase && showcase.hasVue && !showcase.isPublic && !savingError" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
 
           <a href="https://twitter.com/VueTelemetry" target="_blank" class="mr-3">
             <TwitterIcon class="w-5 h-5 hover:text-primary-500" />
@@ -173,7 +173,7 @@
           </div>
         </div>
 
-        <div v-else-if="!showcase.hasVue" class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+        <div v-else-if="!showcase.hasVue" class=" pointer-events-none absolute top-0 left-0 w-full h-full flex items-center justify-center">
           <div class="font-bold-body-weight text-eight">Vue is not used on this website</div>
         </div>
       </div>
