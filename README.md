@@ -15,7 +15,7 @@
 
 ## Manual installation
 
-[download-extension-link]: https://github.com/nuxt-company/vue-telemetry-extensions/releases/download/v1.2.1/vue-telemetry-extension-v1.2.1.zip
+[download-extension-link]: https://github.com/nuxt-company/vue-telemetry-extensions/releases/download/v1.2.2/vue-telemetry-extension-v1.2.2.zip
 
 ### Chrome
 

@@ -26,7 +26,7 @@ browser.runtime.onMessage.addListener(
       }
 
       const showcase = tabsStorage[tabId]
-      if (showcase.hasVue) {
+      if (showcase.hasVue && !showcase.slug) {
         try {
           const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
             method: 'GET'
