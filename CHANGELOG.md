@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/nuxt-company/vue-telemetry-extensions/compare/v1.2.3...v1.3.0) (2020-09-12)
+
+
+### Features
+
+* add new detectors ([f6ccf11](https://github.com/nuxt-company/vue-telemetry-extensions/commit/f6ccf11465016b93408c613758dcc108ff2aebbe))
+
 ### [1.2.3](https://github.com/nuxt-company/vue-telemetry-extensions/compare/v1.2.2...v1.2.3) (2020-09-09)
 
 ### [1.2.2](https://github.com/nuxt-company/vue-telemetry-extensions/compare/v1.2.1...v1.2.2) (2020-09-09)
