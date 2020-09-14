@@ -9,7 +9,7 @@ const { version } = require('./package.json')
 const path = require('path')
 
 const config = {
-  devtool: 'source-map',
+  devtool: 'cheap-source-map',
   mode: process.env.NODE_ENV,
   context: path.join(__dirname, 'src'),
   entry: {

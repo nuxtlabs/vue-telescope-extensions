@@ -3,6 +3,7 @@
 const detectors = require('vue-telemetry-analyzer/src/detectors')
 
 async function analyze () {
+  if (isBlacklisted(document.location.href)) return
   const originalHtml = await fetch(document.location.href).then(res => res.text())
   const context = {
     originalHtml,
@@ -58,3 +59,9 @@ window.addEventListener('message', function (event) {
 })
 
 // postMessage({ from: 'injected', payload: { message: 'hello from injected' } }, '*')
+
+function isBlacklisted (hostname) {
+  const blacklist = ['localhost']
+  const likelyIP = Boolean(/\d/.test(hostname.split('.').pop()))
+  return blacklist.includes(hostname) || likelyIP
+}
