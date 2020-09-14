@@ -28,25 +28,54 @@ browser.runtime.onMessage.addListener(
       const showcase = tabsStorage[tabId]
       if (showcase.hasVue && !showcase.slug) {
         try {
-          const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
-            method: 'GET'
-          })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error('API call to VT failed')
-              }
-              return response.json()
-            })
-          showcase.isPublic = res.body.isPublic
-          showcase.slug = res.body.slug
+          if (typeof EventSource === 'undefined') {
+            console.log('EventSource is not supported in current borwser!')
+            return
+          }
+          const sse = new EventSource(
+          `http://localhost:3001?url=${message.payload.url}`
+          )
+          sse.addEventListener('message', (event) => {
+            const res = JSON.parse(JSON.parse(event.data).body)
+            console.log('SUKA', res)
 
-          // temporary fix when hit CSP
-          if (!showcase.modules.length && res.body.modules.length) {
-            showcase.modules = res.body.modules
-          }
-          if (!showcase.plugins.length && res.body.plugins.length) {
-            showcase.plugins = res.body.plugins
-          }
+            if (res.statusCode === 200 && !res.body.isAdultContent) {
+              showcase.isPublic = res.body.isPublic
+              showcase.slug = res.body.slug
+              sse.close()
+
+              // temporary fix when hit CSP
+              if (!showcase.modules.length && res.body.modules.length) {
+                showcase.modules = res.body.modules
+              }
+              if (!showcase.plugins.length && res.body.plugins.length) {
+                showcase.plugins = res.body.plugins
+              }
+            } else {
+              sse.close()
+              throw new Error('API call to VT failed')
+            }
+          })
+
+          // const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
+          //   method: 'GET'
+          // })
+          //   .then((response) => {
+          //     if (!response.ok) {
+          //       throw new Error('API call to VT failed')
+          //     }
+          //     return response.json()
+          //   })
+          // showcase.isPublic = res.body.isPublic
+          // showcase.slug = res.body.slug
+
+          // // temporary fix when hit CSP
+          // if (!showcase.modules.length && res.body.modules.length) {
+          //   showcase.modules = res.body.modules
+          // }
+          // if (!showcase.plugins.length && res.body.plugins.length) {
+          //   showcase.plugins = res.body.plugins
+          // }
         } catch (err) {}
       }
       // tabsStorage[tabId] = message.payload
