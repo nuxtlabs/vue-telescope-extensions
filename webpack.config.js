@@ -9,7 +9,7 @@ const { version } = require('./package.json')
 const path = require('path')
 
 const config = {
-  devtool: 'cheap-source-map',
+  devtool: 'inline-source-map',
   mode: process.env.NODE_ENV,
   context: path.join(__dirname, 'src'),
   entry: {
@@ -21,6 +21,7 @@ const config = {
   output: {
     path: path.join(__dirname, '/dist'),
     filename: '[name].js'
+    // sourceMapFilename: '[name].js.map'
   },
   resolve: {
     extensions: ['.js', '.vue']
