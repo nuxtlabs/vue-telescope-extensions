@@ -2,6 +2,8 @@
 
 const detectors = require('vue-telemetry-analyzer/src/detectors')
 
+window.$vueTelemetryExtension = true
+
 async function analyze () {
   if (isBlacklisted(document.location.href)) return
   const originalHtml = await fetch(document.location.href).then(res => res.text())
