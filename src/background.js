@@ -37,7 +37,6 @@ browser.runtime.onMessage.addListener(
           )
           sse.addEventListener('message', (event) => {
             const res = JSON.parse(JSON.parse(event.data).body)
-            console.log('SUKA', res)
 
             if (res.statusCode === 200 && !res.body.isAdultContent) {
               showcase.isPublic = res.body.isPublic
