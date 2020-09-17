@@ -300,19 +300,21 @@ export default {
           return
         }
         const sse = new EventSource(
-        `http://localhost:3001?url=${this.showcase.url}&isPublic=true&force=true`
+        `https://service.vuetelemetry.com?url=${this.showcase.url}&isPublic=true&force=true`
         )
         sse.addEventListener('message', (event) => {
-          const res = JSON.parse(JSON.parse(event.data).body)
-
-          if (res.statusCode === 200 && !res.body.isAdultContent) {
-            this.showcase.slug = res.body.slug
-            this.showcase.isPublic = res.body.isPublic
-            this.saving = false
+          try {
+            const res = JSON.parse(event.data)
+            if (!res.error && !res.isAdultContent) {
+              this.showcase.slug = res.slug
+              this.showcase.isPublic = res.isPublic
+              this.saving = false
+              sse.close()
+            } else {
+              throw new Error('API call to VT failed')
+            }
+          } catch (err) {
             sse.close()
-          } else {
-            sse.close()
-            throw new Error('API call to VT failed')
           }
         })
 

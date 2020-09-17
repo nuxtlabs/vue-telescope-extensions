@@ -33,26 +33,28 @@ browser.runtime.onMessage.addListener(
             return
           }
           const sse = new EventSource(
-          `http://localhost:3001?url=${message.payload.url}`
+          `https://service.vuetelemetry.com?url=${message.payload.url}`
           )
           sse.addEventListener('message', (event) => {
-            const res = JSON.parse(JSON.parse(event.data).body)
+            try {
+              const res = JSON.parse(event.data)
+              if (!res.error && !res.isAdultContent) {
+                showcase.isPublic = res.isPublic
+                showcase.slug = res.slug
+                sse.close()
 
-            if (res.statusCode === 200 && !res.body.isAdultContent) {
-              showcase.isPublic = res.body.isPublic
-              showcase.slug = res.body.slug
-              sse.close()
-
-              // temporary fix when hit CSP
-              if (!showcase.modules.length && res.body.modules.length) {
-                showcase.modules = res.body.modules
+                // temporary fix when hit CSP
+                if (!showcase.modules.length && res.modules.length) {
+                  showcase.modules = res.modules
+                }
+                if (!showcase.plugins.length && res.plugins.length) {
+                  showcase.plugins = res.plugins
+                }
+              } else {
+                throw new Error('API call to VT failed')
               }
-              if (!showcase.plugins.length && res.body.plugins.length) {
-                showcase.plugins = res.body.plugins
-              }
-            } else {
+            } catch (err) {
               sse.close()
-              throw new Error('API call to VT failed')
             }
           })
 
