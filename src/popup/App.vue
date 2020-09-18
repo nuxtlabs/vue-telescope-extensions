@@ -295,20 +295,43 @@ export default {
       this.saving = true
       this.savingError = false
       try {
-        await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true&force=true`, {
-          method: 'GET'
-        })
-          .then((response) => {
-            if (!response.ok) {
+        if (typeof EventSource === 'undefined') {
+          console.log('EventSource is not supported in current borwser!')
+          return
+        }
+        const sse = new EventSource(
+        `https://service.vuetelemetry.com?url=${this.showcase.url}&isPublic=true&force=true`
+        )
+        sse.addEventListener('message', (event) => {
+          try {
+            const res = JSON.parse(event.data)
+            if (!res.error && !res.isAdultContent) {
+              this.showcase.slug = res.slug
+              this.showcase.isPublic = res.isPublic
+              this.saving = false
+              sse.close()
+            } else {
               throw new Error('API call to VT failed')
             }
-            return response.json()
-          })
-          .then(({ body }) => {
-            this.showcase.slug = body.slug
-            this.showcase.isPublic = body.isPublic
-            this.saving = false
-          })
+          } catch (err) {
+            sse.close()
+          }
+        })
+
+        // await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true&force=true`, {
+        //   method: 'GET'
+        // })
+        //   .then((response) => {
+        //     if (!response.ok) {
+        //       throw new Error('API call to VT failed')
+        //     }
+        //     return response.json()
+        //   })
+        //   .then(({ body }) => {
+        //     this.showcase.slug = body.slug
+        //     this.showcase.isPublic = body.isPublic
+        //     this.saving = false
+        //   })
         const tabId = this.currentTab.id
         await this.sendToBackground({
           from: 'popup',
