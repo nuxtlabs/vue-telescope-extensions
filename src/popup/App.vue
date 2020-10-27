@@ -300,7 +300,7 @@ export default {
           return
         }
         const sse = new EventSource(
-        `https://service.vuetelemetry.com?url=${this.showcase.url}&isPublic=true&force=true`
+        `https://service.vuetelemetry.com?url=${this.showcase.url}&isPublic=true`
         )
         sse.addEventListener('message', (event) => {
           try {
@@ -318,7 +318,7 @@ export default {
           }
         })
 
-        // await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true&force=true`, {
+        // await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true`, {
         //   method: 'GET'
         // })
         //   .then((response) => {
