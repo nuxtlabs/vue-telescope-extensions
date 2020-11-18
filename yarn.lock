@@ -7846,10 +7846,10 @@ vue-svg-loader@^0.16.0:
     loader-utils "^1.2.3"
     svg-to-vue "^0.7.0"
 
-vue-telemetry-analyzer@^0.7.8:
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/vue-telemetry-analyzer/-/vue-telemetry-analyzer-0.7.8.tgz#8763533b6e4a8fa59295a0431fed521cb2decfed"
-  integrity sha512-aOBKaiiLv/3CQ1qoYpAdOi+GA+TzMSsWlj1rj35mfdlqz48w/2ROlLZja8UbMcnPeIna0isFhQEKafzjXD07+A==
+vue-telemetry-analyzer@^0.7.10:
+  version "0.7.10"
+  resolved "https://registry.yarnpkg.com/vue-telemetry-analyzer/-/vue-telemetry-analyzer-0.7.10.tgz#0267ff37839777cd097ca23c5832671ff038a314"
+  integrity sha512-0xuYe+WDox6uEEX+/RyASjPjhkLEdYDO2kIgae+FL+66xpmdOxd3ELC+r02WTBk/GmoxbwPft1ItUwGn7rBBjQ==
   dependencies:
     consola "^2.15.0"
     make-dir "^3.1.0"
