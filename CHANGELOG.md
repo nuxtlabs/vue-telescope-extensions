@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.5](https://github.com/nuxt-company/vue-telemetry-extensions/compare/v1.4.4...v1.4.5) (2020-12-14)
+
+
+### Bug Fixes
+
+* display vue 3 version ([9ff29a1](https://github.com/nuxt-company/vue-telemetry-extensions/commit/9ff29a10d0e19e6adc6f81695739e1c0a5b83f11))
+
 ### [1.4.4](https://github.com/nuxt-company/vue-telemetry-extensions/compare/v1.4.3...v1.4.4) (2020-12-14)
 
 ### [1.4.3](https://github.com/nuxt-company/vue-telemetry-extensions/compare/v1.4.2...v1.4.3) (2020-11-18)
