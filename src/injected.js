@@ -17,7 +17,7 @@ async function analyze () {
     }
   }
   const hasVue = await detectors.hasVue(context)
-  const vueVersion = (window.$nuxt && window.$nuxt.$root && window.$nuxt.$root.constructor.version) || (window.Vue && window.Vue.version) || [...document.querySelectorAll('*')].map((el) => el.__vue__ && el.__vue__.$root && el.__vue__.$root.constructor.version).filter(Boolean)[0]
+  const vueVersion = window.$nuxt?.$root?.constructor?.version || window.Vue?.version || [...document.querySelectorAll("*")].map((el) => el.__vue__?.$root?.constructor?.version || el.__vue_app__?.version).filter(Boolean)[0]
   const { ssr } = await detectors.getVueMeta(context)
   const framework = await detectors.getFramework(context)
   const ui = await detectors.getUI(context)
