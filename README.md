@@ -1,21 +1,21 @@
-# Vue Telemetry Browser Extensions
+# Vue Telescope Browser Extensions
 
-> Browser extensions for [Vue Telemetry](https://vuetelemetry.com): available on Chrome and Firefox.
+> Browser extensions for [Vue Telescope](https://vuetelescope.com): available on Chrome and Firefox.
 
-[![Firefox Addon](https://badgen.net/chrome-web-store/v/neaebjphlfplgdhedjdhcnpjkndddbpd)](https://chrome.google.com/webstore/detail/vue-telemetry/neaebjphlfplgdhedjdhcnpjkndddbpd)
-[![Firefox Addon](https://badgen.net/amo/v/vue-telemetry)](https://addons.mozilla.org/en-GB/firefox/addon/vue-telemetry/)
+[![Firefox Addon](https://badgen.net/chrome-web-store/v/neaebjphlfplgdhedjdhcnpjkndddbpd)](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
+[![Firefox Addon](https://badgen.net/amo/v/vue-telescope)](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
 
-[![Extension Screenshot](https://user-images.githubusercontent.com/904724/88175523-419f3d80-cc26-11ea-9c44-3c6782c5fbd5.png)](https://vuetelemetry.com)
+[![Extension Screenshot](https://user-images.githubusercontent.com/904724/88175523-419f3d80-cc26-11ea-9c44-3c6782c5fbd5.png)](https://vuetelescope.com)
 
 
 ## Installation
 
-- [Get the Chrome Extension 🍭](https://chrome.google.com/webstore/detail/vue-telemetry/neaebjphlfplgdhedjdhcnpjkndddbpd)
-- [Get the Firefox Addon 🦊](https://addons.mozilla.org/en-GB/firefox/addon/vue-telemetry/)
+- [Get the Chrome Extension 🍭](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
+- [Get the Firefox Addon 🦊](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
 
 ## Manual installation
 
-[download-extension-link]: https://github.com/nuxt-company/vue-telemetry-extensions/releases/download/v1.4.5/vue-telemetry-extension-v1.4.5.zip
+[download-extension-link]: https://github.com/nuxt-company/vue-telescope-extensions/releases/download/v1.4.5/vue-telescope-extension-v1.4.5.zip
 
 ### Chrome
 

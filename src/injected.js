@@ -1,8 +1,10 @@
 // const browser = require('webextension-polyfill')
 
-const detectors = require('vue-telemetry-analyzer/src/detectors')
+const detectors = require('vue-telescope-analyzer/src/detectors')
 
+// backward compatibility
 window.$vueTelemetryExtension = true
+window.$vueTelescopeExtension = true
 
 async function analyze () {
   if (isBlacklisted(document.location.href)) return

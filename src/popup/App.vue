@@ -1,15 +1,15 @@
 <template>
-  <div class="relative extension bg-white">
+  <div class="relative bg-white extension">
     <div class="px-4 pt-4">
       <div class="flex items-center justify-between mb-8">
-        <a href="http://vuetelemetry.com/" target="_blank">
+        <a href="http://vuetelescope.com/" target="_blank">
           <LogoIcon class="h-8" />
         </a>
 
         <div class="flex items-center">
           <a
             v-if="isRootUrl && showcase && showcase.hasVue && showcase.isPublic"
-            :href="`https://vuetelemetry.com/explore/${showcase.slug}`"
+            :href="`https://vuetelescope.com/explore/${showcase.slug}`"
             target="_blank"
             class="mr-3"
           >
@@ -17,11 +17,11 @@
           </a>
           <AppButton v-else-if="isRootUrl && showcase && showcase.hasVue && !showcase.isPublic && !savingError" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
 
-          <a href="https://twitter.com/VueTelemetry" target="_blank" class="mr-3">
+          <a href="https://twitter.com/VueTelescope" target="_blank" class="mr-3">
             <TwitterIcon class="w-5 h-5 hover:text-primary-500" />
           </a>
 
-          <a href="https://github.com/nuxt-company/vue-telemetry-analyzer" target="_blank">
+          <a href="https://github.com/nuxt-company/vue-telescope-analyzer" target="_blank">
             <GithubIcon class="w-5 h-5 hover:text-primary-500" />
           </a>
         </div>
@@ -29,11 +29,11 @@
 
       <!-- <div v-if="isLoading && (!showcase || !showcase.url)">Please refresh the page to detect.</div> -->
 
-      <div v-if="isLoading" class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+      <div v-if="isLoading" class="absolute top-0 left-0 flex items-center justify-center w-full h-full">
         <div class="font-bold-body-weight text-seven">Loading...</div>
       </div>
 
-      <div v-else-if="!showcase || !showcase.url" class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+      <div v-else-if="!showcase || !showcase.url" class="absolute top-0 left-0 flex items-center justify-center w-full h-full">
         <div class="font-bold-body-weight text-eight">Please enter an url in the address bar.</div>
       </div>
 
@@ -41,11 +41,11 @@
         <div v-if="showcase.hasVue">
           <div class="mb-8">
             <div v-if="savingError" class="mb-4 text-orange">
-              Could not save website to Vue Telemetry, please try again later or <a class="underline" :href="`mailto:vuetelemetry@nuxtjs.com?subject=Could not save ${showcase.url}`">contact us</a>.
+              Could not save website to Vue Telescope, please try again later or <a class="underline" :href="`mailto:vuetelescope@nuxtjs.com?subject=Could not save ${showcase.url}`">contact us</a>.
             </div>
             <div class="mb-4">
-              <h3 class="flex items-center font-bold-body-weight pl-2 text-primary-500 uppercase">
-                <InfoIcon class="h-5 mr-2 text-primary-5700 opacity-50" />Info
+              <h3 class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500">
+                <InfoIcon class="h-5 mr-2 opacity-50 text-primary-5700" />Info
               </h3>
             </div>
 
@@ -62,7 +62,7 @@
                   :src="iconURL('/vue.svg')"
                   alt
                 />
-                <div class=" text-base leading-base font-bold-body-weight">
+                <div class="text-base  leading-base font-bold-body-weight">
                   {{ showcase.vueVersion }}
                 </div>
               </ExploreDataItem>
@@ -126,8 +126,8 @@
 
           <div v-if="showcase.plugins.length" class="mb-4">
             <div class="mb-4">
-              <h3 class="flex items-center font-bold-body-weight pl-2 text-primary-500 uppercase">
-                <PluginsIcon class="h-6 mr-2 text-primary-500 opacity-50" />Plugins
+              <h3 class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500">
+                <PluginsIcon class="h-6 mr-2 opacity-50 text-primary-500" />Plugins
               </h3>
             </div>
 
@@ -137,10 +137,10 @@
                 :key="plugin.id"
                 :href="plugin.url"
                 target="_blank"
-                class="mr-4 mb-4 bg-grey-50 hover:bg-grey-100 border border-grey-200 rounded-xl"
+                class="mb-4 mr-4 border bg-grey-50 hover:bg-grey-100 border-grey-200 rounded-xl"
               >
                 <span
-                  class="block font-bold-body-weight px-4 py-2 text-sm"
+                  class="block px-4 py-2 text-sm font-bold-body-weight"
                 >
                   {{ plugin.name }}
                 </span>
@@ -150,8 +150,8 @@
 
           <div v-if="showcase.modules.length">
             <div class="mb-4">
-              <h3 class="flex items-center font-bold-body-weight pl-2 text-primary-500 uppercase">
-                <ModulesIcon class="h-6 mr-2 text-primary-500 opacity-50" />Nuxt Modules
+              <h3 class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500">
+                <ModulesIcon class="h-6 mr-2 opacity-50 text-primary-500" />Nuxt Modules
               </h3>
             </div>
 
@@ -161,10 +161,10 @@
                 :key="module.id"
                 :href="module.url"
                 target="_blank"
-                class="mr-4 mb-4 bg-grey-50 hover:bg-grey-100 border border-grey-200 rounded-xl"
+                class="mb-4 mr-4 border bg-grey-50 hover:bg-grey-100 border-grey-200 rounded-xl"
               >
                 <span
-                  class="block font-bold-body-weight px-4 py-2 text-sm"
+                  class="block px-4 py-2 text-sm font-bold-body-weight"
                 >
                   {{ module.name }}
                 </span>
@@ -173,7 +173,7 @@
           </div>
         </div>
 
-        <div v-else-if="!showcase.hasVue" class=" pointer-events-none absolute top-0 left-0 w-full h-full flex items-center justify-center">
+        <div v-else-if="!showcase.hasVue" class="absolute top-0 left-0 flex items-center justify-center w-full h-full pointer-events-none ">
           <div class="font-bold-body-weight text-eight">Vue is not used on this website</div>
         </div>
       </div>
@@ -289,7 +289,7 @@ export default {
     //   })
     // },
     iconURL (path) {
-      return `https://icons.vuetelemetry.com${path}`
+      return `https://icons.vuetelescope.com${path}`
     },
     async saveShowcase () {
       this.saving = true
@@ -318,20 +318,6 @@ export default {
           }
         })
 
-        // await fetch(`https://vuetelemetry.com/api/analyze?url=${this.showcase.url}&isPublic=true`, {
-        //   method: 'GET'
-        // })
-        //   .then((response) => {
-        //     if (!response.ok) {
-        //       throw new Error('API call to VT failed')
-        //     }
-        //     return response.json()
-        //   })
-        //   .then(({ body }) => {
-        //     this.showcase.slug = body.slug
-        //     this.showcase.isPublic = body.isPublic
-        //     this.saving = false
-        //   })
         const tabId = this.currentTab.id
         await this.sendToBackground({
           from: 'popup',

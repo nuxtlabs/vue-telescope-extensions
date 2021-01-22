@@ -1,6 +1,6 @@
 {
-  "name": "Vue Telemetry",
-  "description": "Analyze Vue.js Websites",
+  "name": "Vue Telescope",
+  "description": "Discover Vue.js Websites",
   "version": "1.0.0",
   "manifest_version": 2,
   "icons": {
@@ -25,7 +25,7 @@
       "48": "icons/icon-grey-48.png",
       "128": "icons/icon-grey-128.png"
     },
-    "default_title": "Vue Telemetry",
+    "default_title": "Vue Telescope",
     "default_popup": "popup/popup.html"
   },
   "background": {

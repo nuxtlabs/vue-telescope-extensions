@@ -57,26 +57,6 @@ browser.runtime.onMessage.addListener(
               sse.close()
             }
           })
-
-          // const res = await fetch(`https://vuetelemetry.com/api/analyze?url=${message.payload.url}`, {
-          //   method: 'GET'
-          // })
-          //   .then((response) => {
-          //     if (!response.ok) {
-          //       throw new Error('API call to VT failed')
-          //     }
-          //     return response.json()
-          //   })
-          // showcase.isPublic = res.body.isPublic
-          // showcase.slug = res.body.slug
-
-          // // temporary fix when hit CSP
-          // if (!showcase.modules.length && res.body.modules.length) {
-          //   showcase.modules = res.body.modules
-          // }
-          // if (!showcase.plugins.length && res.body.plugins.length) {
-          //   showcase.plugins = res.body.plugins
-          // }
         } catch (err) {}
       }
       // tabsStorage[tabId] = message.payload
