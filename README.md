@@ -5,8 +5,7 @@
 [![Firefox Addon](https://badgen.net/chrome-web-store/v/neaebjphlfplgdhedjdhcnpjkndddbpd)](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
 [![Firefox Addon](https://badgen.net/amo/v/vue-telescope)](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
 
-[![Extension Screenshot](https://user-images.githubusercontent.com/904724/88175523-419f3d80-cc26-11ea-9c44-3c6782c5fbd5.png)](https://vuetelescope.com)
-
+[![Extension Screenshot](https://user-images.githubusercontent.com/904724/105485378-12d55300-5cad-11eb-82f9-6cdaf214e6fa.jpg)](https://vuetelescope.com)
 
 ## Installation
 
