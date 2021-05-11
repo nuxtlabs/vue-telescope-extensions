@@ -62,7 +62,7 @@
                   :src="iconURL('/vue.svg')"
                   alt
                 />
-                <div class="text-base  leading-base font-bold-body-weight">
+                <div class="text-base leading-base font-bold-body-weight">
                   {{ showcase.vueVersion }}
                 </div>
               </ExploreDataItem>
@@ -300,7 +300,7 @@ export default {
           return
         }
         const sse = new EventSource(
-        `https://service.vuetelemetry.com?url=${this.showcase.url}&isPublic=true`
+        `https://service.vuetelescope.com?url=${this.showcase.url}&isPublic=true`
         )
         sse.addEventListener('message', (event) => {
           try {
