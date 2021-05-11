@@ -33,7 +33,7 @@ browser.runtime.onMessage.addListener(
             return
           }
           const sse = new EventSource(
-          `https://service.vuetelemetry.com?url=${message.payload.url}`
+          `https://service.vuetelescope.com?url=${message.payload.url}`
           )
           sse.addEventListener('message', (event) => {
             try {
