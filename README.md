@@ -12,7 +12,7 @@
 
 - [Get the Chrome Extension 🍭](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
 - [Get the Firefox Addon 🦊](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
-- [Get the Microsoft Edge Extension 🦊](https://microsoftedge.microsoft.com/addons/detail/vue-telescope/icgcillpgelpleniodgkmohgdmeogodl)
+- [Get the Microsoft Edge Extension 🪟](https://microsoftedge.microsoft.com/addons/detail/vue-telescope/icgcillpgelpleniodgkmohgdmeogodl)
 
 ## Manual installation
 
