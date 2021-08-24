@@ -2,8 +2,9 @@
 
 > Browser extensions for [Vue Telescope](https://vuetelescope.com): available on Chrome and Firefox.
 
-[![Firefox Addon](https://badgen.net/chrome-web-store/v/neaebjphlfplgdhedjdhcnpjkndddbpd)](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
-[![Firefox Addon](https://badgen.net/amo/v/vue-telescope)](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
+[![Chrome Addon](https://badgen.net/chrome-web-store/v/neaebjphlfplgdhedjdhcnpjkndddbpd?icon=chrome)](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
+[![Firefox Addon](https://badgen.net/amo/v/vue-telescope?icon=firefox)](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
+[![Edge Addon](https://badgen.net/badge/icon/v1.5.4?icon=windows&label=Microsoft+Edge)](https://microsoftedge.microsoft.com/addons/detail/vue-telescope/icgcillpgelpleniodgkmohgdmeogodl)
 
 [![Extension Screenshot](https://user-images.githubusercontent.com/904724/105485378-12d55300-5cad-11eb-82f9-6cdaf214e6fa.jpg)](https://vuetelescope.com)
 
@@ -11,6 +12,7 @@
 
 - [Get the Chrome Extension 🍭](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
 - [Get the Firefox Addon 🦊](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
+- [Get the Microsoft Edge Extension 🦊](https://microsoftedge.microsoft.com/addons/detail/vue-telescope/icgcillpgelpleniodgkmohgdmeogodl)
 
 ## Manual installation
 
