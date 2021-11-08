@@ -13,15 +13,38 @@
             target="_blank"
             class="mr-3"
           >
-            <AppButton size="small" appearance="primary" outlined>Open</AppButton>
+            <AppButton size="small" appearance="primary" outlined>
+              Open
+            </AppButton>
           </a>
-          <AppButton v-else-if="isRootUrl && showcase && showcase.hasVue && !showcase.isPublic && !savingError" @click.native="saveShowcase" size="small" appearance="primary" class="mr-3">{{ saving ? 'Saving...' : 'Save' }}</AppButton>
+          <AppButton
+            v-else-if="
+              isRootUrl &&
+                showcase &&
+                showcase.hasVue &&
+                !showcase.isPublic &&
+                !savingError
+            "
+            @click.native="saveShowcase"
+            size="small"
+            appearance="primary"
+            class="mr-3"
+          >
+            {{ saving ? 'Saving...' : 'Save' }}
+          </AppButton>
 
-          <a href="https://twitter.com/VueTelescope" target="_blank" class="mr-3">
+          <a
+            href="https://twitter.com/VueTelescope"
+            target="_blank"
+            class="mr-3"
+          >
             <TwitterIcon class="w-5 h-5 hover:text-primary-500" />
           </a>
 
-          <a href="https://github.com/nuxt-company/vue-telescope-analyzer" target="_blank">
+          <a
+            href="https://github.com/nuxt-company/vue-telescope-analyzer"
+            target="_blank"
+          >
             <GithubIcon class="w-5 h-5 hover:text-primary-500" />
           </a>
         </div>
@@ -29,22 +52,39 @@
 
       <!-- <div v-if="isLoading && (!showcase || !showcase.url)">Please refresh the page to detect.</div> -->
 
-      <div v-if="isLoading" class="absolute top-0 left-0 flex items-center justify-center w-full h-full">
+      <div
+        v-if="isLoading"
+        class="absolute top-0 left-0 flex items-center justify-center w-full h-full"
+      >
         <div class="font-bold-body-weight text-seven">Loading...</div>
       </div>
 
-      <div v-else-if="!showcase || !showcase.url" class="absolute top-0 left-0 flex items-center justify-center w-full h-full">
-        <div class="font-bold-body-weight text-eight">Please enter an url in the address bar.</div>
+      <div
+        v-else-if="!showcase || !showcase.url"
+        class="absolute top-0 left-0 flex items-center justify-center w-full h-full"
+      >
+        <div class="font-bold-body-weight text-eight">
+          Please enter an url in the address bar.
+        </div>
       </div>
 
       <div v-else-if="showcase">
         <div v-if="showcase.hasVue">
           <div class="mb-8">
             <div v-if="savingError" class="mb-4 text-orange">
-              Could not save website to Vue Telescope, please try again later or <a class="underline" :href="`mailto:vuetelescope@nuxtjs.com?subject=Could not save ${showcase.url}`">contact us</a>.
+              Could not save website to Vue Telescope, please try again later or
+              <a
+                class="underline"
+                :href="
+                  `mailto:vuetelescope@nuxtjs.com?subject=Could not save ${showcase.url}`
+                "
+                >contact us</a
+              >.
             </div>
             <div class="mb-4">
-              <h3 class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500">
+              <h3
+                class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500"
+              >
                 <InfoIcon class="h-5 mr-2 opacity-50 text-primary-5700" />Info
               </h3>
             </div>
@@ -53,15 +93,11 @@
               <ExploreDataItem
                 label="Vue Version"
                 tag="a"
-                href="https://vuejs.org"
+                :href="vueDocsURL"
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                <img
-                  class="w-6 h-6 mr-2"
-                  :src="iconURL('/vue.svg')"
-                  alt
-                />
+                <img class="w-6 h-6 mr-2" :src="iconURL('/vue.svg')" alt />
                 <div class="text-base leading-base font-bold-body-weight">
                   {{ showcase.vueVersion }}
                 </div>
@@ -112,7 +148,9 @@
               </ExploreDataItem>
 
               <ExploreDataItem
-                v-if="showcase.framework && showcase.framework.slug === 'nuxtjs'"
+                v-if="
+                  showcase.framework && showcase.framework.slug === 'nuxtjs'
+                "
                 label="Deployment"
               >
                 <div
@@ -126,8 +164,12 @@
 
           <div v-if="showcase.plugins.length" class="mb-4">
             <div class="mb-4">
-              <h3 class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500">
-                <PluginsIcon class="h-6 mr-2 opacity-50 text-primary-500" />Plugins
+              <h3
+                class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500"
+              >
+                <PluginsIcon
+                  class="h-6 mr-2 opacity-50 text-primary-500"
+                />Plugins
               </h3>
             </div>
 
@@ -139,19 +181,20 @@
                 target="_blank"
                 class="mb-4 mr-4 border bg-grey-50 hover:bg-grey-100 border-grey-200 rounded-xl"
               >
-                <span
-                  class="block px-4 py-2 text-sm font-bold-body-weight"
-                >
-                  {{ plugin.name }}
-                </span>
+                <span class="block px-4 py-2 text-sm font-bold-body-weight">{{
+                  plugin.name
+                }}</span>
               </a>
             </div>
           </div>
 
           <div v-if="showcase.modules.length">
             <div class="mb-4">
-              <h3 class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500">
-                <ModulesIcon class="h-6 mr-2 opacity-50 text-primary-500" />Nuxt Modules
+              <h3
+                class="flex items-center pl-2 uppercase font-bold-body-weight text-primary-500"
+              >
+                <ModulesIcon class="h-6 mr-2 opacity-50 text-primary-500" />Nuxt
+                Modules
               </h3>
             </div>
 
@@ -163,21 +206,23 @@
                 target="_blank"
                 class="mb-4 mr-4 border bg-grey-50 hover:bg-grey-100 border-grey-200 rounded-xl"
               >
-                <span
-                  class="block px-4 py-2 text-sm font-bold-body-weight"
-                >
-                  {{ module.name }}
-                </span>
+                <span class="block px-4 py-2 text-sm font-bold-body-weight">{{
+                  module.name
+                }}</span>
               </a>
             </div>
           </div>
         </div>
 
-        <div v-else-if="!showcase.hasVue" class="absolute top-0 left-0 flex items-center justify-center w-full h-full pointer-events-none ">
-          <div class="font-bold-body-weight text-eight">Vue is not used on this website</div>
+        <div
+          v-else-if="!showcase.hasVue"
+          class="absolute top-0 left-0 flex items-center justify-center w-full h-full pointer-events-none"
+        >
+          <div class="font-bold-body-weight text-eight">
+            Vue is not used on this website
+          </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -199,7 +244,7 @@ import AppButton from '../components/AppButton.vue'
 
 export default {
   components: {
-  //   // ExternalLinkIcon,
+    //   // ExternalLinkIcon,
     LogoIcon,
     TwitterIcon,
     GithubIcon,
@@ -225,11 +270,21 @@ export default {
         return false
       }
       const { hostname } = new URL(this.showcase.url)
-      if (this.showcase.url.endsWith(hostname) || this.showcase.url.endsWith(hostname + '/')) {
+      if (
+        this.showcase.url.endsWith(hostname) ||
+        this.showcase.url.endsWith(hostname + '/')
+      ) {
         return true
       } else {
         return false
       }
+    },
+    vueDocsURL () {
+      return (
+        (this.showcase.vueVersion.startsWith('1') && 'https://v1.vuejs.org') ||
+        (this.showcase.vueVersion.startsWith('2') && 'https://vuejs.org') ||
+        (this.showcase.vueVersion.startsWith('3') && 'https://v3.vuejs.org')
+      )
     }
   },
   mounted () {
@@ -263,20 +318,22 @@ export default {
       this.isLoading = false
       this.showcase = res.payload || null
 
-    // this.sendToContent({
-    //   proxyTo: 'injected',
-    //   from: 'popup',
-    //   payload: 'test from popup'
-    // })
+      // this.sendToContent({
+      //   proxyTo: 'injected',
+      //   from: 'popup',
+      //   payload: 'test from popup'
+      // })
     },
     async getCurrentTab () {
-      return await browser.tabs.query({ currentWindow: true, active: true }).then((tabsArray) => {
-        const { id, status, url } = tabsArray[0]
-        if (status === 'complete') {
-          return { id, url }
-        }
-        return null
-      })
+      return await browser.tabs
+        .query({ currentWindow: true, active: true })
+        .then(tabsArray => {
+          const { id, status, url } = tabsArray[0]
+          if (status === 'complete') {
+            return { id, url }
+          }
+          return null
+        })
     },
     sendToBackground (message) {
       return browser.runtime.sendMessage(message)
@@ -300,9 +357,9 @@ export default {
           return
         }
         const sse = new EventSource(
-        `https://service.vuetelescope.com?url=${this.showcase.url}&isPublic=true`
+          `https://service.vuetelescope.com?url=${this.showcase.url}&isPublic=true`
         )
-        sse.addEventListener('message', (event) => {
+        sse.addEventListener('message', event => {
           try {
             const res = JSON.parse(event.data)
             if (!res.error && !res.isAdultContent) {
