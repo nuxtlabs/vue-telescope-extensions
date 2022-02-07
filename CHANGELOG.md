@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.6](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.5.5...v1.5.6) (2022-01-24)
+
+### [1.5.5](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.5.4...v1.5.5) (2021-11-10)
+
+
+### Bug Fixes
+
+* Correct vue version docs url on vue link ([#11](https://github.com/nuxtlabs/vue-telescope-extensions/issues/11)) ([8a37586](https://github.com/nuxtlabs/vue-telescope-extensions/commit/8a37586141def69c3c291d525ad808ceee72898c))
+
 ### [1.5.4](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.5.3...v1.5.4) (2021-05-11)
 
 ### [1.5.3](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.5.2...v1.5.3) (2021-02-22)

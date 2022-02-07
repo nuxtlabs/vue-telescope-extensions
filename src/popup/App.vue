@@ -42,7 +42,7 @@
           </a>
 
           <a
-            href="https://github.com/nuxt-company/vue-telescope-analyzer"
+            href="https://github.com/nuxtlabs/vue-telescope-analyzer"
             target="_blank"
           >
             <GithubIcon class="w-5 h-5 hover:text-primary-500" />
