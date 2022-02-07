@@ -282,8 +282,8 @@ export default {
     vueDocsURL () {
       return (
         (this.showcase.vueVersion.startsWith('1') && 'https://v1.vuejs.org') ||
-        (this.showcase.vueVersion.startsWith('2') && 'https://vuejs.org') ||
-        (this.showcase.vueVersion.startsWith('3') && 'https://v3.vuejs.org')
+        (this.showcase.vueVersion.startsWith('2') && 'https://v2.vuejs.org') ||
+        (this.showcase.vueVersion.startsWith('3') && 'https://vuejs.org')
       )
     }
   },
