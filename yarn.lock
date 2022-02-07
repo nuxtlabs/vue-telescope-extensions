@@ -7833,10 +7833,10 @@ vue-svg-loader@^0.16.0:
     loader-utils "^1.2.3"
     svg-to-vue "^0.7.0"
 
-vue-telescope-analyzer@^0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/vue-telescope-analyzer/-/vue-telescope-analyzer-0.9.3.tgz#4ddd2ad8350343aca38486c681866a9f42c54c46"
-  integrity sha512-oE71pRjZAOVatol82RlikpbvB2RRDEMpqp294naoo6O+XFffJ0F+sQXHAJxkL/V1+Eh/Thci05Ar8eL+mZ4LKw==
+vue-telescope-analyzer@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/vue-telescope-analyzer/-/vue-telescope-analyzer-0.9.5.tgz#1dbf53734f81ce87edcb8302bb1645eb257c28a7"
+  integrity sha512-mPUYtCYGvEsxSvtnDSLEHz/+adyM8iJaK257e8g4VGj0BjTTT8bjkdPvd56y30yOlILNU4GYHWyU3CkRNz8y7Q==
   dependencies:
     consola "^2.15.3"
     make-dir "^3.1.0"
