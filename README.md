@@ -4,7 +4,7 @@
 
 [![Chrome Addon](https://badgen.net/chrome-web-store/v/neaebjphlfplgdhedjdhcnpjkndddbpd?icon=chrome)](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
 [![Firefox Addon](https://badgen.net/amo/v/vue-telescope?icon=firefox)](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
-[![Edge Addon](https://badgen.net/badge/icon/v1.5.7?icon=windows&label=Microsoft+Edge)](https://microsoftedge.microsoft.com/addons/detail/vue-telescope/icgcillpgelpleniodgkmohgdmeogodl)
+[![Edge Addon](https://badgen.net/badge/icon/v1.5.8?icon=windows&label=Microsoft+Edge)](https://microsoftedge.microsoft.com/addons/detail/vue-telescope/icgcillpgelpleniodgkmohgdmeogodl)
 
 [![Extension Screenshot](https://user-images.githubusercontent.com/904724/105485378-12d55300-5cad-11eb-82f9-6cdaf214e6fa.jpg)](https://vuetelescope.com)
 
@@ -16,7 +16,7 @@
 
 ## Manual installation
 
-[download-extension-link]: https://github.com/nuxt-company/vue-telescope-extensions/releases/download/v1.5.7/vue-telescope-extension-v1.5.7.zip
+[download-extension-link]: https://github.com/nuxt-company/vue-telescope-extensions/releases/download/v1.5.8/vue-telescope-extension-v1.5.8.zip
 
 ### Chrome
 
