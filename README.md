@@ -1,6 +1,6 @@
 # Vue Telescope Browser Extensions
 
-> Browser extensions for [Vue Telescope](https://vuetelescope.com): available on Chrome, Firefox and Edge.
+Browser extensions for [Vue Telescope](https://vuetelescope.com): available on Chrome, Firefox and Edge.
 
 [![Chrome Addon](https://badgen.net/chrome-web-store/v/neaebjphlfplgdhedjdhcnpjkndddbpd?icon=chrome)](https://chrome.google.com/webstore/detail/vue-telescope/neaebjphlfplgdhedjdhcnpjkndddbpd)
 [![Firefox Addon](https://badgen.net/amo/v/vue-telescope?icon=firefox)](https://addons.mozilla.org/en-GB/firefox/addon/vue-telescope/)
