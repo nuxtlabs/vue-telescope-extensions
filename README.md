@@ -16,7 +16,7 @@
 
 ## Manual installation
 
-[download-extension-link]: https://github.com/nuxt-company/vue-telescope-extensions/releases/download/v1.5.8/vue-telescope-extension-v1.5.8.zip
+[download-extension-link]: https://github.com/nuxtlabs/vue-telescope-extensions/releases/download/v1.5.8/vue-telescope-extension-v1.5.8.zip
 
 ### Chrome
 
