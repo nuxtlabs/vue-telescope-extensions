@@ -1,15 +1,26 @@
+import { IS_FIREFOX, isSupportExecutionVersion } from './utils'
 const browser = require('webextension-polyfill')
 
-// injecting the script
+// injecting the script, inspire by react-devtools-extensions
+function injectScriptSync (src) {
+  let code = ''
+  const request = new XMLHttpRequest()
+  request.addEventListener('load', function () {
+    code = this.responseText
+  })
+  request.open('GET', src, false)
+  request.send()
+  const script = document.createElement('script')
+  script.textContent = code
+  // This script runs before the <head> element is created, so we add the script to <html> instead.
+  document.documentElement.appendChild(script)
+  script.parentNode.removeChild(script)
+}
 
-const content = browser.extension.getURL('injected.js')
-const script = document.createElement('script')
-script.setAttribute('defer', 'defer')
-script.setAttribute('type', 'text/javascript')
-script.setAttribute('src', content)
-// document.body.appendChild(script)
-document.documentElement.appendChild(script)
-script.parentNode.removeChild(script)
+// equivalent logic for other browser is in background.js
+if (IS_FIREFOX || !isSupportExecutionVersion) {
+  injectScriptSync(browser.extension.getURL('injected.js'))
+}
 
 // content script logic
 
