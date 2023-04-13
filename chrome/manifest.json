@@ -28,7 +28,7 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["https://*/*", "scripting"],
+  "permissions": ["scripting"],
   "host_permissions": [
     "<all_urls>"
   ],

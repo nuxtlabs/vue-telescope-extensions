@@ -71,5 +71,8 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.3.10",
     "webpack-extension-reloader": "^1.1.4"
+  },
+  "volta": {
+    "node": "16.20.0"
   }
 }
