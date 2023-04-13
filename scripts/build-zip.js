@@ -8,10 +8,8 @@ const argv = require('minimist')(process.argv.slice(2))
 const browser = argv['build-browser'] || 'chrome'
 const isFireFox = browser === 'firefox'
 
-const distSuffix = isFireFox ? '-firefox' : ''
-
-const DEST_DIR = path.join(__dirname, `../dist${distSuffix}`)
-const DEST_ZIP_DIR = path.join(__dirname, `../dist-zip${distSuffix}`)
+const DEST_DIR = path.join(__dirname, `../dist${isFireFox ? '-firefox' : ''}`)
+const DEST_ZIP_DIR = path.join(__dirname, '../dist-zip')
 
 const extractExtensionData = () => {
   const extPackageJson = require('../package.json')
@@ -47,7 +45,7 @@ const buildZip = (src, dist, zipFilename) => {
 
 const main = () => {
   const { name, version } = extractExtensionData()
-  const zipFilename = `${name}-v${version}.zip`
+  const zipFilename = `${name}${isFireFox ? '-firefox' : ''}-v${version}.zip`
 
   makeDestZipDirIfNotExists()
 
