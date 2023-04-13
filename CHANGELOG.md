@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.6.1...v1.7.0) (2023-04-13)
+
+
+### Features
+
+* Improve script injection and migrate to Manifest V3 ([#18](https://github.com/nuxtlabs/vue-telescope-extensions/issues/18)) ([8ea5079](https://github.com/nuxtlabs/vue-telescope-extensions/commit/8ea50793b8a1ff35a718ac05accbf2cc6ede1f73))
+
 ### [1.6.1](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.6.0...v1.6.1) (2022-09-21)
 
 ## [1.6.0](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.5.8...v1.6.0) (2022-09-21)
