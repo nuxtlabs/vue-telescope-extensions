@@ -3,10 +3,14 @@ const webpack = require('webpack')
 const ejs = require('ejs')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
-const ExtensionReloader = require('webpack-extension-reloader')
+// const ExtensionReloader = require('webpack-extension-reloader')
 const { VueLoaderPlugin } = require('vue-loader')
 const { version } = require('./package.json')
 const path = require('path')
+
+const argv = require('minimist')(process.argv.slice(2))
+const browser = argv['build-browser'] || 'chrome'
+const distDir = `/dist${browser === 'firefox' ? '-firefox' : ''}`
 
 const config = {
   devtool: 'inline-source-map',
@@ -19,7 +23,7 @@ const config = {
     content: './content.js'
   },
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, distDir),
     filename: '[name].js'
     // sourceMapFilename: '[name].js.map'
   },
@@ -88,17 +92,24 @@ const config = {
       { from: 'popup/popup.html', to: 'popup/popup.html', transform: transformHtml },
       {
         from: './popup/popup.css',
-        to: path.join(__dirname, '/dist/popup/popup.css')
+        to: path.join(__dirname, `${distDir}/popup/popup.css`)
       },
       {
-        from: 'manifest.json',
+        // firefox only support manifest V2
+        from: `../${browser}/manifest.json`,
         to: 'manifest.json',
         transform: (content) => {
           const jsonContent = JSON.parse(content)
           jsonContent.version = version
 
           if (config.mode === 'development') {
-            jsonContent.content_security_policy = "script-src 'self' 'unsafe-eval'; object-src 'self'"
+            if (browser === 'firefox') {
+              jsonContent.content_security_policy = "script-src 'self'; object-src 'self'"
+            } else {
+              jsonContent.content_security_policy = {
+                extension_pages: "script-src 'self'; object-src 'self'"
+              }
+            }
           }
 
           return JSON.stringify(jsonContent, null, 2)
@@ -130,11 +141,13 @@ if (config.mode === 'development') {
 }
 
 if (process.env.HMR === 'true') {
-  config.plugins = (config.plugins || []).concat([
-    new ExtensionReloader({
-      manifest: path.join(__dirname, '/src/manifest.json')
-    })
-  ])
+  // https://github.com/rubenspgcavalcante/webpack-extension-reloader/issues/125
+  // ExtensionReloader think `background.scripts` is must, but manifest V3 can use `service_worker`
+  // config.plugins = (config.plugins || []).concat([
+  //   new ExtensionReloader({
+  //     manifest: path.join(__dirname, '/src/manifest.json')
+  //   })
+  // ])
 }
 
 function transformHtml (content) {

@@ -1,16 +1,53 @@
+import { IS_FIREFOX, isSupportExecutionVersion } from './utils'
 const browser = require('webextension-polyfill')
 
 const tabsStorage = {}
 
+if (!IS_FIREFOX && isSupportExecutionVersion) {
+  /**
+   *  equivalent logic for Firefox is in content.js
+   *  Manifest V3 method of injecting content scripts (not yet supported in Firefox)
+      Note: the "world" option in registerContentScripts is only available in Chrome v102+
+      MAIN The execution environment of the web page. This environment is shared with the web page, without isolation.
+   */
+  browser.scripting.registerContentScripts(
+    [
+      {
+        id: 'injected',
+        matches: ['<all_urls>'],
+        js: ['injected.js'],
+        runAt: 'document_start',
+        world: browser.scripting.ExecutionWorld.MAIN
+      }
+    ],
+    function () {
+    // When the content scripts are already registered, an error will be thrown.
+    // It happens when the service worker process is incorrectly duplicated.
+      if (browser.runtime.lastError) {
+        console.error(browser.runtime.lastError)
+      }
+    }
+  )
+}
+
 browser.tabs.onActivated.addListener(handleActivated)
 browser.tabs.onUpdated.addListener(handleUpdated)
+
+function setIcon (details) {
+  // because manifest version is different
+  if (IS_FIREFOX) {
+    browser.browserAction.setIcon(details)
+  } else {
+    browser.action.setIcon(details)
+  }
+}
 
 browser.runtime.onMessage.addListener(
   async function (message, sender, sendResponse) {
     if (message.action === 'analyze') {
       // when sending message from popup.js there's no sender.tab, so need to pass tabId
       const tabId = (sender.tab && sender.tab.id) || message.payload.tabId
-      browser.browserAction.setIcon({
+      setIcon({
         tabId: tabId,
         path: message.payload.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
       })
@@ -74,7 +111,7 @@ browser.runtime.onMessage.addListener(
 
 // when tab clicked
 async function handleActivated ({ tabId, windowId }) {
-  browser.browserAction.setIcon({
+  setIcon({
     tabId,
     path: tabsStorage[tabId] && tabsStorage[tabId] && tabsStorage[tabId].hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
   })

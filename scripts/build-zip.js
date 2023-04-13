@@ -4,8 +4,14 @@ const fs = require('fs')
 const path = require('path')
 const archiver = require('archiver')
 
-const DEST_DIR = path.join(__dirname, '../dist')
-const DEST_ZIP_DIR = path.join(__dirname, '../dist-zip')
+const argv = require('minimist')(process.argv.slice(2))
+const browser = argv['build-browser'] || 'chrome'
+const isFireFox = browser === 'firefox'
+
+const distSuffix = isFireFox ? '-firefox' : ''
+
+const DEST_DIR = path.join(__dirname, `../dist${distSuffix}`)
+const DEST_ZIP_DIR = path.join(__dirname, `../dist-zip${distSuffix}`)
 
 const extractExtensionData = () => {
   const extPackageJson = require('../package.json')

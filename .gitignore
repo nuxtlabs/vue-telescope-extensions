@@ -2,6 +2,8 @@
 /*.log
 /dist
 /dist-zip
+/dist-firefox
+/dist-zip-firefox
 coverage
 .env
 .DS_Store
