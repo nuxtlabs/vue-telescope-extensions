@@ -16,7 +16,8 @@ Browser extensions for [Vue Telescope](https://vuetelescope.com): available on C
 
 ## Manual installation
 
-[download-extension-link]: https://github.com/nuxtlabs/vue-telescope-extensions/releases/download/v1.5.8/vue-telescope-extension-v1.5.8.zip
+[download-extension-link]: https://github.com/nuxtlabs/vue-telescope-extensions/releases/download/v1.7.0/vue-telescope-extension-v1.7.0.zip
+[download-extension-firefox-link]: https://github.com/nuxtlabs/vue-telescope-extensions/releases/download/v1.7.0/vue-telescope-extension-firefox-v1.7.0.zip
 
 ### Chrome
 
