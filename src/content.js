@@ -18,7 +18,7 @@ function injectScriptSync (src) {
 }
 
 // equivalent logic for other browser is in background.js
-if (IS_FIREFOX || !isSupportExecutionVersion) {
+if ((IS_FIREFOX || !isSupportExecutionVersion) && typeof browser.extension.getURL === 'function') {
   injectScriptSync(browser.extension.getURL('injected.js'))
 }
 
