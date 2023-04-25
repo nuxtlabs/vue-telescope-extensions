@@ -1,9 +1,9 @@
-import { IS_FIREFOX, isSupportExecutionVersion } from './utils'
+import { IS_CHROME, IS_FIREFOX, isSupportExecutionVersion } from './utils'
 const browser = require('webextension-polyfill')
 
 const tabsStorage = {}
 
-if (!IS_FIREFOX && isSupportExecutionVersion) {
+if (IS_CHROME && isSupportExecutionVersion) {
   /**
    *  equivalent logic for Firefox is in content.js
    *  Manifest V3 method of injecting content scripts (not yet supported in Firefox)
