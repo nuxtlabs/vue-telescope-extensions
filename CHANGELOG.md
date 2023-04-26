@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.7.2...v1.8.0) (2023-04-26)
+
+
+### Features
+
+* support Nuxt version ([37d49c8](https://github.com/nuxtlabs/vue-telescope-extensions/commit/37d49c82d4666b4290c9e16f24f8bc15866182db))
+
 ### [1.7.2](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.7.1...v1.7.2) (2023-04-25)
 
 

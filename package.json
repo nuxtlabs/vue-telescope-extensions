@@ -1,6 +1,6 @@
 {
   "name": "vue-telescope-extension",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "description": "The Vue Telescope extension to discover Vue websites.",
   "author": "NuxtJS Company",
   "license": "GPL-3.0",
