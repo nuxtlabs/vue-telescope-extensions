@@ -105,7 +105,7 @@
 
               <ExploreDataItem
                 v-if="showcase.framework"
-                label="Framework"
+                :label="showcase.framework.version ? showcase.framework.name : 'Framework'"
                 tag="a"
                 :href="showcase.framework.url"
                 target="_blank"
@@ -116,8 +116,8 @@
                   :src="iconURL(showcase.framework.imgPath)"
                   alt
                 />
-                <div class="text-base leading-seven font-bold-body-weight">
-                  {{ showcase.framework.name }}
+                <div class="text-base leading-base font-bold-body-weight">
+                  {{ showcase.framework.version || showcase.framework.name }}
                 </div>
               </ExploreDataItem>
 

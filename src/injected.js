@@ -22,6 +22,12 @@ async function analyze () {
   const vueVersion = window.$nuxt?.$root?.constructor?.version || window.Vue?.version || [...document.querySelectorAll("*")].map((el) => el.__vue__?.$root?.constructor?.version || el.__vue_app__?.version).filter(Boolean)[0]
   const { ssr } = await detectors.getVueMeta(context)
   const framework = await detectors.getFramework(context)
+  if (framework?.slug === 'nuxtjs' && vueVersion) {
+    try {
+      framework.version = window.__unctx__?.get('nuxt-app')?.use()?.versions?.nuxt
+    } catch (e) {}
+    framework.version = framework.version || `Version ${vueVersion.split('.')[0]}`
+  }
   const ui = await detectors.getUI(context)
   const plugins = await detectors.getPlugins(context)
   const nuxtMeta = await detectors.getNuxtMeta(context)
