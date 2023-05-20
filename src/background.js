@@ -1,7 +1,26 @@
 import { IS_CHROME, IS_FIREFOX, isSupportExecutionVersion } from './utils'
 const browser = require('webextension-polyfill')
 
-const tabsStorage = {}
+// persistent state storage
+class TabsStorage {
+  constructor () {
+    this.key = 'tabs'
+  }
+
+  async get () {
+    const cache = await browser.storage.local.get([this.key])
+    return cache[this.key] || {}
+  }
+
+  async set (tabId, state) {
+    const cache = await this.get()
+    return browser.storage.local.set({ [this.key]: { ...cache, [tabId]: state } })
+  }
+
+  async clear () {
+    return browser.storage.local.remove([this.key])
+  }
+}
 
 if (IS_CHROME && isSupportExecutionVersion) {
   /**
@@ -32,6 +51,13 @@ if (IS_CHROME && isSupportExecutionVersion) {
 
 browser.tabs.onActivated.addListener(handleActivated)
 browser.tabs.onUpdated.addListener(handleUpdated)
+browser.runtime.onStartup.addListener(() => {
+  // clear state on startup.
+  // note: chrome allows to use 'browser.storage.session' but it is available in chrome only.
+  // for firefox a 'window.session' can be considered as alternative.
+  // TODO: create polyfill for session store.
+  new TabsStorage().clear()
+})
 
 function setIcon (details) {
   // because manifest version is different
@@ -44,6 +70,7 @@ function setIcon (details) {
 
 browser.runtime.onMessage.addListener(
   async function (message, sender, sendResponse) {
+    const tabsStorage = new TabsStorage()
     if (message.action === 'analyze') {
       // when sending message from popup.js there's no sender.tab, so need to pass tabId
       const tabId = (sender.tab && sender.tab.id) || message.payload.tabId
@@ -52,17 +79,18 @@ browser.runtime.onMessage.addListener(
         path: message.payload.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
       })
 
-      if (!tabsStorage[tabId]) {
-        tabsStorage[tabId] = message.payload
+      const tabs = await tabsStorage.get()
+      if (!tabs[tabId]) {
+        tabs[tabId] = message.payload
       } else {
         // temporary fix when hit CSP
         if (!message.payload.modules.length) delete message.payload.modules
         if (!message.payload.plugins.length) delete message.payload.plugins
 
-        tabsStorage[tabId] = { ...tabsStorage[tabId], ...message.payload }
+        tabs[tabId] = { ...tabs[tabId], ...message.payload }
       }
 
-      const showcase = tabsStorage[tabId]
+      const showcase = tabs[tabId]
       if (showcase.hasVue && !showcase.slug) {
         try {
           if (typeof EventSource === 'undefined') {
@@ -96,14 +124,11 @@ browser.runtime.onMessage.addListener(
           })
         } catch (err) {}
       }
-      // tabsStorage[tabId] = message.payload
+      tabsStorage.set(tabId, tabs[tabId])
     } else if (!sender.tab) {
       if (message.action === 'getShowcase') {
-        // this is likely popup requesting
-        // sendResponse doesn't work in Firefox 👀
-        // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage#Sending_a_synchronous_response
-        return Promise.resolve({ payload: tabsStorage[message.payload.tabId] })
-        // sendResponse({ payload: tabsStorage[message.payload.tabId] })
+        const tabs = await tabsStorage.get()
+        return { payload: tabs[message.payload.tabId] }
       }
     }
   }
@@ -111,9 +136,11 @@ browser.runtime.onMessage.addListener(
 
 // when tab clicked
 async function handleActivated ({ tabId, windowId }) {
+  const tabsStorage = new TabsStorage()
+  const tabs = await tabsStorage.get()
   setIcon({
     tabId,
-    path: tabsStorage[tabId] && tabsStorage[tabId] && tabsStorage[tabId].hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
+    path: tabs[tabId] && tabs[tabId].hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
   })
   // chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
   //   const { id, url, status } = tabs[0]
@@ -126,7 +153,9 @@ async function handleActivated ({ tabId, windowId }) {
 // when tab updated
 async function handleUpdated (tabId, changeInfo, tabInfo) {
   if (changeInfo.status === 'complete') {
-    if (!tabsStorage[tabId]) return
+    const tabsStorage = new TabsStorage()
+    const tabs = await tabsStorage.get()
+    if (!tabs[tabId]) return
     // tabsStorage[tabId].url = tabInfo.url
     browser.tabs.sendMessage(tabId, {
       from: 'background',
