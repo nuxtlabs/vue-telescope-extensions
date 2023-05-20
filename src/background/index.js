@@ -1,26 +1,8 @@
-import { IS_CHROME, IS_FIREFOX, isSupportExecutionVersion } from './utils'
-const browser = require('webextension-polyfill')
+import { IS_CHROME, IS_FIREFOX, isSupportExecutionVersion } from '../utils'
+import browser from 'webextension-polyfill'
+import TabsStateService from './TabsStateService'
 
-// persistent state storage
-class TabsStorage {
-  constructor () {
-    this.key = 'tabs'
-  }
-
-  async get () {
-    const cache = await browser.storage.local.get([this.key])
-    return cache[this.key] || {}
-  }
-
-  async set (tabId, state) {
-    const cache = await this.get()
-    return browser.storage.local.set({ [this.key]: { ...cache, [tabId]: state } })
-  }
-
-  async clear () {
-    return browser.storage.local.remove([this.key])
-  }
-}
+const tabsState = new TabsStateService()
 
 if (IS_CHROME && isSupportExecutionVersion) {
   /**
@@ -56,7 +38,7 @@ browser.runtime.onStartup.addListener(() => {
   // note: chrome allows to use 'browser.storage.session' but it is available in chrome only.
   // for firefox a 'window.session' can be considered as alternative.
   // TODO: create polyfill for session store.
-  new TabsStorage().clear()
+  tabsState.clear()
 })
 
 function setIcon (details) {
@@ -70,7 +52,6 @@ function setIcon (details) {
 
 browser.runtime.onMessage.addListener(
   async function (message, sender, sendResponse) {
-    const tabsStorage = new TabsStorage()
     if (message.action === 'analyze') {
       // when sending message from popup.js there's no sender.tab, so need to pass tabId
       const tabId = (sender.tab && sender.tab.id) || message.payload.tabId
@@ -79,7 +60,7 @@ browser.runtime.onMessage.addListener(
         path: message.payload.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
       })
 
-      const tabs = await tabsStorage.get()
+      const tabs = await tabsState.get()
       if (!tabs[tabId]) {
         tabs[tabId] = message.payload
       } else {
@@ -124,10 +105,10 @@ browser.runtime.onMessage.addListener(
           })
         } catch (err) {}
       }
-      tabsStorage.set(tabId, tabs[tabId])
+      tabsState.set(tabId, tabs[tabId])
     } else if (!sender.tab) {
       if (message.action === 'getShowcase') {
-        const tabs = await tabsStorage.get()
+        const tabs = await tabsState.get()
         return { payload: tabs[message.payload.tabId] }
       }
     }
@@ -136,8 +117,7 @@ browser.runtime.onMessage.addListener(
 
 // when tab clicked
 async function handleActivated ({ tabId, windowId }) {
-  const tabsStorage = new TabsStorage()
-  const tabs = await tabsStorage.get()
+  const tabs = await tabsState.get()
   setIcon({
     tabId,
     path: tabs[tabId] && tabs[tabId].hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
@@ -153,8 +133,7 @@ async function handleActivated ({ tabId, windowId }) {
 // when tab updated
 async function handleUpdated (tabId, changeInfo, tabInfo) {
   if (changeInfo.status === 'complete') {
-    const tabsStorage = new TabsStorage()
-    const tabs = await tabsStorage.get()
+    const tabs = await tabsState.get()
     if (!tabs[tabId]) return
     // tabsStorage[tabId].url = tabInfo.url
     browser.tabs.sendMessage(tabId, {
