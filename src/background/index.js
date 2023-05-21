@@ -1,8 +1,10 @@
 import { IS_CHROME, IS_FIREFOX, isSupportExecutionVersion } from '../utils'
 import browser from 'webextension-polyfill'
 import TabsStateService from './TabsStateService'
+import LocalSettingsController from '../shared/LocalSettingsController'
 
 const tabsState = new TabsStateService()
+const settingsController = new LocalSettingsController()
 
 if (IS_CHROME && isSupportExecutionVersion) {
   /**
@@ -31,7 +33,6 @@ if (IS_CHROME && isSupportExecutionVersion) {
   )
 }
 
-browser.tabs.onActivated.addListener(handleActivated)
 browser.tabs.onUpdated.addListener(handleUpdated)
 browser.runtime.onStartup.addListener(() => {
   // clear state on startup.
@@ -41,24 +42,56 @@ browser.runtime.onStartup.addListener(() => {
   tabsState.clear()
 })
 
-function setIcon (details) {
+async function setIcon (details) {
   // because manifest version is different
   if (IS_FIREFOX) {
-    browser.browserAction.setIcon(details)
+    await browser.browserAction.setIcon(details)
   } else {
-    browser.action.setIcon(details)
+    await browser.action.setIcon(details)
   }
 }
+
+const setIconForTab = async (tabId) => {
+    const [tabs, settings] = await Promise.all([
+        tabsState.get(),
+        settingsController.get()
+    ])
+    const tab = tabs[tabId];
+    if (tab?.framework?.slug && settings.useFrameworkIcon ) {
+        const slug = tab.framework.slug
+        const iconPath = `icons/${slug}.png`
+        try {
+            await setIcon({tabId, path: iconPath});
+        } catch(e) {
+            await setIcon({
+                tabId,
+                path: 'icons/icon-128.png'
+              })
+        }
+    } else {
+        await setIcon({
+          tabId,
+          path: tab?.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
+        })
+    }
+}
+
+browser.storage.local.onChanged.addListener(async (payload) => {
+    if (payload.settings) {
+        const tabs = await browser.tabs.query({});
+        tabs.forEach(tab => {
+            if (tab.id) {
+                setIconForTab(tab.id)
+            }
+        })
+    }
+})
 
 browser.runtime.onMessage.addListener(
   async function (message, sender, sendResponse) {
     if (message.action === 'analyze') {
       // when sending message from popup.js there's no sender.tab, so need to pass tabId
       const tabId = (sender.tab && sender.tab.id) || message.payload.tabId
-      setIcon({
-        tabId: tabId,
-        path: message.payload.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
-      })
 
       const tabs = await tabsState.get()
       if (!tabs[tabId]) {
@@ -81,7 +114,7 @@ browser.runtime.onMessage.addListener(
           const sse = new EventSource(
           `https://service.vuetelescope.com?url=${message.payload.url}`
           )
-          sse.addEventListener('message', (event) => {
+          sse.addEventListener('message', async (event) => {
             try {
               const res = JSON.parse(event.data)
               if (!res.error && !res.isAdultContent) {
@@ -96,6 +129,7 @@ browser.runtime.onMessage.addListener(
                 if (!showcase.plugins.length && res.plugins.length) {
                   showcase.plugins = res.plugins
                 }
+                await tabsState.updateData(tabId, tabs[tabId])
               } else {
                 throw new Error('API call to VT failed')
               }
@@ -105,7 +139,8 @@ browser.runtime.onMessage.addListener(
           })
         } catch (err) {}
       }
-      tabsState.set(tabId, tabs[tabId])
+      await tabsState.updateData(tabId, tabs[tabId])
+      await setIconForTab(tabId);
     } else if (!sender.tab) {
       if (message.action === 'getShowcase') {
         const tabs = await tabsState.get()
@@ -114,21 +149,6 @@ browser.runtime.onMessage.addListener(
     }
   }
 )
-
-// when tab clicked
-async function handleActivated ({ tabId, windowId }) {
-  const tabs = await tabsState.get()
-  setIcon({
-    tabId,
-    path: tabs[tabId] && tabs[tabId].hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png'
-  })
-  // chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-  //   const { id, url, status } = tabs[0]
-  //   if (status === 'complete') {
-  //     // tabsStorage[id].url = url
-  //   }
-  // })
-}
 
 // when tab updated
 async function handleUpdated (tabId, changeInfo, tabInfo) {
@@ -142,10 +162,5 @@ async function handleUpdated (tabId, changeInfo, tabInfo) {
       action: 'analyze',
       payload: {}
     })
-    // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    //   // send message to content script
-    //   chrome.tabs.sendMessage(tabs[0].id, { from: 'background', to: 'injected', payload: { message: 'hello from background with sendMessage' } })
-    // })
-    // console.log('tabsStorage', tabsStorage)
   }
 }
