@@ -1,22 +1,18 @@
-import browser from 'webextension-polyfill'
+import CacheService from '../shared/CacheService'
 
 // persistent state storage
-export default class TabsStorage {
-  constructor () {
-    this.key = 'tabs'
+export default class TabsStorage extends CacheService {
+  get key () {
+    return 'tabs'
   }
 
   async get () {
-    const cache = await browser.storage.local.get([this.key])
-    return cache[this.key] || {}
+    const cache = await super.get()
+    return cache || {}
   }
 
-  async set (tabId, state) {
+  async updateData (tabId, state) {
     const cache = await this.get()
-    return browser.storage.local.set({ [this.key]: { ...cache, [tabId]: state } })
-  }
-
-  async clear () {
-    return browser.storage.local.remove([this.key])
+    return this.set({ ...cache, [tabId]: state })
   }
 }
