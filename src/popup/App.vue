@@ -7,6 +7,7 @@
         </a>
 
         <div class="flex items-center">
+          <SettingsButton class="mx-3"/>
           <a
             v-if="isRootUrl && showcase && showcase.hasVue && showcase.isPublic"
             :href="`https://vuetelescope.com/explore/${showcase.slug}`"
@@ -241,6 +242,7 @@ import ModulesIcon from '../images/modules.svg?inline'
 
 import ExploreDataItem from '../components/ExploreDataItem.vue'
 import AppButton from '../components/AppButton.vue'
+import SettingsButton from '../components/Settings.vue'
 
 export default {
   components: {
@@ -253,7 +255,8 @@ export default {
     ModulesIcon,
     //   RefreshIcon,
     ExploreDataItem,
-    AppButton
+    AppButton,
+    SettingsButton
   },
   data () {
     return {
