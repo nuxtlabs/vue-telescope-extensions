@@ -8,7 +8,7 @@
             <button @click="toggleIconState" class="whitespace-no-wrap outline-none flex flex-row items-center focus:outline-none">
                 <CheckboxSelectedIcon v-if="useFrameworkIcon" class="mr-2 w-5 h-5"/>
                 <CheckboxIcon v-else class="mr-2 w-5 h-5"/>
-                use framework brand icon
+                use framework logo
             </button>
         </li>
     </ul>
