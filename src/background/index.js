@@ -1,10 +1,8 @@
 import { IS_CHROME, IS_FIREFOX, isSupportExecutionVersion } from '../utils'
 import browser from 'webextension-polyfill'
 import TabsStateService from './TabsStateService'
-import LocalSettingsController from '../shared/LocalSettingsController'
 
 const tabsState = new TabsStateService()
-const settingsController = new LocalSettingsController()
 
 if (IS_CHROME && isSupportExecutionVersion) {
   /**
@@ -52,12 +50,9 @@ async function setIcon (details) {
 }
 
 const setIconForTab = async (tabId) => {
-    const [tabs, settings] = await Promise.all([
-        tabsState.get(),
-        settingsController.get()
-    ])
+    const tabs = await tabsState.get()
     const tab = tabs[tabId];
-    if (tab?.framework?.slug && settings.useFrameworkIcon ) {
+    if (tab?.framework?.slug) {
         const slug = tab.framework.slug
         const iconPath = `icons/${slug}.png`
         try {
