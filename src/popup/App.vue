@@ -64,7 +64,7 @@
         class="absolute top-0 left-0 flex items-center justify-center w-full h-full"
       >
         <div class="font-bold-body-weight text-eight">
-          Please enter an url in the address bar.
+          Please enter a url in the address bar.
         </div>
       </div>
 
