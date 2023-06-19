@@ -19,7 +19,7 @@ const config = {
   entry: {
     'popup/popup': './popup/popup.js',
     injected: './injected.js',
-    background: './background.js',
+    background: './background/index.js',
     content: './content.js'
   },
   output: {
