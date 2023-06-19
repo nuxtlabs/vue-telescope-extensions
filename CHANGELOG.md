@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.8.0...v1.9.0) (2023-06-19)
+
+
+### Features
+
+* add option to display framework icon ([#21](https://github.com/nuxtlabs/vue-telescope-extensions/issues/21)) ([1526345](https://github.com/nuxtlabs/vue-telescope-extensions/commit/152634513ee0b0e07468541483de3a7b35c7e245)), closes [/github.com/nuxtlabs/vue-telescope-extensions/pull/21#issuecomment-1582693379](https://github.com/nuxtlabs//github.com/nuxtlabs/vue-telescope-extensions/pull/21/issues/issuecomment-1582693379)
+
+
+### Bug Fixes
+
+* typo in error message ([#22](https://github.com/nuxtlabs/vue-telescope-extensions/issues/22)) ([742cbc8](https://github.com/nuxtlabs/vue-telescope-extensions/commit/742cbc836a9f01adde9e36b8aec61941d8b250e3))
+
 ## [1.8.0](https://github.com/nuxtlabs/vue-telescope-extensions/compare/v1.7.2...v1.8.0) (2023-04-26)
 
 
