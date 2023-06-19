@@ -20,7 +20,7 @@
     "dev": "concurrently \"npm run watch:tailwind\" \"npm run watch:dev\"",
     "build": "npm run build:tailwind && webpack --mode production",
     "build:firefox": "npm run build:tailwind && webpack --mode production --build-browser firefox && cp dist/tailwind.css dist-firefox/tailwind.css",
-    "release": "standard-version && git push --follow-tags origin master"
+    "release": "standard-version && git push --follow-tags origin main"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
