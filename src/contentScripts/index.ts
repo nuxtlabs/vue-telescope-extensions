@@ -1,5 +1,3 @@
-const browser = require('webextension-polyfill')
-
 // injecting the script
 function injectScript(src: any) {
   const script = document.createElement('script')
