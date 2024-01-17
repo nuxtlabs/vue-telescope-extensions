@@ -1,14 +1,36 @@
 <script setup lang="ts">
 const showcase = ref()
 const isLoading = ref(false)
-const timer = ref()
+const saving = ref(false)
+const savingError = ref(false)
 const currentTab = ref()
+const timer = ref()
+
+const isRootUrl = computed(() => {
+  if (!showcase.value || !showcase.value.url)
+    return false
+
+  const { hostname } = new URL(showcase.value.url)
+
+  if (showcase.value.url.endsWith(hostname) || showcase.value.url.endsWith(`${hostname}/`))
+    return false
+  else
+    return true
+})
+
+const vueDocsURL = computed(() => {
+  return (
+    (showcase.value.vueVersion.startWith('1') && 'https://v1.vuejs.org')
+    || (showcase.value.vueVersion.startWith('2') && 'https://v2.vuejs.org')
+    || (showcase.value.vueVersion.startWith('3') && 'https://vuejs.org')
+  )
+})
 
 const getCurrentTab = async () => {
-  return await browser.tabs
-    .query({ currentWindow: true, active: true })
+  return await browser.tabs.query({ currentWindow: true, active: true })
     .then((tabsArray: any) => {
       const { id, status, url } = tabsArray[0]
+
       if (status === 'complete')
         return { id, url }
 
@@ -16,62 +38,45 @@ const getCurrentTab = async () => {
     })
 }
 
-const sendToBackground = (message: any) => {
-  return browser.runtime.sendMessage(message)
-}
-
 const detect = async (nbTries = 0) => {
   currentTab.value = await getCurrentTab()
+
   if (!currentTab.value) {
     timer.value = setTimeout(() => detect(), 1000)
     return
   }
-  const tabId = currentTab.value.id
-  const res = await sendToBackground({
+
+  const tabId: number = currentTab.value.id
+
+  const res = await browser.runtime.sendMessage({
     from: 'popup',
     action: 'getShowcase',
-    payload: {
-      tabId,
-    },
+    payload: { tabId },
   })
-  if (!res.payload && nbTries < 3) {
-    timer.value = setTimeout(() => detect(nbTries + 1), 1000)
-    return
-  }
-  isLoading.value = false
-  showcase.value = res.payload || null
 
-  // this.sendToContent({
-  //   proxyTo: 'injected',
-  //   from: 'popup',
-  //   payload: 'test from popup'
-  // })
+  // console.log('res', res)
+
+  // if (!res.payload && nbTries < 3) {
+  //   timer.value = setTimeout(() => detect(nbTries + 1), 1000)
+  //   return
+  // }
+
+  // isLoading.value = false
+  // showcase.value = res.payload || null
 }
 
-onMounted(() => {
-  detect()
-  // console.log('showcase', showcase.value)
+onMounted(() => detect())
+
+onUnmounted(() => {
+  clearTimeout(timer.value)
+  timer.value = 0
 })
 </script>
 
 <template>
-  <main class="w-[561px] text-center bg-gray-950 p-6">
-    <div class="flex items-center justify-center pb-4 border-b border-gray-800">
-      <Logo />
-    </div>
+  <main class="w-[300px] px-4 py-5 text-center text-gray-700">
+    <Logo />
 
-    <div class="h-[400px]" />
-
-    <div class="flex items-end justify-between pt-5 border-t border-gray-800">
-      <span target="_blank" class="text-gray-400">Published under <a href="https://github.com/nuxtlabs/vue-telescope-extensions/blob/main/LICENSE" class="hover:underline">MIT license.</a></span>
-      <div class="flex space-x-4">
-        <a href="https://github.com/nuxtlabs/vue-telescope-extensions" class="text-gray-400" target="_blank">
-          <div class="w-5 h-5 duration-200 i-simple-icons-github hover:bg-gray-300 transition-hover" />
-        </a>
-        <a href="https://github.com/nuxtlabs/vue-telescope-extensions" class="text-gray-400" target="_blank">
-          <div class="w-5 h-5 duration-200 i-simple-icons-twitter hover:bg-gray-300 transition-hover" />
-        </a>
-      </div>
-    </div>
+    {{ showcase }}
   </main>
 </template>

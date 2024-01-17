@@ -1,4 +1,4 @@
-import { isFirefox, isForbiddenUrl } from '~/env'
+import { IS_FIREFOX, isForbiddenUrl } from '~/env'
 
 // Firefox fetch files from cache instead of reloading changes from disk,
 // hmr will not work as Chromium based browser
@@ -12,7 +12,7 @@ browser.webNavigation.onCommitted.addListener(({ tabId, frameId, url }) => {
 
   // inject the latest scripts
   browser.tabs.executeScript(tabId, {
-    file: `${isFirefox ? '' : '.'}/dist/contentScripts/index.global.js`,
+    file: `${IS_FIREFOX ? '' : '.'}/dist/contentScripts/index.global.js`,
     runAt: 'document_end',
   }).catch(error => console.error(error))
 })

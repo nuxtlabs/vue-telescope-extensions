@@ -1,6 +1,6 @@
-// import { onMessage, sendMessage } from 'webext-bridge/background'
-// import type { Tabs } from 'webextension-polyfill'
-import TabsStateService from './TabsStateService'
+import browser from 'webextension-polyfill'
+import TabsStateService from './TabsStateService.js'
+import { IS_CHROME, isSupportExecutionVersion } from '~/env'
 
 const tabsState = new TabsStateService()
 
@@ -10,6 +10,35 @@ if (import.meta.hot) {
   import('/@vite/client')
   // load latest content script
   import('./contentScriptHMR')
+}
+
+if (IS_CHROME && isSupportExecutionVersion) {
+  /**
+   *  equivalent logic for Firefox is in content.js
+   *  Manifest V3 method of injecting content scripts (not yet supported in Firefox)
+      Note: the "world" option in registerContentScripts is only available in Chrome v102+
+      MAIN The execution environment of the web page. This environment is shared with the web page, without isolation.
+   */
+
+  browser.scripting.registerContentScripts(
+    [
+      {
+        id: 'injected',
+        matches: ['<all_urls>'],
+        js: ['dist/contentScripts/injected.js'],
+        runAt: 'document_start',
+        // @ts-expect-error - not exist on static
+        world: browser.scripting.ExecutionWorld.MAIN,
+      },
+    ])
+
+  // function () {
+  // // When the content scripts are already registered, an error will be thrown.
+  // // It happens when the service worker process is incorrectly duplicated.
+  //   if (browser.runtime.lastError) {
+  //     console.error(browser.runtime.lastError)
+  //   }
+  // }
 }
 
 browser.runtime.onInstalled.addListener((): void => {
@@ -26,51 +55,8 @@ browser.runtime.onStartup.addListener(() => {
   tabsState.clear()
 })
 
-async function setIcon(details: any) {
-  // because manifest version is different
-  // if (IS_FIREFOX)
-  //   await browser.browserAction.setIcon(details)
-
-  // else
-  await browser.action.setIcon(details)
-}
-
-const setIconForTab = async (tabId: any) => {
-  const tabs = await tabsState.get()
-  const tab = tabs[tabId]
-  if (tab?.framework?.slug) {
-    const slug = tab.framework.slug
-    const iconPath = `icons/${slug}.png`
-    try {
-      await setIcon({ tabId, path: iconPath })
-    }
-    catch (e) {
-      await setIcon({
-        tabId,
-        path: 'icons/icon-128.png',
-      })
-    }
-  }
-  else {
-    await setIcon({
-      tabId,
-      path: tab?.hasVue ? 'icons/icon-128.png' : 'icons/icon-grey-128.png',
-    })
-  }
-}
-
-browser.storage.local.onChanged.addListener(async (payload) => {
-  if (payload.settings) {
-    const tabs = await browser.tabs.query({})
-    tabs.forEach((tab) => {
-      if (tab.id)
-        setIconForTab(tab.id)
-    })
-  }
-})
-
 browser.runtime.onMessage.addListener(
-  async (message, sender, _) => {
+  async (message, sender, sendResponse) => {
     if (message.action === 'analyze') {
       // when sending message from popup.js there's no sender.tab, so need to pass tabId
       const tabId = (sender.tab && sender.tab.id) || message.payload.tabId
@@ -90,19 +76,20 @@ browser.runtime.onMessage.addListener(
       }
 
       const showcase = tabs[tabId]
+
       if (showcase.hasVue && !showcase.slug) {
         try {
           if (typeof EventSource === 'undefined') {
-            // console.log('EventSource is not supported in current borwser!')
+            // eslint-disable-next-line no-console
+            console.log('EventSource is not supported in current borwser!')
             return
           }
           const sse = new EventSource(
-          `https://service.vuetelescope.com?url=${message.payload.url}`,
+            `https://service.vuetelescope.com?url=${message.payload.url}`,
           )
           sse.addEventListener('message', async (event) => {
             try {
               const res = JSON.parse(event.data)
-              // console.log('res', res)
               if (!res.error && !res.isAdultContent) {
                 showcase.isPublic = res.isPublic
                 showcase.slug = res.slug
@@ -126,14 +113,16 @@ browser.runtime.onMessage.addListener(
             }
           })
         }
-        catch (err) {}
+        catch (err) { }
       }
       await tabsState.updateData(tabId, tabs[tabId])
-      await setIconForTab(tabId)
+      // await setIconForTab(tabId)
     }
     else if (!sender.tab) {
       if (message.action === 'getShowcase') {
         const tabs = await tabsState.get()
+        // eslint-disable-next-line no-console
+        console.log('tabs', tabs[message.payload.tabId])
         return { payload: tabs[message.payload.tabId] }
       }
     }
@@ -141,7 +130,7 @@ browser.runtime.onMessage.addListener(
 )
 
 // when tab updated
-async function handleUpdated(tabId: any, changeInfo: any) {
+async function handleUpdated(tabId, changeInfo, tabInfo) {
   if (changeInfo.status === 'complete') {
     const tabs = await tabsState.get()
     if (!tabs[tabId])
@@ -155,42 +144,3 @@ async function handleUpdated(tabId: any, changeInfo: any) {
     })
   }
 }
-
-// let previousTabId = 0
-
-// // communication example: send previous tab title from background page
-// // see shim.d.ts for type declaration
-// browser.tabs.onActivated.addListener(async ({ tabId }) => {
-//   if (!previousTabId) {
-//     previousTabId = tabId
-//     return
-//   }
-
-//   let tab: Tabs.Tab
-
-//   try {
-//     tab = await browser.tabs.get(previousTabId)
-//     previousTabId = tabId
-//   }
-//   catch {
-//     return
-//   }
-
-//   // eslint-disable-next-line no-console
-//   console.log('previous tab', tab)
-//   sendMessage('tab-prev', { title: tab.title }, { context: 'content-script', tabId })
-// })
-
-// onMessage('get-current-tab', async () => {
-//   try {
-//     const tab = await browser.tabs.get(previousTabId)
-//     return {
-//       title: tab?.title,
-//     }
-//   }
-//   catch {
-//     return {
-//       title: undefined,
-//     }
-//   }
-// })
