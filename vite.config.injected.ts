@@ -22,13 +22,13 @@ export default defineConfig({
     emptyOutDir: false,
     sourcemap: isDev ? 'inline' : false,
     lib: {
-      entry: r('src/contentScripts/injected.ts'),
+      entry: r('src/contentScripts/injected.js'),
       name: packageJson.name,
       formats: ['iife'],
     },
     rollupOptions: {
       output: {
-        entryFileNames: 'injected.js',
+        entryFileNames: 'injected.global.js',
         extend: true,
       },
     },

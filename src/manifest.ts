@@ -49,11 +49,28 @@ export async function getManifest() {
         js: [
           'dist/contentScripts/index.global.js',
         ],
+        run_at: 'document_start',
+      },
+      {
+        matches: [
+          '<all_urls>',
+        ],
+        js: [
+          'dist/contentScripts/injected.global.js',
+        ],
       },
     ],
     web_accessible_resources: [
       {
         resources: ['dist/contentScripts/style.css'],
+        matches: ['<all_urls>'],
+      },
+      {
+        resources: ['dist/contentScripts/index.global.js'],
+        matches: ['<all_urls>'],
+      },
+      {
+        resources: ['dist/contentScripts/injected.global.js'],
         matches: ['<all_urls>'],
       },
     ],

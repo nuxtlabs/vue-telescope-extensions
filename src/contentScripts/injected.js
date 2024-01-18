@@ -1,33 +1,36 @@
-// import browser from 'webextension-polyfill';
+// const browser = require('webextension-polyfill')
 
-// import detectors as any from 'vue-telescope-analyzer/src/detectors';
-import detectors from '../../node_modules/vue-telescope-analyzer/src/detectors.js';
+const detectors = require('vue-telescope-analyzer/src/detectors')
 
 // backward compatibility
-(window as any).$vueTelemetryExtension = true;
-(window as any).$vueTelescopeExtension = true
+window.$vueTelemetryExtension = true
+window.$vueTelescopeExtension = true
 
 async function analyze() {
+  function evaluatePage(fn) {
+    const parsedFn = JSON.parse(fn)
+    return parsedFn()
+  }
+
   if (isBlacklisted(document.location.href))
     return
-  // const originalHtml = await fetch(document.location.href).then(res => res.text());
+  // const originalHtml = await fetch(document.location.href).then(res => res.text())
   const originalHtml = document.documentElement.outerHTML
   const context = {
     originalHtml,
     html: document.documentElement.outerHTML,
     scripts: Array.from(document.getElementsByTagName('script')).map(({ src }) => src).filter(script => script),
     page: {
-      // eslint-disable-next-line no-eval
-      evaluate: (fn: any) => window.eval(`(${fn});`),
+      evaluate: evaluatePage,
     },
   }
   const hasVue = await detectors.hasVue(context)
-  const vueVersion = (window as any)?.$nuxt?.$root?.constructor?.version || (window as any).Vue?.version || [...document.querySelectorAll('*')].map(el => el.__vue__?.$root?.constructor?.version || el.__vue_app__?.version).filter(Boolean)[0]
+  const vueVersion = window.$nuxt?.$root?.constructor?.version || window.Vue?.version || [...document.querySelectorAll('*')].map(el => el.__vue__?.$root?.constructor?.version || el.__vue_app__?.version).filter(Boolean)[0]
   const { ssr } = await detectors.getVueMeta(context)
   const framework = await detectors.getFramework(context)
   if (framework?.slug === 'nuxtjs' && vueVersion) {
     try {
-      framework.version = (window as any).__unctx__?.get('nuxt-app')?.use()?.versions?.nuxt
+      framework.version = window.__unctx__?.get('nuxt-app')?.use()?.versions?.nuxt
     }
     catch (e) {}
     framework.version = framework.version || `Version ${vueVersion.split('.')[0]}`
@@ -59,7 +62,7 @@ async function analyze() {
 analyze()
 
 // listen to messages from content/popup/other script
-window.addEventListener('message', (event: MessageEvent) => {
+window.addEventListener('message', (event) => {
   if (event.data && event.data.from === 'content' && event.data.action === 'analyze') {
     analyze()
     // console.log('message from content', event.data)
@@ -78,8 +81,8 @@ window.addEventListener('message', (event: MessageEvent) => {
 
 // postMessage({ from: 'injected', payload: { message: 'hello from injected' } }, '*')
 
-function isBlacklisted(hostname: string) {
+function isBlacklisted(hostname) {
   const blacklist = ['localhost']
-  const likelyIP = Boolean(/\d/.test(hostname.split('.').pop() as string))
+  const likelyIP = Boolean(/\d/.test(hostname.split('.').pop()))
   return blacklist.includes(hostname) || likelyIP
 }

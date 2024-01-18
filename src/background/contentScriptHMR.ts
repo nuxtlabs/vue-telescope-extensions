@@ -10,6 +10,11 @@ browser.webNavigation.onCommitted.addListener(({ tabId, frameId, url }) => {
   if (isForbiddenUrl(url))
     return
 
+  // browser.tabs.executeScript(tabId, {
+  //   file: `${IS_FIREFOX ? '' : '.'}/dist/contentScripts/injected.global.js`,
+  //   runAt: 'document_start',
+  // }).catch(error => console.error(error))
+
   // inject the latest scripts
   browser.tabs.executeScript(tabId, {
     file: `${IS_FIREFOX ? '' : '.'}/dist/contentScripts/index.global.js`,

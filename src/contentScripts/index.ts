@@ -17,7 +17,7 @@ import { IS_CHROME, isSupportExecutionVersion } from '~/env'
 
   // equivalent logic for other browser is in background.js
   if (!IS_CHROME || !isSupportExecutionVersion)
-    injectScript(browser.runtime.getURL('injected.js'))
+    injectScript(browser.runtime.getURL('injected.global.js'))
 
   // content script logic
   browser.runtime.onMessage.addListener(messageFromBackground)

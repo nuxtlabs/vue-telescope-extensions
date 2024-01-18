@@ -12,6 +12,20 @@ if (import.meta.hot) {
   import('./contentScriptHMR')
 }
 
+const injectScript = async () => {
+  await browser.scripting.registerContentScripts(
+    [
+      {
+        id: 'injected',
+        matches: ['<all_urls>'],
+        js: ['dist/contentScripts/injected.global.js'],
+        runAt: 'document_start',
+        // @ts-expect-error - not exist on static
+        world: 'MAIN',
+      },
+    ])
+}
+
 if (IS_CHROME && isSupportExecutionVersion) {
   /**
    *  equivalent logic for Firefox is in content.js
@@ -20,17 +34,8 @@ if (IS_CHROME && isSupportExecutionVersion) {
       MAIN The execution environment of the web page. This environment is shared with the web page, without isolation.
    */
 
-  browser.scripting.registerContentScripts(
-    [
-      {
-        id: 'injected',
-        matches: ['<all_urls>'],
-        js: ['dist/contentScripts/injected.js'],
-        runAt: 'document_start',
-        // @ts-expect-error - not exist on static
-        world: browser.scripting.ExecutionWorld.MAIN,
-      },
-    ])
+  // eslint-disable-next-line no-console
+  injectScript().catch((err: any) => console.log('err', err))
 
   // function () {
   // // When the content scripts are already registered, an error will be thrown.
@@ -56,7 +61,7 @@ browser.runtime.onStartup.addListener(() => {
 })
 
 browser.runtime.onMessage.addListener(
-  async (message, sender, sendResponse) => {
+  async (message, sender, _) => {
     if (message.action === 'analyze') {
       // when sending message from popup.js there's no sender.tab, so need to pass tabId
       const tabId = (sender.tab && sender.tab.id) || message.payload.tabId
@@ -121,8 +126,7 @@ browser.runtime.onMessage.addListener(
     else if (!sender.tab) {
       if (message.action === 'getShowcase') {
         const tabs = await tabsState.get()
-        // eslint-disable-next-line no-console
-        console.log('tabs', tabs[message.payload.tabId])
+
         return { payload: tabs[message.payload.tabId] }
       }
     }
