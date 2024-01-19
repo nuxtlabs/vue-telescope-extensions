@@ -13,9 +13,15 @@ export async function getManifest() {
     name: pkg.displayName || pkg.name,
     version: pkg.version,
     description: pkg.description,
+
     action: {
-      default_icon: './assets/icon-512.png',
+      default_icon: {
+        16: './assets/icon-grey-16.png',
+        48: './assets/icon-grey-48.png',
+        128: './assets/icon-grey-128.png',
+      },
       default_popup: './dist/popup/index.html',
+      default_title: 'Vue Telescope',
     },
     options_ui: {
       page: './dist/options/index.html',

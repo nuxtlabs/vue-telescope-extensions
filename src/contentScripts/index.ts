@@ -64,9 +64,17 @@ import { IS_CHROME, isSupportExecutionVersion } from '~/env'
   const shadowDOM = container.attachShadow?.({ mode: __DEV__ ? 'open' : 'closed' }) || container
   styleEl.setAttribute('rel', 'stylesheet')
   styleEl.setAttribute('href', browser.runtime.getURL('dist/contentScripts/style.css'))
-  shadowDOM.appendChild(styleEl)
-  shadowDOM.appendChild(root)
-  document.body.appendChild(container)
+
+  try {
+    shadowDOM.appendChild(styleEl)
+    shadowDOM.appendChild(root)
+    document.body.appendChild(container)
+  }
+  catch (err: any) {
+    // eslint-disable-next-line no-console
+    console.log(err)
+  }
+
   const app = createApp(App)
   setupApp(app)
   app.mount(root)

@@ -3,8 +3,6 @@ import type { Showcase } from '../../types'
 
 const showcase = ref<Showcase>()
 const isLoading = ref(false)
-const saving = ref(false)
-const savingError = ref(false)
 const currentTab = ref()
 const timer = ref()
 
@@ -22,22 +20,67 @@ const isRootUrl = computed(() => {
 
 const vueDocsURL = computed(() => {
   return (
-    (showcase.value?.vueVersion.startsWith('1') && 'https://v1.vuejs.org')
-    || (showcase.value?.vueVersion.startsWith('2') && 'https://v2.vuejs.org')
-    || (showcase.value?.vueVersion.startsWith('3') && 'https://vuejs.org')
+    (showcase.value?.vueVersion?.startsWith('1') && 'https://v1.vuejs.org')
+    || (showcase.value?.vueVersion?.startsWith('2') && 'https://v2.vuejs.org')
+    || (showcase.value?.vueVersion?.startsWith('3') && 'https://vuejs.org')
   )
 })
 
-const getCurrentTab = async () => {
+const getCurrentTab = async (): Promise<{ id: number; url: string } | null> => {
   return await browser.tabs.query({ currentWindow: true, active: true })
-    .then((tabsArray: any) => {
-      const { id, status, url } = tabsArray[0]
+    .then((tabs: any[]) => {
+      const { id, status, url } = tabs[0]
 
       if (status === 'complete')
         return { id, url }
 
       return null
     })
+}
+
+const saveShowcase = async () => {
+  try {
+    if (typeof EventSource === 'undefined') {
+      // eslint-disable-next-line no-console
+      console.log('EventSource is not supported in the current browser!')
+      return
+    }
+
+    const sse = new EventSource(
+      `https://service.vuetelescope.com?url=${showcase.value.url}&isPublic=true`,
+    )
+
+    sse.addEventListener('message', (event: MessageEvent) => {
+      try {
+        const res = JSON.parse(event.data)
+        if (!res.error && !res.isAdultContent && showcase.value) {
+          showcase.value.slug = res.slug
+          showcase.value.isPublic = res.isPublic
+          sse.close()
+        }
+        else {
+          throw new Error('API call to VT failed')
+        }
+      }
+      catch (err) {
+        sse.close()
+      }
+    })
+
+    const tabId = currentTab.value.id
+
+    await browser.runtime.sendMessage({
+      from: 'popup',
+      action: 'analyze',
+      payload: {
+        tabId,
+        showcase,
+      },
+    })
+  }
+  catch (err) {
+    throw new Error('Failed to save showcase0')
+  }
 }
 
 const detect = async (nbTries = 0) => {
@@ -65,7 +108,10 @@ const detect = async (nbTries = 0) => {
   showcase.value = res.payload || null
 }
 
-onMounted(() => detect())
+onMounted(() => detect().then(() => {
+  if (isRootUrl.value && showcase.value?.hasVue)
+    saveShowcase()
+}))
 
 onUnmounted(() => {
   clearTimeout(timer.value)

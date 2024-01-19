@@ -5,6 +5,8 @@ export interface Showcase {
   isStatic?: boolean
   path?: string
   url?: string
+  slug?: string
+  isPublic?: string
   framework?: Framework
   ui?: AddOns
   plugins?: AddOns[]

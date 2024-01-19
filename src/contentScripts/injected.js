@@ -1,5 +1,6 @@
 // const browser = require('webextension-polyfill')
 
+// import detectors from '../../node_modules/vue-telescope-analyzer/src/'
 const detectors = require('vue-telescope-analyzer/src/detectors')
 
 // backward compatibility
@@ -14,7 +15,7 @@ async function analyze() {
 
   if (isBlacklisted(document.location.href))
     return
-  // const originalHtml = await fetch(document.location.href).then(res => res.text())
+
   const originalHtml = document.documentElement.outerHTML
   const context = {
     originalHtml,

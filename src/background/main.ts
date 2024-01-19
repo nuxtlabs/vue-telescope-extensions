@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
-import TabsStateService from './TabsStateService.js'
-import { IS_CHROME, isSupportExecutionVersion } from '~/env'
+import TabsStateService from './TabsStateService'
+import { IS_CHROME, IS_FIREFOX, isSupportExecutionVersion } from '~/env'
 
 const tabsState = new TabsStateService()
 
@@ -27,23 +27,8 @@ const injectScript = async () => {
 }
 
 if (IS_CHROME && isSupportExecutionVersion) {
-  /**
-   *  equivalent logic for Firefox is in content.js
-   *  Manifest V3 method of injecting content scripts (not yet supported in Firefox)
-      Note: the "world" option in registerContentScripts is only available in Chrome v102+
-      MAIN The execution environment of the web page. This environment is shared with the web page, without isolation.
-   */
-
   // eslint-disable-next-line no-console
   injectScript().catch((err: any) => console.log('err', err))
-
-  // function () {
-  // // When the content scripts are already registered, an error will be thrown.
-  // // It happens when the service worker process is incorrectly duplicated.
-  //   if (browser.runtime.lastError) {
-  //     console.error(browser.runtime.lastError)
-  //   }
-  // }
 }
 
 browser.runtime.onInstalled.addListener((): void => {
@@ -58,6 +43,50 @@ browser.runtime.onStartup.addListener(() => {
   // for firefox a 'window.session' can be considered as alternative.
   // TODO: create polyfill for session store.
   tabsState.clear()
+})
+
+const setIcon = async (details: any) => {
+  // because manifest version is different
+  if (IS_FIREFOX)
+    await browser.browserAction.setIcon(details)
+
+  else
+    await browser.action.setIcon(details)
+}
+
+const setIconForTab = async (tabId: number) => {
+  const tabs = await tabsState.get()
+  const tab = tabs[tabId]
+
+  if (tab?.framework?.slug) {
+    const slug = tab.framework.slug
+    const iconPath = `icons/${slug}.png`
+    try {
+      await setIcon({ tabId, path: iconPath })
+    }
+    catch (e) {
+      await setIcon({
+        tabId,
+        path: '/assets/icon-128.png',
+      })
+    }
+  }
+  else {
+    await setIcon({
+      tabId,
+      path: tab?.hasVue ? '/assets/icon-128.png' : '/assets/icon-grey-128.png',
+    })
+  }
+}
+
+browser.storage.local.onChanged.addListener(async (payload) => {
+  if (payload.settings) {
+    const tabs = await browser.tabs.query({})
+    tabs.forEach((tab) => {
+      if (tab.id)
+        setIconForTab(tab.id)
+    })
+  }
 })
 
 browser.runtime.onMessage.addListener(
