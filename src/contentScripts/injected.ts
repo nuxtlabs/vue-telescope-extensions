@@ -1,14 +1,14 @@
-// const browser = require('webextension-polyfill')
-
-// import detectors from '../../node_modules/vue-telescope-analyzer/src/'
-const detectors = require('vue-telescope-analyzer/src/detectors')
+// import { Buffer } from "buffer";
+// @ts-expect-error - Could not find a declaration file for module
+import { detectors } from '../../node_modules/vue-telescope-analyzer/src';
 
 // backward compatibility
-window.$vueTelemetryExtension = true
-window.$vueTelescopeExtension = true
+(window as any).$vueTelemetryExtension = true;
+(window as any).$vueTelescopeExtension = true
+// window.Buffer = Buffer
 
 async function analyze() {
-  function evaluatePage(fn) {
+  function evaluatePage(fn: string) {
     const parsedFn = JSON.parse(fn)
     return parsedFn()
   }
@@ -26,12 +26,12 @@ async function analyze() {
     },
   }
   const hasVue = await detectors.hasVue(context)
-  const vueVersion = window.$nuxt?.$root?.constructor?.version || window.Vue?.version || [...document.querySelectorAll('*')].map(el => el.__vue__?.$root?.constructor?.version || el.__vue_app__?.version).filter(Boolean)[0]
+  const vueVersion = (window as any).$nuxt?.$root?.constructor?.version || (window as any).Vue?.version || [...document.querySelectorAll('*')].map(el => el.__vue__?.$root?.constructor?.version || el.__vue_app__?.version).filter(Boolean)[0]
   const { ssr } = await detectors.getVueMeta(context)
   const framework = await detectors.getFramework(context)
   if (framework?.slug === 'nuxtjs' && vueVersion) {
     try {
-      framework.version = window.__unctx__?.get('nuxt-app')?.use()?.versions?.nuxt
+      framework.version = (window as any).__unctx__?.get('nuxt-app')?.use()?.versions?.nuxt
     }
     catch (e) {}
     framework.version = framework.version || `Version ${vueVersion.split('.')[0]}`
@@ -82,7 +82,7 @@ window.addEventListener('message', (event) => {
 
 // postMessage({ from: 'injected', payload: { message: 'hello from injected' } }, '*')
 
-function isBlacklisted(hostname) {
+function isBlacklisted(hostname: string): boolean {
   const blacklist = ['localhost']
   const likelyIP = Boolean(/\d/.test(hostname.split('.').pop()))
   return blacklist.includes(hostname) || likelyIP

@@ -60,21 +60,22 @@ const setIconForTab = async (tabId: number) => {
 
   if (tab?.framework?.slug) {
     const slug = tab.framework.slug
-    const iconPath = `icons/${slug}.png`
+    const iconPath = `../../assets/${slug}.png`
+
     try {
       await setIcon({ tabId, path: iconPath })
     }
     catch (e) {
       await setIcon({
         tabId,
-        path: '/assets/icon-128.png',
+        path: '../../assets/icon-128.png',
       })
     }
   }
   else {
     await setIcon({
       tabId,
-      path: tab?.hasVue ? '/assets/icon-128.png' : '/assets/icon-grey-128.png',
+      path: tab?.hasVue ? '../../assets/icon-128.png' : '../../assets/icon-grey-128.png',
     })
   }
 }
@@ -150,7 +151,7 @@ browser.runtime.onMessage.addListener(
         catch (err) { }
       }
       await tabsState.updateData(tabId, tabs[tabId])
-      // await setIconForTab(tabId)
+      await setIconForTab(tabId)
     }
     else if (!sender.tab) {
       if (message.action === 'getShowcase') {
@@ -162,8 +163,8 @@ browser.runtime.onMessage.addListener(
   },
 )
 
-// when tab updated
-async function handleUpdated(tabId, changeInfo, tabInfo) {
+// when tab updated@
+async function handleUpdated(tabId: any, changeInfo: any) {
   if (changeInfo.status === 'complete') {
     const tabs = await tabsState.get()
     if (!tabs[tabId])

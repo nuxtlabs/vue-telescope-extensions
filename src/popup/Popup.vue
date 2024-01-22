@@ -125,7 +125,15 @@ onUnmounted(() => {
       <Logo />
     </div>
 
-    <div v-if="showcase" class="text-sm font-semibold text-white pt-8 pb-10">
+    <div v-if="isLoading" class="flex items-center justify-center p-8 text-lg text-white">
+      Loading...
+    </div>
+
+    <div v-else-if="!showcase || !showcase.url" class="flex items-center justify-center p-8 text-lg text-white">
+      Please enter a url in the address bar.
+    </div>
+
+    <div v-else-if="showcase" class="text-sm font-semibold text-white pt-8 pb-10">
       <div v-if="showcase.hasVue">
         <div class="pb-6">
           <div class="mb-3">
@@ -138,7 +146,7 @@ onUnmounted(() => {
             </li>
 
             <li v-if="showcase.framework">
-              <ExploreDataItem :url="showcase.framework.url" :label="showcase.framework.version" :icon="showcase.framework.imgPath" infos />
+              <ExploreDataItem :url="showcase.framework.url" :label="showcase.framework.version || showcase.framework.name" :icon="showcase.framework.imgPath" infos />
             </li>
 
             <li v-if="showcase.ui">
@@ -155,7 +163,7 @@ onUnmounted(() => {
           </ul>
         </div>
 
-        <div v-if="showcase.plugins" class="pb-6">
+        <div v-if="showcase.plugins && showcase.plugins.length" class="pb-6">
           <div class="pb-3">
             Plugins
           </div>
@@ -167,7 +175,7 @@ onUnmounted(() => {
           </ul>
         </div>
 
-        <div v-if="showcase.modules">
+        <div v-if="showcase.modules && showcase.modules.length">
           <div class="pb-3">
             Nuxt Modules
           </div>
@@ -179,10 +187,9 @@ onUnmounted(() => {
           </ul>
         </div>
       </div>
-    </div>
-
-    <div v-else>
-      Vue is not used on this website
+      <div v-else-if="!showcase.hasVue" class="flex items-center justify-center p-8 text-lg text-white">
+        Vue is not used on this website
+      </div>
     </div>
 
     <div class="flex items-end justify-between pt-5 border-t border-gray-800">

@@ -22,7 +22,7 @@ export default defineConfig({
     emptyOutDir: false,
     sourcemap: isDev ? 'inline' : false,
     lib: {
-      entry: r('src/contentScripts/injected.js'),
+      entry: r('src/contentScripts/injected.ts'),
       name: packageJson.name,
       formats: ['iife'],
     },

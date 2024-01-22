@@ -23,10 +23,6 @@ export async function getManifest() {
       default_popup: './dist/popup/index.html',
       default_title: 'Vue Telescope',
     },
-    options_ui: {
-      page: './dist/options/index.html',
-      open_in_tab: true,
-    },
     background: IS_FIREFOX
       ? {
           scripts: ['dist/background/index.mjs'],
