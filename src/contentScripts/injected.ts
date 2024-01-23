@@ -85,6 +85,6 @@ window.addEventListener('message', (event) => {
 
 function isBlacklisted(hostname: string): boolean {
   const blacklist = ['localhost']
-  const likelyIP = Boolean(/\d/.test(hostname.split('.').pop()))
+  const likelyIP = Boolean(/\d/.test(hostname.split('.').pop() as any))
   return blacklist.includes(hostname) || likelyIP
 }
