@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import type { Showcase } from '../../types'
 import TabsStateService from './TabsStateService'
 import { IS_CHROME, IS_FIREFOX, isSupportExecutionVersion } from '~/env'
 
@@ -56,7 +57,7 @@ const setIcon = async (details: any) => {
 
 const setIconForTab = async (tabId: number) => {
   const tabs = await tabsState.get()
-  const tab = tabs[tabId]
+  const tab: Showcase = tabs[tabId]
 
   if (tab?.framework?.slug) {
     const slug = tab.framework.slug
@@ -110,7 +111,7 @@ browser.runtime.onMessage.addListener(
         tabs[tabId] = { ...tabs[tabId], ...message.payload }
       }
 
-      const showcase = tabs[tabId]
+      const showcase: Showcase = tabs[tabId]
 
       if (showcase.hasVue && !showcase.slug) {
         try {

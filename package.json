@@ -21,7 +21,7 @@
     "build:js": "vite build --config vite.config.content.ts",
     "build:injected": "vite build --config vite.config.injected.ts",
     "pack": "cross-env NODE_ENV=production run-p pack:*",
-    "pack:zip": "rimraf extension.zip && jszip-cli add extension/* -o ./extension.zip",
+    "pack:zip": "rimraf vue-telescope-extension.zip && jszip-cli add extension/* -o ./vue-telescope-extension.zip",
     "pack:crx": "crx pack extension -o ./extension.crx",
     "pack:xpi": "cross-env WEB_EXT_ARTIFACTS_DIR=./ web-ext build --source-dir ./extension --filename extension.xpi --overwrite-dest",
     "start:chromium": "web-ext run --source-dir ./extension --target=chromium",

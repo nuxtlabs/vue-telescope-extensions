@@ -1,6 +1,7 @@
 // import { Buffer } from "buffer";
 // @ts-expect-error - Could not find a declaration file for module
-import { detectors } from '../../node_modules/vue-telescope-analyzer/src';
+import { detectors } from '../../node_modules/vue-telescope-analyzer/src'
+import type { Showcase } from '../../types'
 
 // backward compatibility
 (window as any).$vueTelemetryExtension = true;
@@ -56,7 +57,7 @@ async function analyze() {
       hasSSR: ssr || nuxtMeta.ssr,
       isStatic: nuxtMeta.static,
       modules,
-    },
+    } as Showcase,
   })
 }
 
