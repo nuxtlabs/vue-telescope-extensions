@@ -89,7 +89,8 @@ browser.runtime.onMessage.addListener(
       const tabId = (sender.tab && sender.tab.id) || message.payload.tabId
 
       const tabs = await tabsState.get()
-      if (!tabs[tabId]) {
+      // set/overwrite analyzed data on new tab/url
+      if (!tabs[tabId] || tabs[tabId].url !== message.payload.url) {
         tabs[tabId] = message.payload
       } else {
         // temporary fix when hit CSP
