@@ -1,6 +1,6 @@
 // const browser = require('webextension-polyfill')
 
-const detectors = require('vue-telescope-analyzer/src/detectors')
+import detectors from 'vue-telescope-analyzer/src/detectors.mjs'
 
 // backward compatibility
 window.$vueTelemetryExtension = true

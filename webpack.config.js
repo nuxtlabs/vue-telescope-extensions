@@ -28,13 +28,20 @@ const config = {
     // sourceMapFilename: '[name].js.map'
   },
   resolve: {
-    extensions: ['.js', '.vue']
+    extensions: ['.mjs', '.js', '.vue']
   },
   node: {
     fs: 'empty'
   },
   module: {
     rules: [
+      {
+        test: /\.mjs$/,
+        type: 'javascript/esm',
+        include: [
+          /node_modules/
+        ]
+      },
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
